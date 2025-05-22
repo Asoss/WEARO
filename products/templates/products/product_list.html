@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bazar Online</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            background-image: url("sprites/back4.png");
+            background-size: cover;
+            color: #d4d121;
+            overflow: auto;
+            overflow-y: auto;
+        }
+        .sidebar {
+            background-color: #8ea078;
+            width: 170px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 0;
+            transition: width 0.3s;
+            position: absolute;
+            height: 100vh;
+            overflow: hidden;
+            top: 90px;
+            left: 0;
+        }
+        .menu-icon {
+            font-size: 24px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .menu-lines {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .menu-line {
+            width: 15px;
+            height: 2px;
+            border-radius: 2px;
+        }
+        .categories {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+            margin-left: 10px;
+        }
+        .sidebar.expanded .categories {
+            display: block;
+        }
+        .category-item {
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .category-item:hover {
+            background-color: #8ea078;
+            color: white;
+        }
+        .main-content {
+            flex-grow: 1;
+            margin-left: 170px;
+            padding: 20px;
+        }
+        .header {
+            background-color: #1d1d1d;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            height: 8%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.315);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+        .logo img {
+            height: 65px;
+            width: auto;
+            margin-left: 10%;
+        }
+        .search-container {
+            display: flex;
+            width: 40%;
+            align-items: center;
+            padding: 3px 10px;
+            border-radius: 5px;
+            border-bottom: 3px solid #d4d121; 
+            color: #d4d121;
+            height: 40%;
+        }
+        .search-icon {
+            height: 15px;
+        }
+        .search-bar {
+            flex-grow: 1;
+            border: none;
+            padding: 5px;
+            border-radius: 15px;
+            outline: none;
+            background-color: transparent;
+            font-size: 14px;
+            color: #d4d121;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            padding: 5px 10px;
+            border-radius: 15px;
+        }
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .user-info img {
+            height: 60px;
+            width: 60px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .nav-links {
+            font-family: 'Copperplate Gothic', fantasy;
+            padding: 1% 3%; 
+            display: flex;
+            background-color: #1d1d1d;
+            justify-content: space-between;
+            gap: 10px; 
+            font-size: 20px;
+            position: fixed;
+            top: 11%;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            white-space: nowrap;
+            box-shadow: 0 2px 5px rgba(255, 174, 0, 0.247);
+            border-bottom: #d4d121 3px solid;
+        }
+        
+        .nav-links a {
+    text-decoration: none; 
+    border-bottom: 2px solid #353535; 
+    color: #d4d121;
+    padding: 8px 12px;
+    
+    border-bottom: #d4d121 1px solid;
+    border-top: #d4d121 1px solid;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.nav-links a:hover {
+    background: #d4d121; 
+    transform: scale(1.1);
+    color: #1d1d1d;
+}
+
+.content {
+    justify-self:center;
+    position: static;
+    width: 80%; 
+    height: 75vh;
+    margin-top: 9%; 
+    padding: 20px;
+    box-shadow: 0 0 10px #00000033;
+    background-color: #1d1d1d;
+    border-left: #d4d121 3px solid;
+    border-right: #d4d121 3px solid;
+    border-bottom: #d4d121 3px solid;
+    color: #d4d121;
+    overflow-y: auto;
+    scrollbar-color: #d4d121 #1d1d1d;
+}
+.product-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    width: 95%;
+}
+.product-list li {
+    justify-self: center;
+    min-width: 180px;
+    padding: 15px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background-color:#272727;
+    border-bottom: #d4d121 3px solid;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+.add-product {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #d4d121;
+    transition: background-color 0.3s, transform 0.2s;
+}
+.add-product:hover {
+    transform: scale(1.05);
+}
+.sort-button {
+    position: fixed;
+    padding: 10px;
+    transition: transform 0.2s;
+    top: 21%;
+    right: 10%;
+}
+.sort-button2 {
+    text-decoration: none;
+    color: #d4d121;
+    font-size: 20px;
+    position: fixed;
+    top: 20%;
+    right: 12.5%;
+}
+
+.sort-button:hover {
+    transform: scale(1.2);
+}
+.home-button {
+    font-size: 24px;
+    text-decoration: none;
+    margin-left: 15px;
+    transition: transform 0.2s;
+}
+
+.home-button:hover {
+    transform: scale(1.2);
+}
+    .avatar {
+        width: 420px;
+        height: 420px;
+        object-fit: cover;
+        margin-bottom: 15px;
+    }
+
+
+</style>
+<script>
+    function toggleSidebar() {
+        document.querySelector('.sidebar').classList.toggle('expanded');
+    }
+    
+    function filterProducts() {
+        
+        const searchInput = document.getElementById('search-bar').value.toLowerCase();
+        const productList = document.getElementById('product-list');
+        const products = productList.getElementsByTagName('li');
+        
+        for (let i = 0; i < products.length; i++) {
+            const productName = products[i].getElementsByTagName('strong')[0].innerText.toLowerCase();
+            if (productName.includes(searchInput)) {
+                products[i].style.display = '';
+            } else {
+                products[i].style.display = 'none';
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <img onclick="location.href = '/'" src="/sprites/logo.png" alt="logo" style="cursor: pointer;">
+        </div>
+        <div class="search-container">
+            <img class="search-icon" src="/sprites/search.png" alt="search">
+            <input type="text" id="search-bar" class="search-bar" placeholder="Search..." onkeyup="filterProducts()">
+        </div>
+        
+        
+        <div class="user-section">
+            <a class="add-product" href="/add">Add Product</a>
+            <a class="add-product" href="/my_listings">My advertisement</a>
+            <a class="add-product" href="/my_favorites">My Cart</a>            
+            <div class="user-info">
+                
+                {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}">
+                    <img class="avatar" src="{{ user.profile.avatar.url }}" alt="Аватар">
+                </a>
+                {% else %}
+                <a href="{% url 'login' %}" style="color: #d4d121;">Log in</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div style="position: fixed; width: 100%;display: block;">
+        {% block content %}
+        
+        <div class="nav-links">
+            <a href="?category=Auto">Auto</a>
+            <a href="?category=Home/Garden">Home/Garden</a>
+            <a href="?category=Electronics">Electronics</a>
+            <a href="?category=Clothes">Clothes</a>
+            <a href="?category=Realty">Realty</a>
+            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">For Auto</a>
+            <a href="?category=Toys">Toys!</a>
+            <a href="?category=Animals">Animals</a>
+            <a href="?category=Others">Others...</a>
+        </div>
+        
+        <p class="sort-button2">Order by: price</p>
+            <a href="?sort={% if sort_order == 'asc' %}desc{% else %}asc{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}" 
+            class="sort-button">
+            {% if sort_order == "asc" %}
+            <img src="/sprites/order_up.png" width="20px" alt="order">
+            {% else %}
+            <img src="/sprites/order_down.png" width="20px" alt="order">
+            {% endif %}
+        </a>
+
+        
+        <div class="content">
+            <h1 style="text-align: center;">Catalog</h1>
+            
+            {% if selected_category %}
+            <h2 style="text-align: center;">Category: {{ selected_category }}</h2>
+            {% endif %}
+            
+            
+            
+            
+            
+            <ul id="product-list" class="product-list">
+                {% for product in products %}
+                <li data-price="{{ product.price }}" onclick="location.href='/details/{{ product.id }}'">
+                    <h3><strong>{{ product.name }}</strong></h3>
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" height="100px">
+                    {% endif %}
+                    <div>
+                        <br>
+                        <span>Price: {{ product.price }}₴</span>
+                        <br>
+                        <span>Category: {{ product.category }}</span>
+                    </div>
+                </li>
+                {% empty %}
+                <p style="text-align: center;">No products in this category.</p>
+                {% endfor %}
+            </ul>
+        </div> 
+        
+        {% endblock %}
+        

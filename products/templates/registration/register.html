@@ -1,0 +1,67 @@
+<style>
+    body {
+        color:#d4d121;
+        background-color: #272727;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-image: url("/sprites/back4.png");
+        margin-top: 7%;
+    }
+    form {
+        justify-self: center;
+        background-color: #1d1d1d;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 10%;
+            height: 650px;
+            width: 20%;
+            border: 2px solid #d4d121;
+    }
+    button {
+            margin-left: 30%;
+            display: block;
+            width: 40%;
+            padding: 10px;
+            border-top: 2px solid #d4d121;
+            border-bottom: 2px solid #d4d121;
+            border-right: none;
+            border-left: none;
+            background-color:#272727;
+            cursor: pointer;
+            margin-top: 15px;
+            color: #d4d121;
+        }
+    button:hover {
+        background-color: #d4d121;
+        color: #272727;
+    }
+    input, select, textarea {
+            width: 95%;
+            padding: 8px;
+            margin-top: 5px;
+            background-image: url("sprites/back4.png");
+            border-top: none;
+            border-right: none;
+            border-left: none;
+            background-color: #272727;
+            border-bottom: 2px solid #d4d121;
+            border-radius: 5px;
+            color: #d4d121;
+        }
+</style>
+
+<body>
+    <form method="post" enctype="multipart/form-data">
+    <h2>Register</h2>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Register</button>
+        <p>Already have an account? <a href="/login/" style="color: #d4d121;">Login</a></p>
+    </form>
+</body>
+</html>
