@@ -35,5 +35,14 @@
     {% empty %}
         <p>Немає товарів</p>
     {% endfor %}
+    <a href="{% url 'my_account' %}" style="
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: black;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+">Go to My Account</a>
 </body>
 </html>

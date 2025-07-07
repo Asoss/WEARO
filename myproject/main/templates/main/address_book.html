@@ -1,0 +1,52 @@
+<form method="POST" style="max-width: 500px; font-family: sans-serif;">
+  {% csrf_token %}
+
+  <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 10px;">ADD NEW ADDRESS</h2>
+  <p style="margin-bottom: 25px; color: #444;">
+    <span style="font-size: 18px;"></span>
+    You currently have no saved addresses. Get started by adding one.
+  </p>
+
+  <div style="margin-bottom: 20px;">
+    <label for="first_name" style="font-weight: 600;">First name:</label>
+    <input type="text" id="first_name" name="first_name" value="{{ form.first_name.value|default_if_none:'' }}" required>
+  </div>
+
+  <div style="margin-bottom: 20px;">
+    <label for="last_name" style="font-weight: 600;">Last name:</label>
+    <input type="text" id="last_name" name="last_name" value="{{ form.last_name.value|default_if_none:'' }}" required>
+  </div>
+
+  <div style="margin-bottom: 20px;">
+    <label for="mobile" style="font-weight: 600;">Mobile:</label>
+    <input type="text" id="mobile" name="mobile" value="{{ form.mobile.value|default_if_none:'' }}" required>
+  </div>
+
+  <div style="margin-bottom: 20px;">
+    <label for="country" style="font-weight: 600;">Country:</label>
+    <select id="country" name="country" required>
+      <option value="">Please select</option>
+      <option value="UA" {% if form.country.value == "UA" %}selected{% endif %}>Ukraine</option>
+      <option value="PL" {% if form.country.value == "PL" %}selected{% endif %}>Poland</option>
+      <option value="US" {% if form.country.value == "US" %}selected{% endif %}>United States</option>
+      <option value="GB" {% if form.country.value == "GB" %}selected{% endif %}>United Kingdom</option>
+    </select>
+  </div>
+
+  <button type="submit" style="
+    background-color: #222;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+  ">SAVE ADDRESS</button>
+  
+</form>
+      <a href="{% url 'my_account' %}">← Back to account</a>
+
+{% for field in form %}
+  {% if field.errors %}
+    <div style="color: red;">{{ field.errors }}</div>
+  {% endif %}
+{% endfor %}

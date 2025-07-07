@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 
@@ -44,3 +45,40 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return f"Фото для {self.product.name}"
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    description = models.TextField()
+    date_ordered = models.DateField()
+
+class Return(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    reason = models.TextField()
+    date_requested = models.DateField()
+
+class HelpRequest(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+
+
+
+class Address(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    address_line = models.TextField()
+    city = models.CharField(max_length=100)
+    postal_code = models.CharField(max_length=20)
+
+class PaymentMethod(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    card_number = models.CharField(max_length=16)
+    expiry_date = models.DateField()
+
+class SocialAccount(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    provider = models.CharField(max_length=100)
+    account_link = models.URLField()
+
+class Item(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()

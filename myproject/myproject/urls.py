@@ -2,10 +2,18 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from main import views
+from django.contrib.auth import views as auth_views
+
 
 urlpatterns = [
     path('', include('main.urls')),
     path('admin/', admin.site.urls),
+    path('', views.home, name='home'),  
+    path('orders/', views.my_orders, name='my_orders'),
+    path('', include('main.urls')),
+    path('my-account/', views.my_account, name='my_account'),
+    path('help/delivery/', views.delivery_info, name='delivery_info'),
 ]
 
 if settings.DEBUG:
