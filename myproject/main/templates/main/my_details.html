@@ -1,0 +1,56 @@
+<form method="POST" style="max-width: 500px; font-family: sans-serif;">
+  {% csrf_token %}
+
+  <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">MY DETAILS</h2>
+  <p style="margin-bottom: 30px;">
+    Feel free to edit any of your details below so your ASOS account is totally up to date.
+  </p>
+
+  <!-- First name -->
+  <div style="margin-bottom: 20px;">
+    <label for="first_name" style="font-weight: 600;">First name</label>
+    <input type="text" id="first_name" name="first_name" value="{{ user_form.first_name.value|default_if_none:'' }}" required>
+  </div>
+
+  <!-- Last name -->
+  <div style="margin-bottom: 20px;">
+    <label for="last_name" style="font-weight: 600;">Last name</label>
+    <input type="text" id="last_name" name="last_name" value="{{ user_form.last_name.value|default_if_none:'' }}" required>
+  </div>
+
+  <!-- Email -->
+  <div style="margin-bottom: 20px;">
+    <label for="email" style="font-weight: 600;">Email address</label>
+    <input type="email" id="email" name="email" value="{{ user_form.email.value|default_if_none:'' }}" required>
+  </div>
+
+  <!-- Birth date -->
+  <div style="margin-bottom: 20px;">
+    <label for="birth_date" style="font-weight: 600;">Date of birth</label>
+    <input type="date" id="birth_date" name="birth_date" value="{{ details_form.birth_date.value|default_if_none:'' }}">
+  </div>
+
+  <!-- Gender -->
+  <div style="margin-bottom: 20px;">
+    <label style="font-weight: 600;">Mostly interested in</label><br>
+
+    <input type="radio" id="gender_male" name="gender" value="male"
+      {% if details_form.gender.value == "male" %}checked{% endif %}>
+    <label for="gender_male">Menswear</label><br>
+
+    <input type="radio" id="gender_female" name="gender" value="female"
+      {% if details_form.gender.value == "female" %}checked{% endif %}>
+    <label for="gender_female">Womenswear</label>
+  </div>
+
+  <!-- Submit -->
+  <button type="submit" style="
+    background-color: #e0e0e0;
+    padding: 12px 25px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+  ">SAVE CHANGES</button>
+        <a href="{% url 'my_account' %}">← Back to account</a>
+
+</form>
