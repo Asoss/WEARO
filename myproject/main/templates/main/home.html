@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Головна — Магазин</title>
+    <style>
+        .product {
+            display: inline-block;
+            width: 220px;
+            margin: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+        .product img {
+            max-width: 200px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Товари</h1>
+    {% for product in products %}
+        <div class="product">
+            {% if product.main_image %}
+                <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
+            {% else %}
+                <p>Немає фото</p>
+            {% endif %}
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.price }}</p>
+            <a href="{% url 'product_detail' product.pk %}">Детальніше</a>
+
+        </div>
+    {% empty %}
+        <p>Немає товарів</p>
+    {% endfor %}
+</body>
+</html>
