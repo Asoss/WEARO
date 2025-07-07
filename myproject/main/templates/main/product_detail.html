@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ product.name }}</title>
+    <style>
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+        .main-image {
+            max-width: 400px;
+            height: auto;
+        }
+        .gallery img {
+            width: 100px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ product.name }}</h1>
+        <img class="main-image" src="{{ product.main_image.url }}" alt="{{ product.name }}">
+        <p><strong>Ціна:</strong> {{ product.price }} грн</p>
+        <p><strong>Бренд:</strong> {{ product.brand }}</p>
+        <p><strong>Категорія:</strong> {{ product.category.name }}</p>
+        {% if product.color %}
+            <p><strong>Колір:</strong> {{ product.color.name }}</p>
+        {% endif %}
+        {% if product.model_height %}
+            <p><strong>Зріст моделі:</strong> {{ product.model_height }} см</p>
+        {% endif %}
+        {% if product.model_size %}
+            <p><strong>Розмір моделі:</strong> {{ product.model_size }}</p>
+        {% endif %}
+        {% if product.care %}
+            <p><strong>Догляд:</strong> {{ product.care }}</p>
+        {% endif %}
+        {% if product.extra_details %}
+            <p><strong>Деталі:</strong> {{ product.extra_details }}</p>
+        {% endif %}
+
+        <h3>Галерея:</h3>
+        <div class="gallery">
+            {% for img in product.images.all %}
+        <img src="{{ img.image.url }}" alt="Фото {{ product.name }}" style="width:120px; height:auto; margin: 5px; border: 1px solid #ccc;">
+            {% empty %}
+        <p>Немає додаткових фото.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
