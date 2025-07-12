@@ -15,4 +15,6 @@ urlpatterns = [
     path('payment/', views.payment_methods, name='payment_methods'),
     path('social/', views.social_accounts, name='social_accounts'),
     path('logout/', views.sign_out, name='sign_out'),
+    path('cart/', views.cart_view, name='cart'),
+    path('cart/add/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
 ]

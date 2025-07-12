@@ -7,14 +7,35 @@
         .container {
             max-width: 1000px;
             margin: auto;
+            font-family: Arial, sans-serif;
         }
+
         .main-image {
             max-width: 400px;
             height: auto;
         }
+
         .gallery img {
             width: 100px;
             margin: 5px;
+        }
+
+        .add-to-cart-form {
+            margin-top: 20px;
+        }
+
+        .add-to-cart-button {
+            background-color: #222;
+            color: white;
+            padding: 10px 25px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .add-to-cart-button:hover {
+            background-color: #444;
         }
     </style>
 </head>
@@ -41,12 +62,17 @@
             <p><strong>Деталі:</strong> {{ product.extra_details }}</p>
         {% endif %}
 
+        <form method="post" action="{% url 'add_to_cart' product.id %}" class="add-to-cart-form">
+            {% csrf_token %}
+            <button type="submit" class="add-to-cart-button">Додати в кошик</button>
+        </form>
+
         <h3>Галерея:</h3>
         <div class="gallery">
             {% for img in product.images.all %}
-        <img src="{{ img.image.url }}" alt="Фото {{ product.name }}" style="width:120px; height:auto; margin: 5px; border: 1px solid #ccc;">
+                <img src="{{ img.image.url }}" alt="Фото {{ product.name }}" style="width:120px; height:auto; margin: 5px; border: 1px solid #ccc;">
             {% empty %}
-        <p>Немає додаткових фото.</p>
+                <p>Немає додаткових фото.</p>
             {% endfor %}
         </div>
     </div>
