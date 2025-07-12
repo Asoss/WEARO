@@ -1,6 +1,6 @@
 from django.urls import path
-from . import views
 from django.contrib import admin
+from main import views
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -15,4 +15,7 @@ urlpatterns = [
     path('payment/', views.payment_methods, name='payment_methods'),
     path('social/', views.social_accounts, name='social_accounts'),
     path('logout/', views.sign_out, name='sign_out'),
+    path('login/', views.user_login, name='login'),
+    path('register/', views.register, name='register'),
+
 ]

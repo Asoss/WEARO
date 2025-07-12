@@ -1,0 +1,23 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+{% if page == "register" %}
+<h2>Реєстрація</h2>
+{% else %}
+<h2>Вхід</h2>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">
+        {% if page == "register" %}Зареєструватись{% else %}Увійти{% endif %}
+    </button>
+</form>
+
+{% if page == "register" %}
+<p>Вже маєте акаунт? <a href="{% url 'login' %}">Увійдіть</a></p>
+{% else %}
+<p>Ще не маєте акаунту? <a href="{% url 'register' %}">Зареєструйтесь</a></p>
+{% endif %}
+{% endblock %}
