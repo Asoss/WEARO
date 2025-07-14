@@ -1,48 +1,49 @@
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <title>Головна — Магазин</title>
-    <style>
-        .product {
-            display: inline-block;
-            width: 220px;
-            margin: 15px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            text-align: center;
-        }
-        .product img {
-            max-width: 200px;
-            height: auto;
-        }
-    </style>
-</head>
-<body>
-    <h1>Товари</h1>
-    {% for product in products %}
-        <div class="product">
-            {% if product.main_image %}
-                <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
-            {% else %}
-                <p>Немає фото</p>
-            {% endif %}
-            <h3>{{ product.name }}</h3>
-            <p>{{ product.price }}</p>
-            <a href="{% url 'product_detail' product.pk %}">Детальніше</a>
+{% extends "main/base.html" %}
 
-        </div>
+{% block content %}
+<style>
+    .product {
+        display: inline-block;
+        width: 220px;
+        margin: 15px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: center;
+    }
+
+    .product img {
+        max-width: 200px;
+        height: auto;
+    }
+</style>
+
+<h1>Товари</h1>
+<div style="display: flex; flex-wrap: wrap; justify-content: center;">
+    {% for product in products %}
+    <div class="product">
+        {% if product.main_image %}
+        <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
+        {% else %}
+        <p>Немає фото</p>
+        {% endif %}
+        <h3>{{ product.name }}</h3>
+        <p>{{ product.price }} грн</p>
+        <a href="{% url 'product_detail' product.pk %}">Детальніше</a>
+    </div>
     {% empty %}
-        <p>Немає товарів</p>
+    <p>Немає товарів</p>
     {% endfor %}
+</div>
+
+<div style="text-align: center; margin-top: 20px;">
     <a href="{% url 'my_account' %}" style="
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: black;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-">Go to My Account</a>
-</body>
-</html>
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: black;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+    ">Перейти в мій акаунт</a>
+</div>
+{% endblock %}

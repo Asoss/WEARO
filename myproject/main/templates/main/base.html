@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Магазин одягу</title>
+</head>
+
+<body>
+    <header style="text-align: right; padding: 10px; background: #f5f5f5;">
+        {% if user.is_authenticated %}
+        Вітаю, {{ user.username }} | <a href="{% url 'sign_out' %}">Вийти</a>
+        {% else %}
+        <a href="{% url 'login' %}">Увійти</a> | <a href="{% url 'register' %}">Реєстрація</a>
+        {% endif %}
+    </header>
+
+    <main style="padding: 20px;">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer style="text-align: center; margin-top: 30px; padding: 10px; border-top: 1px solid #ccc;">
+        2025 Магазин одягу "Asos"
+    </footer>
+</body>
+
+</html>

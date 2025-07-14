@@ -82,3 +82,17 @@ class SocialAccount(models.Model):
 class Item(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
+
+class UserDetails(models.Model):
+    GENDER_CHOICES = [
+        ('M', 'Чоловік'),
+        ('F', 'Жінка'),
+        ('O', 'Інше'),
+    ]
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    birth_date = models.DateField(null=True, blank=True)
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+
+    def __str__(self):
+        return f"Деталі для {self.user.username}"
