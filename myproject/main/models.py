@@ -2,9 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-
 class Color(models.Model):
-    name = models.CharField(max_length=50, unique=True)  # Назва кольору (напр. Чорний)
+    name = models.CharField(max_length=50, unique=True)
     hex_code = models.CharField(max_length=7, help_text='HTML-код кольору, напр. #000000')
 
     def __str__(self):
@@ -26,17 +25,18 @@ class Category(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=8, decimal_places=2)
-    main_image = models.ImageField(upload_to='products/')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     brand = models.CharField(max_length=100, blank=True)
     color = models.ForeignKey(Color, on_delete=models.SET_NULL, null=True, blank=True)
     available = models.BooleanField(default=True)
     model_height = models.PositiveIntegerField(blank=True, null=True, help_text="Зріст моделі в см")
     model_size = models.CharField(max_length=10, blank=True, help_text="Розмір одягу на моделі (наприклад, S)")
-    care = models.TextField(blank=True)  
-    extra_details = models.TextField(blank=True)
+    care = models.TextField(blank=True, help_text="Про догляд")  
+    extra_details = models.TextField(blank=True, help_text="Про мене")
+
     def __str__(self):
         return self.name
+
 
 
 class ProductImage(models.Model):
