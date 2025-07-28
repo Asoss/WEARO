@@ -44,6 +44,9 @@ def sign_out(request):
     logout(request)
     return redirect('home')
 
+def page404(request):
+    return render(request, 'main/page404.html')
+
 def register(request):
     """Обробка реєстрації нового користувача"""
     form = RegisterForm(request.POST or None)
