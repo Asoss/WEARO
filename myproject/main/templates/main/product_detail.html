@@ -4,51 +4,203 @@
     <meta charset="UTF-8">
     <title>{{ product.name }}</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #fff;
+            margin: 0;
+            padding: 0;
+        }
         .container {
-            max-width: 1000px;
+            display: flex;
+            gap: 40px;
+            padding: 40px;
+            max-width: 1200px;
             margin: auto;
         }
-        .main-image {
-            max-width: 400px;
-            height: auto;
+        .gallery {
+            width: 40%;
         }
-        .gallery img {
-            width: 100px;
-            margin: 5px;
+        .main-image {
+            position: relative;
+        }
+        .main-image img {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        .main-image button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 20px;
+        }
+        #prevBtn {
+            left: 10px;
+        }
+        #nextBtn {
+            right: 10px;
+        }
+
+        .thumbnails {
+            display: flex;
+            justify-content: start;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .thumb {
+            width: 60px;
+            height: 80px;
+            object-fit: cover;
+            border: 2px solid transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.2s, border 0.2s;
+        }
+        .thumb.active {
+            border-color: #333;
+            transform: scale(1.1);
+        }
+
+        .product-info {
+            width: 60%;
+        }
+        .price {
+            color: green;
+            font-size: 24px;
+            margin: 10px 0;
+        }
+        select {
+            padding: 8px;
+            margin: 10px 0;
+            width: 200px;
+        }
+        .add-to-cart {
+            background: green;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .accordion {
+            margin-top: 20px;
+        }
+        .accordion-item {
+            border-top: 1px solid #ccc;
+            padding: 10px 0;
+        }
+        .accordion-item summary {
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .color-box {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 1px solid #000;
+            vertical-align: middle;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>{{ product.name }}</h1>
-        <img class="main-image" src="{{ product.main_image.url }}" alt="{{ product.name }}">
-        <p><strong>Ціна:</strong> {{ product.price }} грн</p>
-        <p><strong>Бренд:</strong> {{ product.brand }}</p>
-        <p><strong>Категорія:</strong> {{ product.category.name }}</p>
-        {% if product.color %}
-            <p><strong>Колір:</strong> {{ product.color.name }}</p>
-        {% endif %}
-        {% if product.model_height %}
-            <p><strong>Зріст моделі:</strong> {{ product.model_height }} см</p>
-        {% endif %}
-        {% if product.model_size %}
-            <p><strong>Розмір моделі:</strong> {{ product.model_size }}</p>
-        {% endif %}
-        {% if product.care %}
-            <p><strong>Догляд:</strong> {{ product.care }}</p>
-        {% endif %}
-        {% if product.extra_details %}
-            <p><strong>Деталі:</strong> {{ product.extra_details }}</p>
-        {% endif %}
-
-        <h3>Галерея:</h3>
-        <div class="gallery">
-            {% for img in product.images.all %}
-        <img src="{{ img.image.url }}" alt="Фото {{ product.name }}" style="width:120px; height:auto; margin: 5px; border: 1px solid #ccc;">
-            {% empty %}
-        <p>Немає додаткових фото.</p>
+<div class="container">
+    <div class="gallery" id="gallery">
+        <div class="main-image">
+            <img id="mainImage" src="{{ product.images.first.image.url }}" alt="Main">
+            <button id="prevBtn">❮</button>
+            <button id="nextBtn">❯</button>
+        </div>
+        <div class="thumbnails">
+            {% for image in product.images.all %}
+                <img src="{{ image.image.url }}" class="thumb {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}">
             {% endfor %}
         </div>
     </div>
+
+    <div class="product-info">
+        <h1>{{ product.name }}</h1>
+        <p class="price">{{ product.price }} грн</p>
+        {% if product.color %}
+            <p><strong>Колір:</strong> {{ product.color.name }}</p>
+        {% endif %}
+
+        <label for="size"><strong>Оберіть розмір:</strong></label><br>
+        <select id="size" name="size">
+            <option disabled selected>Будь ласка, виберіть</option>
+            <option>XS</option>
+            <option>S</option>
+            <option>M</option>
+            <option>L</option>
+            <option>XL</option>
+        </select>
+
+        <br><button class="add-to-cart">ДОДАТИ ДО КОШИКА</button>
+
+        <details class="dropdown">
+            <summary>Бренд</summary>
+            <p>{{ product.brand }}</p>
+        </details>
+
+        <details class="dropdown">
+            <summary>Розмір і посадка</summary>
+            {% if product.model_height %}<p>Зріст моделі: {{ product.model_height }} см</p>{% endif %}
+            {% if product.model_size %}<p>Розмір моделі: {{ product.model_size }}</p>{% endif %}
+        </details>
+
+        <details class="dropdown">
+            <summary>Бережи мене</summary>
+            <p>{{ product.care }}</p>
+        </details>
+
+        <details class="dropdown">
+            <summary>Про мене</summary>
+            <p>{{ product.extra_details }}</p>
+        </details>
+    </div>
+</div>
+
+<script>
+    const thumbs = Array.from(document.querySelectorAll(".thumb"));
+    const mainImage = document.getElementById("mainImage");
+    const nextBtn = document.getElementById("nextBtn");
+    const prevBtn = document.getElementById("prevBtn");
+
+    let currentIndex = 0;
+
+    function showImage(index) {
+        if (index >= 0 && index < thumbs.length) {
+            currentIndex = index;
+            mainImage.src = thumbs[index].src;
+
+            thumbs.forEach(t => t.classList.remove("active"));
+            thumbs[index].classList.add("active");
+        }
+    }
+
+    thumbs.forEach((thumb, i) => {
+        thumb.addEventListener("click", () => showImage(i));
+    });
+
+    nextBtn.addEventListener("click", () => showImage(currentIndex + 1));
+    prevBtn.addEventListener("click", () => showImage(currentIndex - 1));
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight") showImage(currentIndex + 1);
+        if (e.key === "ArrowLeft") showImage(currentIndex - 1);
+    });
+
+    document.getElementById("gallery").addEventListener("wheel", (e) => {
+        if (e.deltaY > 0) showImage(currentIndex + 1);
+        else showImage(currentIndex - 1);
+    });
+</script>
 </body>
 </html>
