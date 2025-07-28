@@ -4,6 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Магазин одягу</title>
+
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
 </head>
 
 <body>
@@ -11,7 +15,7 @@
         {% if user.is_authenticated %}
         Вітаю, {{ user.username }} | <a href="{% url 'sign_out' %}">Вийти</a>
         {% else %}
-        <a href="{% url 'login' %}">Увійти</a> | <a href="{% url 'register' %}">Реєстрація</a>
+        <a href="{% url 'login_email' %}">Увійти</a> | <a href="{% url 'register' %}">Реєстрація</a>
         {% endif %}
     </header>
 
@@ -21,7 +25,7 @@
     </main>
 
     <footer style="text-align: center; margin-top: 30px; padding: 10px; border-top: 1px solid #ccc;">
-        2025 Магазин одягу "Asos"
+        2025 Магазин одягу "Wearo"
     </footer>
 </body>
 

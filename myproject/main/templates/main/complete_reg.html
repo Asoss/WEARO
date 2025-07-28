@@ -1,0 +1,37 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="auth-container">
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="input-wrapper">
+            <input type="date" name="birth_date" id="birth_date" required placeholder=" ">
+            <label for="birth_date">ДАТА НАРОДЖЕННЯ:*</label>
+        </div>
+
+        <p class="warning">Вам має бути 16 років або більше, щоб використовувати WEARO</p>
+
+        <div class="gender-wrapper">
+            <label class="radio-group-label"> ㅤЩО ВАС БІЛЬШЕ ЦІКАВИТЬ:*</label>
+            <div class="radio-group">
+                <label class="radio-option">
+                    <input type="radio" name="gender" value="female" required>
+                    Жіночий одяг
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="gender" value="male">
+                    Чоловічий одяг
+                </label>
+            </div>
+        </div>
+
+        <button type="submit" class="submit-btn">ПРИЄДНАТИСЬ ДО WEARO</button>
+
+        <p class="switch-text">Уже зареєстровані?
+            <a href="{% url 'login_email' %}" class="plain-link">Перейти до входу</a>
+        </p>
+    </form>
+</div>
+{% endblock %}
