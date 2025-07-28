@@ -16,7 +16,7 @@
 </form>
 
 {% if page == "register" %}
-<p>Вже маєте акаунт? <a href="{% url 'login' %}">Увійдіть</a></p>
+<p>Вже маєте акаунт? <a href="{% url 'login_email' %}">Увійдіть</a></p>
 {% else %}
 <p>Ще не маєте акаунту? <a href="{% url 'register' %}">Зареєструйтесь</a></p>
 {% endif %}

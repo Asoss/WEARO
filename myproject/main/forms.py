@@ -31,19 +31,31 @@ class RegisterForm(forms.Form):
     username = forms.CharField(
         label="Ім'я користувача",
         min_length=3,
-        widget=forms.TextInput(attrs={"class": "form-control"})
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "id": "id_username"
+        })
     )
     email = forms.EmailField(
         label="Email",
-        widget=forms.EmailInput(attrs={"class": "form-control"})
+        widget=forms.EmailInput(attrs={
+            "class": "form-control",
+            "id": "id_email"
+        })
     )
     password = forms.CharField(
         label="Пароль",
-        widget=forms.PasswordInput(attrs={"class": "form-control"})
+        widget=forms.PasswordInput(attrs={
+            "class": "form-control",
+            "id": "id_password"
+        })
     )
     password2 = forms.CharField(
         label="Підтвердіть пароль",
-        widget=forms.PasswordInput(attrs={"class": "form-control"})
+        widget=forms.PasswordInput(attrs={
+            "class": "form-control",
+            "id": "id_password2"
+        })
     )
 
     def clean_username(self):
@@ -54,30 +66,27 @@ class RegisterForm(forms.Form):
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
-        if "@" not in email:
-            raise forms.ValidationError("Email має містити @.")
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Користувач з таким email вже існує")
         if not email.endswith((".com", ".net", ".ua", ".org")):
             raise forms.ValidationError("Email повинен закінчуватись на .com, .ua, .net або .org")
         return email
-
-    def clean_password(self):
-        password = self.cleaned_data.get("password")
-        if len(password) < 8:
-            raise forms.ValidationError("Пароль має містити щонайменше 8 символів")
-        if not re.search(r"[A-ZА-Я]", password):
-            raise forms.ValidationError("Пароль має містити хоча б одну велику літеру")
-        if not re.search(r"\d", password):
-            raise forms.ValidationError("Пароль має містити хоча б одну цифру")
-        if not re.search(r"[!@#$%^&*()_+=\-{}[\]:;\"'<>,.?/]", password):
-            raise forms.ValidationError("Пароль має містити хоча б один спеціальний символ")
-        return password
 
     def clean(self):
         cleaned_data = super().clean()
         password = cleaned_data.get("password")
         password2 = cleaned_data.get("password2")
 
+        if password and len(password) < 8:
+            self.add_error("password", "Пароль має містити щонайменше 8 символів")
+        if password and not re.search(r"[A-ZА-Я]", password):
+            self.add_error("password", "Пароль має містити хоча б одну велику літеру")
+        if password and not re.search(r"\d", password):
+            self.add_error("password", "Пароль має містити хоча б одну цифру")
+        if password and not re.search(r"[!@#$%^&*()_+=\-{}[\]:;\"'<>,.?/]", password):
+            self.add_error("password", "Пароль має містити хоча б один спеціальний символ")
+
         if password and password2 and password != password2:
-            raise forms.ValidationError("Паролі не співпадають!")
+            self.add_error("password2", "Паролі не співпадають!")
 
         return cleaned_data

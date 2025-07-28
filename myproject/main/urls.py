@@ -1,6 +1,7 @@
 from django.urls import path
 from django.contrib import admin
 from main import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -15,7 +16,24 @@ urlpatterns = [
     path('payment/', views.payment_methods, name='payment_methods'),
     path('social/', views.social_accounts, name='social_accounts'),
     path('logout/', views.sign_out, name='sign_out'),
-    path('login/', views.user_login, name='login'),
+    path('login/email/', views.email_step, name='login_email'),
+    path('login/password/', views.password_step, name='login_password'),
+    path("reset_password/", views.password_reset_request, name="password_reset"),
+    path(
+        "reset/<uidb64>/<token>/",
+        auth_views.PasswordResetConfirmView.as_view(template_name="main/password_reset_confirm.html"),
+        name="password_reset_confirm"
+    ),
+    path(
+        "reset_password_done/",
+        auth_views.PasswordResetDoneView.as_view(template_name="main/password_reset_done.html"),
+        name="password_reset_done"
+    ),
+    path(
+        "reset_password_complete/",
+        auth_views.PasswordResetCompleteView.as_view(template_name="main/password_reset_complete.html"),
+        name="password_reset_complete"
+    ),
     path('register/', views.register, name='register'),
-
+    path("complete-register/", views.complete_register, name="complete_reg"),
 ]
