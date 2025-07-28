@@ -1,0 +1,51 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="auth-container">
+    <h2>Привiт, друже!</h2>
+    <p>Введіть свою електронну адресу, щоб увійти або приєднатися до</p>
+
+    <div class="benefits">
+        <div class="benefit">
+            <img src="{% static 'icons/discount.png' %}" alt="Знижки">
+            <p>Ексклюзивні знижки</p>
+        </div>
+        <div class="benefit">
+            <img src="{% static 'icons/track.png' %}" alt="Відстеження">
+            <p>Легке відстеження<br>доставок та повернень</p>
+        </div>
+        <div class="benefit">
+            <img src="{% static 'icons/fast.png' %}" alt="Швидко">
+            <p>Швидке<br>оформлення замовлення</p>
+        </div>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="input-wrapper">
+            <input type="email" name="email" id="email" required value="{{ request.POST.email|default_if_none:'' }}">
+            <label for="email">ЕЛЕКТРОННА ПОШТА:*</label>
+
+            {% if error %}
+            <div class="error-text">{{ error }}</div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="submit-btn">ПРОДОВЖИТИ</button>
+    </form>
+
+    <div class="or-divider">
+        <hr><span>або продовжи з</span>
+        <hr>
+    </div>
+
+    <div class="social-login">
+        <div class="social-icon"><img src="{% static 'icons/google.png' %}" alt="Google"></div>
+        <div class="social-icon"><img src="{% static 'icons/apple.png' %}" alt="Apple"></div>
+        <div class="social-icon"><img src="{% static 'icons/facebook.png' %}" alt="Facebook"></div>
+    </div>
+
+    <p class="switch-text">Ще не зареєстровані? <a href="{% url 'register' %}" class="plain-link">Реєстрація</a></p>
+</div>
+{% endblock %}

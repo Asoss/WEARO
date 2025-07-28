@@ -1,8 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.core.mail import send_mail
+from django.urls import reverse
+from django.conf import settings
+from django.template.loader import render_to_string
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from .models import Product, Item
-from .forms import LoginForm, RegisterForm
+from .models import Product
+from .forms import RegisterForm, UserForm
 
 
 def home(request):
@@ -48,26 +55,120 @@ def page404(request):
     return render(request, 'main/page404.html')
 
 def register(request):
-    """Обробка реєстрації нового користувача"""
-    form = RegisterForm(request.POST or None)
-    if request.method == "POST" and form.is_valid():
-        user = User.objects.create_user(
-            username=form.cleaned_data["username"],
-            email=form.cleaned_data["email"],
-            password=form.cleaned_data["password"]
-        )
-        login(request, user)
-        return redirect("home")
-    return render(request, "main/auth.html", {"form": form, "page": "register"})
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        user_form = UserForm(request.POST)
+        if form.is_valid() and user_form.is_valid():
+            user = User.objects.create_user(
+                username=form.cleaned_data["username"],
+                email=form.cleaned_data["email"],
+                password=form.cleaned_data["password"],
+                first_name=user_form.cleaned_data["first_name"],
+                last_name=user_form.cleaned_data["last_name"]
+            )
+            login(request, user)  
+            return redirect("complete_reg") 
+    else:
+        form = RegisterForm()
+        user_form = UserForm()
+    return render(request, "main/register.html", {"form": form, "user_form": user_form})
 
-def user_login(request):
-    """Обробка входу користувача"""
-    form = LoginForm(request.POST or None)
-    if request.method == "POST" and form.is_valid():
-        username = form.cleaned_data["username"]
-        password = form.cleaned_data["password"]
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect("home")
-    return render(request, "main/auth.html", {"form": form, "page": "login"})
+
+
+def email_step(request):
+    error = None
+    next_url = request.GET.get("next", "login_password")
+
+    if request.method == "POST":
+        email = request.POST.get("email").strip().lower()
+        request.session["login_email"] = email
+
+        try:
+            User.objects.get(email=email)
+            return redirect(next_url)
+        except User.DoesNotExist:
+            error = "Упс! Невірна адреса електронної пошти"
+
+    return render(request, "main/login_email.html", {"error": error})
+
+def password_step(request):
+    email = request.session.get("login_email")
+    if not email:
+        return redirect("login_email")
+
+    error = None
+
+    if request.method == "POST":
+        password = request.POST.get("password")
+        try:
+            user = User.objects.get(email=email)
+            auth_user = authenticate(request, username=user.username, password=password)
+            if auth_user:
+                login(request, auth_user)
+                request.session.pop("login_email", None) 
+                return redirect("home")
+            else:
+                error = "Невірний пароль"
+        except User.DoesNotExist:
+            return redirect("login_email")
+
+    return render(request, "main/login_password.html", {"error": error, "email": email})
+
+
+
+def password_reset_request(request):
+    email = request.session.get("login_email")
+
+    if not email:
+        return redirect("login_email")  
+
+    if request.method == "POST":
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return redirect("login_email")
+
+
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
+
+        reset_url = request.build_absolute_uri(
+            reverse("password_reset_confirm", kwargs={"uidb64": uid, "token": token})
+        )
+
+        email_subject = "Скидання паролю"
+        email_body = render_to_string("main/password_reset_email.html", {
+            "user": user,
+            "reset_url": reset_url,
+        })
+
+        send_mail(
+            subject=email_subject,
+            message=email_body,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
+            fail_silently=False,
+        )
+
+        return redirect("password_reset_done") 
+
+    return render(request, "main/password_reset.html", {"email": email})
+
+
+def complete_register(request):
+    if request.method == "POST":
+        birth_date = request.POST.get("birth_date")
+        gender = request.POST.get("gender")
+
+        if birth_date and gender:
+            if request.user.is_authenticated:
+                user_details = request.user.userdetails
+                user_details.birth_date = birth_date
+                user_details.gender = gender
+                user_details.save()
+                return redirect("home")
+        else:
+            error = "Заповніть всі поля"
+            return render(request, "main/complete_reg.html", {"error": error})
+
+    return render(request, "main/complete_reg.html")

@@ -1,0 +1,334 @@
+body,
+.auth-container,
+.benefit p,
+.switch-text {
+    font-family: 'Roboto Flex', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.8px;
+}
+
+.auth-container {
+    max-width: 485px;
+    margin: 10px auto;
+    padding: 45px;
+    border: 5px solid black;
+    font-family: 'Roboto Flex', sans-serif;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-container h2 {
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.auth-container input[type="text"],
+.auth-container input[type="email"],
+.auth-container input[type="password"] {
+    padding: 20px 12px 6px;
+    margin-bottom: 10px;
+    height: auto;
+    width: 100%;
+    border-radius: 5px;
+    border: 0.5px solid grey;
+    font-size: 20px;
+    box-sizing: border-box;
+}
+
+.email-edit {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.edit-btn {
+    padding: 8px 12px;
+    background: white;
+    border: 1px solid black;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.password-field {
+    position: relative;
+}
+
+.password-field .eye-btn {
+    position: absolute;
+    right: 10px;
+    top: 7px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.input-wrapper {
+    position: relative;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 20px 12px 6px;
+    font-size: 20px;
+    border: 0.5px solid black;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+.input-wrapper label {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+    background-color: white;
+    padding: 0 4px;
+    pointer-events: none;
+    transition: 0.2s ease;
+}
+
+.input-wrapper input:focus+label,
+.input-wrapper input:not(:placeholder-shown)+label {
+    top: -8px;
+    font-size: 15px;
+    color: black;
+}
+
+.eye-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.eye-img {
+    width: 20px;
+    height: 20px;
+}
+
+.submit-btn {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 14px 0;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+    width: 100%;
+    border-radius: 3px;
+}
+
+.switch-text {
+    margin-top: 15px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.plain-link {
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.error-text {
+    color: red;
+    font-size: 13px;
+    margin-top: -8px;
+    margin-bottom: 10px;
+}
+
+.benefits {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    margin-bottom: 30px;
+    gap: 10px;
+}
+
+.benefit img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: -5px;
+}
+
+.benefit p {
+    font-size: 16px;
+    line-height: 1.2;
+}
+
+.or-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 25px 0 15px;
+    font-size: 13px;
+    color: #555;
+}
+
+.or-divider hr {
+    flex: 1;
+    height: 1px;
+    background-color: #ccc;
+    border: none;
+}
+
+.or-divider span {
+    margin: 0 10px;
+    white-space: nowrap;
+}
+
+.social-login {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+
+.social-icon img {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.social-icon img:hover {
+    transform: scale(1.3);
+}
+
+/*complete_reg*/
+.auth-container input[type="date"] {
+    width: 100%;
+    padding: 14px 10px;
+    font-size: 20px;
+    border: 0.5px solid black;
+    box-sizing: border-box;
+}
+
+.warning {
+    margin-bottom: 10px;
+    margin-top: -13px;
+}
+
+.input-wrapper input[type="radio"] {
+    margin-right: 8px;
+    transform: scale(1.2);
+    accent-color: black;
+}
+
+.input-wrapper label[for="gender"],
+.input-wrapper>label:not(:has(input)) {
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.input-wrapper .gender-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-left: 10px;
+    margin-top: 8px;
+}
+
+.auth-container p {
+    font-size: 15px;
+    margin-bottom: 25px;
+    color: #666;
+}
+
+.radio-group-label {
+    display: block;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.radio-group {
+    display: flex;
+    gap: 30px;
+}
+
+.radio-option {
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.gender-wrapper {
+    margin-bottom: 30px;
+}
+
+.radio-option input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: black;
+    border-radius: 20px;
+}
+
+
+/*reset_passowrd*/
+
+.reset-password-box {
+    border: 2px solid black;
+    max-width: 460px;
+    margin: 80px auto;
+    padding: 40px;
+    position: relative;
+    text-align: left;
+    font-family: 'Roboto Flex', sans-serif;
+}
+
+.reset-password-box h2 {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.reset-password-box p {
+    font-size: 16px;
+    margin-bottom: 25px;
+    color: black;
+}
+
+.email-edit {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.email-label {
+    color: rgba(0, 0, 0, 0.6);
+    font-weight: 500;
+}
+
+.email-edit input {
+    border: none;
+    border-bottom: 1.5px solid gray;
+    padding: 5px;
+    font-size: 16px;
+    background: transparent;
+    width: 100%;
+}
+
+.edit-btn {
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    padding: 4px 10px;
+    font-size: 14px;
+    text-decoration: none;
+    color: #000;
+    transition: 0.2s ease;
+    background-color: white;
+}
