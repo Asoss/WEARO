@@ -1149,7 +1149,9 @@ class QuerySet(AltersData):
             if not id_list:
                 return {}
             filter_key = "{}__in".format(field_name)
-            batch_size = connections[self.db].features.max_query_params
+            max_params = connections[self.db].features.max_query_params or 0
+            num_fields = len(opts.pk_fields) if field_name == "pk" else 1
+            batch_size = max_params // num_fields
             id_list = tuple(id_list)
             # If the database has a limit on the number of query parameters
             # (e.g. SQLite), retrieve objects in batches if necessary.
@@ -1554,6 +1556,8 @@ class QuerySet(AltersData):
             if len(qs) == 1:
                 return qs[0]
             return qs[0]._combinator_query("union", *qs[1:], all=all)
+        elif not other_qs:
+            return self
         return self._combinator_query("union", *other_qs, all=all)
 
     def intersection(self, *other_qs):
@@ -2715,7 +2719,11 @@ class RelatedPopulator:
             )
 
         self.model_cls = klass_info["model"]
-        self.pk_idx = self.init_list.index(self.model_cls._meta.pk.attname)
+        # A primary key must have all of its constituents not-NULL as
+        # NULL != NULL and thus NULL cannot be referenced through a foreign
+        # relationship. Therefore checking for a single member of the primary
+        # key is enough to determine if the referenced object exists or not.
+        self.pk_idx = self.init_list.index(self.model_cls._meta.pk_fields[0].attname)
         self.related_populators = get_related_populators(klass_info, select, self.db)
         self.local_setter = klass_info["local_setter"]
         self.remote_setter = klass_info["remote_setter"]

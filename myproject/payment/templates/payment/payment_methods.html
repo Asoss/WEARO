@@ -1,0 +1,60 @@
+<form method="POST" enctype="multipart/form-data" style="max-width: 500px; font-family: sans-serif;">
+  {% csrf_token %}
+
+  <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 10px;">PAYMENT METHODS</h2>
+  <p style="margin-bottom: 25px; color: #444;">
+    Choose your preferred way to pay. You can update or manage your payment methods anytime.
+  </p>
+
+  <div style="margin-bottom: 20px;">
+    <label for="name" style="font-weight: 600;">Payment method name:</label>
+    <input
+      type="text"
+      id="name"
+      name="name"
+      value="{{ form.name.value|default_if_none:'' }}"
+      required
+      style="width: 100%; padding: 8px;"
+    >
+  </div>
+
+  <div style="margin-bottom: 20px;">
+    <label for="description" style="font-weight: 600;">Short description:</label>
+    <textarea
+      id="description"
+      name="description"
+      rows="3"
+      style="width: 100%; padding: 8px;"
+    >{{ form.description.value|default_if_none:'' }}</textarea>
+  </div>
+
+  <div style="margin-bottom: 20px;">
+    <label for="logo" style="font-weight: 600;">Upload logo:</label><br>
+    <input type="file" id="logo" name="logo">
+  </div>
+
+  <div style="margin-bottom: 20px;">
+    <input type="checkbox" id="active" name="active" {% if form.active.value %}checked{% endif %}>
+    <label for="active">Show this method as active</label>
+  </div>
+
+  <button
+    type="submit"
+    style="
+      background-color: #222;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    "
+  >SAVE METHOD</button>
+</form>
+
+<a href="{% url 'my_account' %}">← Back to account</a>
+
+{% for field in form %}
+  {% if field.errors %}
+    <div style="color: red;">{{ field.errors }}</div>
+  {% endif %}
+{% endfor %}

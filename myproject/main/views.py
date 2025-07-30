@@ -24,7 +24,7 @@ def my_account(request):
     return render(request, 'main/my_account.html')
 
 def my_orders(request):
-    return render(request, 'main/my_orders.html')
+    return render(request, 'order/my_orders.html')
 
 def my_returns(request):
     return render(request, 'main/my_returns.html')
@@ -39,7 +39,7 @@ def address_book(request):
     return render(request, 'main/address_book.html')
 
 def payment_methods(request):
-    return render(request, 'main/payment_methods.html')
+    return render(request, 'payment/payment_methods.html')
 
 def social_accounts(request):
     return render(request, 'main/social_accounts.html')
@@ -172,3 +172,20 @@ def complete_register(request):
             return render(request, "main/complete_reg.html", {"error": error})
 
     return render(request, "main/complete_reg.html")
+def cart_view(request):
+    cart_ids = request.session.get('cart', [])
+    products = Product.objects.filter(id__in=cart_ids)
+    return render(request, 'cart/cart.html', {'products': products})
+def add_to_cart(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
+    cart = request.session.get('cart', [])
+    cart.append(product.id)
+    request.session['cart'] = cart
+
+    return redirect('cart')
+def women_view(request):
+    return render(request, 'women/women.html')
+
+def men_view(request):
+    return render(request, 'men/men.html')
