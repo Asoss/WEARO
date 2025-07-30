@@ -1,0 +1,66 @@
+<div class="cart-container">
+  <div class="cart-icon">🛒</div>
+  <div class="cart-title">Your cart is empty</div>
+  <div class="cart-text">
+    Start adding items to your cart. <br>
+    When you're ready, we’ll take you through checkout. Easy.
+  </div>
+    <a href="{% url 'home' %}" class="cart-button">START SHOPPING</a>
+</div>
+
+<div class="footer-icons">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook" style="height:28px;">
+</div>
+
+<style>
+  .cart-container {
+    padding: 100px 20px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
+
+  .cart-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+  }
+
+  .cart-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .cart-text {
+    color: #444;
+    font-size: 16px;
+    margin-bottom: 30px;
+  }
+
+.cart-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #000;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+.cart-button:hover {
+    background-color: #333;
+}
+
+  .footer-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    padding: 40px 20px;
+    border-top: 1px solid #eee;
+  }
+
+  .footer-icons img {
+    height: 30px;
+  }
+</style>
