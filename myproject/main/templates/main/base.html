@@ -8,16 +8,38 @@
     {% load static %}
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
 </head>
 
 <body>
-    <header style="text-align: right; padding: 10px; background: #f5f5f5;">
-        {% if user.is_authenticated %}
-        Вітаю, {{ user.username }} | <a href="{% url 'sign_out' %}">Вийти</a>
-        {% else %}
-        <a href="{% url 'login_email' %}">Увійти</a> | <a href="{% url 'register' %}">Реєстрація</a>
-        {% endif %}
+    <header style="padding: 10px; background: #f5f5f5;">
+        <div class="header-inner">
+            <div class="search-wrapper">
+                <form method="GET" action="{% url 'product_search' %}" class="search-form" onsubmit="saveSearchTerm()">
+                    <input type="text" name="q" placeholder="Пошук товарів за назвою..." class="search-input"
+                        id="searchInput" autocomplete="off" onfocus="showOverlay()" oninput="updateRecentList()">
+                    <button type="button" class="clear-btn" onclick="clearSearch()">×</button>
+                    <button type="submit" class="search-icon" id="searchButton">
+                        <img src="{% static 'icons/search.jpg' %}" alt="search" style="width: 14px;">
+                    </button>
+                </form>
+                <div class="recent-searches" id="recentSearches">
+                    <h4>RECENT SEARCHES</h4>
+                    <ul id="searchList"></ul>
+                    <a href="#" onclick="clearRecentSearches()">CLEAR</a>
+                </div>
+            </div>
+            <div class="authorization-container">
+                {% if user.is_authenticated %}
+                Вітаю, {{ user.username }} | <a href="{% url 'sign_out' %}">Вийти</a>
+                {% else %}
+                <a href="{% url 'login_email' %}">Увійти</a> | <a href="{% url 'register' %}">Реєстрація</a>
+                {% endif %}
+            </div>
+        </div>
     </header>
+    <div class="search-overlay" id="searchOverlay" onclick="hideOverlay()"></div>
+
 
     <main style="padding: 20px;">
         {% block content %}
@@ -27,6 +49,7 @@
     <footer style="text-align: center; margin-top: 30px; padding: 10px; border-top: 1px solid #ccc;">
         2025 Магазин одягу "Wearo"
     </footer>
+    <script src="{% static 'js/search.js' %}"></script>
 </body>
 
 </html>

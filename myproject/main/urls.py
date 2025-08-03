@@ -39,4 +39,5 @@ urlpatterns = [
     path("complete-register/", views.complete_register, name="complete_reg"),
     path('cart/', views.cart_view, name='cart'),
     path('cart/add/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+    path('search/', views.search_results, name='product_search'),
 ]
