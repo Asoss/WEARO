@@ -108,6 +108,29 @@
             border: 1px solid #000;
             vertical-align: middle;
         }
+
+        .recently-viewed {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 40px;
+        }
+        .recently-viewed h3 {
+            margin-bottom: 20px;
+        }
+        .recent-products {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .recent-product {
+            width: 160px;
+            text-align: center;
+        }
+        .recent-product img {
+            width: 100%;
+            height: auto;
+            border: 1px solid #ccc;
+        }
     </style>
 </head>
 <body>
@@ -164,6 +187,24 @@
             <summary>Про мене</summary>
             <p>{{ product.extra_details }}</p>
         </details>
+    </div>
+</div>
+
+<div class="recently-viewed">
+    <h3>Переглянуті товари</h3>
+    <div class="recent-products">
+        {% for item in recently_viewed %}
+        <div class="recent-product">
+            <a href="{% url 'product_detail' item.pk %}">
+                {% if item.images.first %}
+                    <img src="{{ item.images.first.image.url }}" alt="{{ item.name }}">
+                {% else %}
+                    <p>Немає фото</p>
+                {% endif %}
+                <p>{{ item.name }}</p>
+            </a>
+        </div>
+        {% endfor %}
     </div>
 </div>
 

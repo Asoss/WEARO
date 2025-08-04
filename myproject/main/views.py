@@ -18,7 +18,24 @@ def home(request):
 
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    return render(request, 'main/product_detail.html', {'product': product})
+
+    # Ініціалізуємо список у сесії
+    viewed = request.session.get('viewed_products', [])
+    if pk not in viewed:
+        viewed.insert(0, pk)
+    # Обмежуємо до останніх 5
+    viewed = viewed[:5]
+    request.session['viewed_products'] = viewed
+
+    # Вибираємо продукти (без повторного імпорту Product!)
+    recently_viewed = Product.objects.filter(pk__in=viewed).exclude(pk=pk)
+
+    return render(request, 'main/product_detail.html', {
+        'product': product,
+        'recently_viewed': recently_viewed
+    })
+
+
 
 def my_account(request):
     return render(request, 'main/my_account.html')
