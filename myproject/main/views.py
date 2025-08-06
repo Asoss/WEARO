@@ -189,6 +189,7 @@ def complete_register(request):
             return render(request, "main/complete_reg.html", {"error": error})
 
     return render(request, "main/complete_reg.html")
+
 def cart_view(request):
     cart_ids = request.session.get('cart', [])
     products = Product.objects.filter(id__in=cart_ids)
@@ -206,3 +207,8 @@ def women_view(request):
 
 def men_view(request):
     return render(request, 'men/men.html')
+
+def search_results(request):
+    query = request.GET.get('q')
+    products = Product.objects.filter(name__icontains=query) if query else []
+    return render(request, 'main/product_search.html', {'products': products})

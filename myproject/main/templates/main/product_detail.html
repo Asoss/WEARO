@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="uk">
+
 <head>
     <meta charset="UTF-8">
     <title>{{ product.name }}</title>
@@ -10,6 +11,7 @@
             margin: 0;
             padding: 0;
         }
+
         .container {
             display: flex;
             gap: 40px;
@@ -17,17 +19,21 @@
             max-width: 1200px;
             margin: auto;
         }
+
         .gallery {
             width: 40%;
         }
+
         .main-image {
             position: relative;
         }
+
         .main-image img {
             width: 100%;
             border: 1px solid #ccc;
             border-radius: 8px;
         }
+
         .main-image button {
             position: absolute;
             top: 50%;
@@ -40,9 +46,11 @@
             z-index: 10;
             font-size: 20px;
         }
+
         #prevBtn {
             left: 10px;
         }
+
         #nextBtn {
             right: 10px;
         }
@@ -54,6 +62,7 @@
             margin-top: 10px;
             flex-wrap: wrap;
         }
+
         .thumb {
             width: 60px;
             height: 80px;
@@ -63,6 +72,7 @@
             cursor: pointer;
             transition: transform 0.2s, border 0.2s;
         }
+
         .thumb.active {
             border-color: #333;
             transform: scale(1.1);
@@ -71,16 +81,19 @@
         .product-info {
             width: 60%;
         }
+
         .price {
             color: green;
             font-size: 24px;
             margin: 10px 0;
         }
+
         select {
             padding: 8px;
             margin: 10px 0;
             width: 200px;
         }
+
         .add-to-cart {
             background: green;
             color: white;
@@ -93,14 +106,17 @@
         .accordion {
             margin-top: 20px;
         }
+
         .accordion-item {
             border-top: 1px solid #ccc;
             padding: 10px 0;
         }
+
         .accordion-item summary {
             cursor: pointer;
             font-weight: bold;
         }
+
         .color-box {
             display: inline-block;
             width: 20px;
@@ -133,55 +149,60 @@
         }
     </style>
 </head>
+
 <body>
-<div class="container">
-    <div class="gallery" id="gallery">
-        <div class="main-image">
-            <img id="mainImage" src="{{ product.images.first.image.url }}" alt="Main">
-            <button id="prevBtn">❮</button>
-            <button id="nextBtn">❯</button>
+    <div class="container">
+        <div class="gallery" id="gallery">
+            <div class="main-image">
+                <img id="mainImage" src="{{ product.images.first.image.url }}" alt="Main">
+                <button id="prevBtn">❮</button>
+                <button id="nextBtn">❯</button>
+            </div>
+            <div class="thumbnails">
+                {% for image in product.images.all %}
+                <img src="{{ image.image.url }}" class="thumb {% if forloop.first %}active{% endif %}"
+                    data-index="{{ forloop.counter0 }}">
+                {% endfor %}
+            </div>
         </div>
-        <div class="thumbnails">
-            {% for image in product.images.all %}
-                <img src="{{ image.image.url }}" class="thumb {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}">
-            {% endfor %}
-        </div>
-    </div>
 
-    <div class="product-info">
-        <h1>{{ product.name }}</h1>
-        <p class="price">{{ product.price }} грн</p>
-        {% if product.color %}
+        <div class="product-info">
+            <h1>{{ product.name }}</h1>
+            <p class="price">{{ product.price }} грн</p>
+            {% if product.color %}
             <p><strong>Колір:</strong> {{ product.color.name }}</p>
-        {% endif %}
+            {% endif %}
 
-        <label for="size"><strong>Оберіть розмір:</strong></label><br>
-        <select id="size" name="size">
-            <option disabled selected>Будь ласка, виберіть</option>
-            <option>XS</option>
-            <option>S</option>
-            <option>M</option>
-            <option>L</option>
-            <option>XL</option>
-        </select>
+            <label for="size"><strong>Оберіть розмір:</strong></label><br>
+            <select id="size" name="size">
+                <option disabled selected>Будь ласка, виберіть</option>
+                <option>XS</option>
+                <option>S</option>
+                <option>M</option>
+                <option>L</option>
+                <option>XL</option>
+            </select>
 
-        <br><button class="add-to-cart" onclick="window.location.href='{% url 'cart' %}'">ДОДАТИ ДО КОШИКА</button>
+            <form action="{% url 'add_to_cart' product.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="add-to-cart">ДОДАТИ ДО КОШИКА</button>
+            </form>
 
-        <details class="dropdown">
-            <summary>Бренд</summary>
-            <p>{{ product.brand }}</p>
-        </details>
+            <details class="dropdown">
+                <summary>Бренд</summary>
+                <p>{{ product.brand }}</p>
+            </details>
 
-        <details class="dropdown">
-            <summary>Розмір і посадка</summary>
-            {% if product.model_height %}<p>Зріст моделі: {{ product.model_height }} см</p>{% endif %}
-            {% if product.model_size %}<p>Розмір моделі: {{ product.model_size }}</p>{% endif %}
-        </details>
+            <details class="dropdown">
+                <summary>Розмір і посадка</summary>
+                {% if product.model_height %}<p>Зріст моделі: {{ product.model_height }} см</p>{% endif %}
+                {% if product.model_size %}<p>Розмір моделі: {{ product.model_size }}</p>{% endif %}
+            </details>
 
-        <details class="dropdown">
-            <summary>Бережи мене</summary>
-            <p>{{ product.care }}</p>
-        </details>
+            <details class="dropdown">
+                <summary>Бережи мене</summary>
+                <p>{{ product.care }}</p>
+            </details>
 
         <details class="dropdown">
             <summary>Про мене</summary>
@@ -208,40 +229,41 @@
     </div>
 </div>
 
-<script>
-    const thumbs = Array.from(document.querySelectorAll(".thumb"));
-    const mainImage = document.getElementById("mainImage");
-    const nextBtn = document.getElementById("nextBtn");
-    const prevBtn = document.getElementById("prevBtn");
+    <script>
+        const thumbs = Array.from(document.querySelectorAll(".thumb"));
+        const mainImage = document.getElementById("mainImage");
+        const nextBtn = document.getElementById("nextBtn");
+        const prevBtn = document.getElementById("prevBtn");
 
-    let currentIndex = 0;
+        let currentIndex = 0;
 
-    function showImage(index) {
-        if (index >= 0 && index < thumbs.length) {
-            currentIndex = index;
-            mainImage.src = thumbs[index].src;
+        function showImage(index) {
+            if (index >= 0 && index < thumbs.length) {
+                currentIndex = index;
+                mainImage.src = thumbs[index].src;
 
-            thumbs.forEach(t => t.classList.remove("active"));
-            thumbs[index].classList.add("active");
+                thumbs.forEach(t => t.classList.remove("active"));
+                thumbs[index].classList.add("active");
+            }
         }
-    }
 
-    thumbs.forEach((thumb, i) => {
-        thumb.addEventListener("click", () => showImage(i));
-    });
+        thumbs.forEach((thumb, i) => {
+            thumb.addEventListener("click", () => showImage(i));
+        });
 
-    nextBtn.addEventListener("click", () => showImage(currentIndex + 1));
-    prevBtn.addEventListener("click", () => showImage(currentIndex - 1));
+        nextBtn.addEventListener("click", () => showImage(currentIndex + 1));
+        prevBtn.addEventListener("click", () => showImage(currentIndex - 1));
 
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowRight") showImage(currentIndex + 1);
-        if (e.key === "ArrowLeft") showImage(currentIndex - 1);
-    });
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowRight") showImage(currentIndex + 1);
+            if (e.key === "ArrowLeft") showImage(currentIndex - 1);
+        });
 
-    document.getElementById("gallery").addEventListener("wheel", (e) => {
-        if (e.deltaY > 0) showImage(currentIndex + 1);
-        else showImage(currentIndex - 1);
-    });
-</script>
+        document.getElementById("gallery").addEventListener("wheel", (e) => {
+            if (e.deltaY > 0) showImage(currentIndex + 1);
+            else showImage(currentIndex - 1);
+        });
+    </script>
 </body>
+
 </html>

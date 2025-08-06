@@ -1,32 +1,21 @@
 {% extends "main/base.html" %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
 
 {% block content %}
-<style>
-    .product {
-        display: inline-block;
-        width: 220px;
-        margin: 15px;
-        padding: 10px;
-        border: 1px solid #ccc;
-        text-align: center;
-    }
 
-    .product img {
-        max-width: 200px;
-        height: auto;
-    }
-</style>
+
 
 <h1>Товари</h1>
 <div style="display: flex; flex-wrap: wrap; justify-content: center;">
     {% for product in products %}
     <div class="product">
         {% with product.images.first as first_image %}
-            {% if first_image %}
-                <img src="{{ first_image.image.url }}" alt="{{ product.name }}">
-            {% else %}
-                <p>Немає фото</p>
-            {% endif %}
+        {% if first_image %}
+        <img src="{{ first_image.image.url }}" alt="{{ product.name }}">
+        {% else %}
+        <p>Немає фото</p>
+        {% endif %}
         {% endwith %}
         <h3>{{ product.name }}</h3>
         <p>{{ product.price }} грн</p>
@@ -75,4 +64,5 @@
     border-radius: 5px;
     font-weight: bold;
 ">Men</a>
+
 {% endblock %}
