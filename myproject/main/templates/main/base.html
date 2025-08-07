@@ -16,17 +16,18 @@
         <div class="header-inner">
             <div class="search-wrapper">
                 <form method="GET" action="{% url 'product_search' %}" class="search-form" onsubmit="saveSearchTerm()">
-                    <input type="text" name="q" placeholder="Пошук товарів за назвою..." class="search-input"
-                        id="searchInput" autocomplete="off" onfocus="showOverlay()" oninput="updateRecentList()">
+                    <input type="text" name="q" placeholder="Пошук товарів за назвою або брендом..."
+                        class="search-input" id="searchInput" autocomplete="off" onfocus="showOverlay()"
+                        oninput="updateRecentList()">
                     <button type="button" class="clear-btn" onclick="clearSearch()">×</button>
                     <button type="submit" class="search-icon" id="searchButton">
                         <img src="{% static 'icons/search.jpg' %}" alt="search" style="width: 14px;">
                     </button>
                 </form>
                 <div class="recent-searches" id="recentSearches">
-                    <h4>RECENT SEARCHES</h4>
+                    <h4>ОСТАННІ ПОШУКИ</h4>
                     <ul id="searchList"></ul>
-                    <a href="#" onclick="clearRecentSearches()">CLEAR</a>
+                    <a href="#" onclick="clearRecentSearches()">ОЧИСТИТИ</a>
                 </div>
             </div>
             <div class="authorization-container">
