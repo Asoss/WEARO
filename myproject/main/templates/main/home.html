@@ -6,63 +6,9 @@
 
 
 
-<h1>Товари</h1>
-<div style="display: flex; flex-wrap: wrap; justify-content: center;">
-    {% for product in products %}
-    <div class="product">
-        {% with product.images.first as first_image %}
-        {% if first_image %}
-        <img src="{{ first_image.image.url }}" alt="{{ product.name }}">
-        {% else %}
-        <p>Немає фото</p>
-        {% endif %}
-        {% endwith %}
-        <h3>{{ product.name }}</h3>
-        <p>{{ product.price }} грн</p>
-        <a href="{% url 'product_detail' product.pk %}">Детальніше</a>
-    </div>
-    {% empty %}
-    <p>Немає товарів</p>
-    {% endfor %}
+<div style="text-align:center; margin-top: 30px;">
+    <a href="{% url 'women' %}" style="padding: 15px 30px; background-color: pink; color: white; border-radius: 8px; text-decoration: none; margin-right: 20px;">Жіноче</a>
+    <a href="{% url 'men' %}" style="padding: 15px 30px; background-color: lightblue; color: white; border-radius: 8px; text-decoration: none;">Чоловіче</a>
 </div>
-
-<div style="text-align: center; margin-top: 20px;">
-    <a href="{% url 'my_account' %}" style="
-        display: inline-block;
-        padding: 10px 20px;
-        background-color: black;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-        font-weight: bold;
-    ">Перейти в мій акаунт</a>
-</div>
-<a href="{% url 'cart' %}" style="
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: black;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-">Cart</a>
-<a href="{% url 'women' %}" style="
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: black;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-">Women</a>
-<a href="{% url 'men' %}" style="
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: black;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-">Men</a>
 
 {% endblock %}
