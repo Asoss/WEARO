@@ -1,0 +1,23 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+<h1 style="text-align:center;">{{ title }}</h1>
+<div style="display: flex; flex-wrap: wrap; justify-content: center;">
+    {% for product in products %}
+    <div class="product">
+        {% with product.images.first as first_image %}
+        {% if first_image %}
+        <img src="{{ first_image.image.url }}" alt="{{ product.name }}" style="max-width:200px;">
+        {% else %}
+        <p>Немає фото</p>
+        {% endif %}
+        {% endwith %}
+        <h3>{{ product.name }}</h3>
+        <p>{{ product.price }} грн</p>
+        <a href="{% url 'product_detail' product.pk %}">Детальніше</a>
+    </div>
+    {% empty %}
+    <p>Немає товарів</p>
+    {% endfor %}
+</div>
+{% endblock %}

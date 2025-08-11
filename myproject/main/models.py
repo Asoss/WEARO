@@ -23,6 +23,10 @@ class Category(models.Model):
         return f"{self.parent.name + ' > ' if self.parent else ''}{self.name}"
 
 class Product(models.Model):
+    GENDER_CHOICES = [
+        (0, 'Жіноче'),
+        (1, 'Чоловіче'),
+    ]
     name = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -33,6 +37,7 @@ class Product(models.Model):
     model_size = models.CharField(max_length=10, blank=True, help_text="Розмір одягу на моделі (наприклад, S)")
     care = models.TextField(blank=True, help_text="Про догляд")  
     extra_details = models.TextField(blank=True, help_text="Про мене")
+    gender = models.IntegerField(choices=GENDER_CHOICES, default=0)
 
     def __str__(self):
         return self.name
