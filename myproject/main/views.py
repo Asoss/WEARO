@@ -217,6 +217,40 @@ def men_view(request):
     return render(request, 'men/men.html')
 
 def search_results(request):
-    query = request.GET.get('q')
-    products = Product.objects.filter(name__icontains=query) if query else []
-    return render(request, 'main/product_search.html', {'products': products})
+    query = request.GET.get('q', '')
+    brand_filter = request.GET.get('brand', '')
+    size_filter = request.GET.get('size', '')
+    price_min = request.GET.get('price_min')
+    price_max = request.GET.get('price_max')
+
+    products = Product.objects.all()
+
+    if query:
+        products = products.filter(name__icontains=query)
+
+    if brand_filter:
+        products = products.filter(brand=brand_filter)
+
+    if size_filter:
+        products = products.filter(model_size=size_filter)
+
+    if price_min:
+        products = products.filter(price__gte=price_min)
+
+    if price_max:
+        products = products.filter(price__lte=price_max)
+
+    brands = ['Nike', 'Adidas', 'Puma', 'Zara', 'H&M', "Levi's", 'ONLY & SONS', 'COLLUSION', 'New Balance', 'Converse']
+    sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL','W']
+
+    context = {
+        'products': products,
+        'brands': brands,
+        'sizes': sizes,
+        'query': query,  
+    }
+
+    return render(request, 'main/product_search.html', context)
+
+
+    
