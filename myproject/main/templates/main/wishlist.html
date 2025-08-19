@@ -1,0 +1,36 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="wishlist-container">
+    <h2>
+        Мої збережені речі
+        <span id="wishlist-count" style="font-size: 16px; color: gray;">({{ wishlist_count }})</span>
+    </h2>
+
+    {% if saved_items %}
+    <div class="product-grid">
+        {% for item in saved_items %}
+        {% with item.product as product %}
+        <div class="product-card" data-product-id="{{ product.id }}">
+
+            {% with product.images.first as first_image %}
+            {% if first_image %}
+            <img src="{{ first_image.image.url }}" alt="{{ product.name }}" style="max-width:200px;">
+            {% else %}
+            <p>Немає фото</p>
+            {% endif %}
+            {% endwith %}
+
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.price }} грн</p>
+            <a href="{% url 'product_detail' product.id %}">Детальніше</a>
+        </div>
+        {% endwith %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>У вас ще немає збережених речей.</p>
+    {% endif %}
+</div>
+{% endblock %}

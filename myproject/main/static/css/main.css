@@ -152,3 +152,15 @@
     max-width: 1200px;
     margin: 0 auto;
 }
+
+
+.wishlist-btn {
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+    margin-right: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.2s ease;
+}

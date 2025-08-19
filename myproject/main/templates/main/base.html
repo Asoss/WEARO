@@ -32,6 +32,16 @@
             </div>
             <div class="authorization-container">
                 {% if user.is_authenticated %}
+                <a href="{% url 'wishlist' %}" class="wishlist-btn">
+                    <img src="{% static 'icons/heart.png' %}" alt="Wishlist" style="width:20px; vertical-align:middle;">
+                </a>
+                {% else %}
+                <a href="{% url 'login_email' %}?next={% url 'login_password' %}" class="wishlist-btn">
+                    <img src="{% static 'icons/heart.png' %}" alt="Wishlist" style="width:20px; vertical-align:middle;">
+                </a>
+                {% endif %}
+                |
+                {% if user.is_authenticated %}
                 Вітаю, {{ user.username }} | <a href="{% url 'sign_out' %}">Вийти</a>
                 {% else %}
                 <a href="{% url 'login_email' %}">Увійти</a> | <a href="{% url 'register' %}">Реєстрація</a>
@@ -51,6 +61,7 @@
         2025 Магазин одягу "Wearo"
     </footer>
     <script src="{% static 'js/search.js' %}"></script>
+    <script src="{% static 'js/wishlist.js' %}"></script>
 </body>
 
 </html>

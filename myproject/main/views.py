@@ -8,8 +8,11 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from .models import Product
+from .models import Product, Wishlist
 from .forms import RegisterForm, UserForm
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 
 
 def home(request):
@@ -220,3 +223,47 @@ def search_results(request):
     query = request.GET.get('q')
     products = Product.objects.filter(name__icontains=query) if query else []
     return render(request, 'main/product_search.html', {'products': products})
+
+def wishlist_view(request):
+    if not request.user.is_authenticated:
+        return render(request, 'main/wishlist_guest.html', {
+            'title': 'Мої збережені речі'
+        })
+
+    saved_items = Wishlist.objects.filter(user=request.user).select_related('product')
+    count = saved_items.count()
+
+    return render(request, 'main/wishlist.html', {
+        'title': 'Мої збережені речі',
+        'saved_items': saved_items,
+        'wishlist_count': count
+    })
+
+@login_required
+def toggle_wishlist(request, product_id):
+    print(f"Toggle wishlist для товару: {product_id}")  # для дебагу
+    
+    try:
+        product = Product.objects.get(id=product_id)
+        wishlist_item, created = Wishlist.objects.get_or_create(user=request.user, product=product)
+
+        if not created:
+            wishlist_item.delete()
+            print(f"Товар {product_id} видалено з wishlist")  # для дебагу
+            return JsonResponse({'status': 'removed'})
+        else:
+            print(f"Товар {product_id} додано в wishlist")  # для дебагу
+            return JsonResponse({'status': 'added'})
+    except Product.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
+
+# @login_required
+# @require_POST
+# def remove_from_wishlist(request, item_id):
+#     try:
+#         item = Wishlist.objects.get(id=item_id, user=request.user)
+#         item.delete()
+#         count = Wishlist.objects.filter(user=request.user).count()
+#         return JsonResponse({"status": "removed", "count": count, "product_id": item.product.id})
+#     except Wishlist.DoesNotExist:
+#         return JsonResponse({"status": "error"}, status=404)

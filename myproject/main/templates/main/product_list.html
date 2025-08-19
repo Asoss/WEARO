@@ -1,10 +1,29 @@
 {% extends "main/base.html" %}
+{% load static %}
 
 {% block content %}
 <h1 style="text-align:center;">{{ title }}</h1>
+
 <div style="display: flex; flex-wrap: wrap; justify-content: center;">
     {% for product in products %}
-    <div class="product">
+    <div class="product" style="position:relative; margin:10px; border:1px solid #ddd; padding:10px;">
+
+        {% if user.is_authenticated %}
+        {% if product.id in wishlist_products %}
+        <img src="{% static 'icons/heart_filled.png' %}" class="wishlist-heart active"
+            data-product-id="{{ product.id }}"
+            style="position:absolute; top:10px; right:10px; width:24px; height:24px; cursor:pointer;">
+        {% else %}
+        <img src="{% static 'icons/heart.png' %}" class="wishlist-heart" data-product-id="{{ product.id }}"
+            style="position:absolute; top:10px; right:10px; width:24px; height:24px; cursor:pointer;">
+        {% endif %}
+        {% else %}
+        <a href="{% url 'login_email' %}?next={% url 'wishlist' %}">
+            <img src="{% static 'icons/heart.png' %}"
+                style="position:absolute; top:10px; right:10px; width:24px; height:24px;">
+        </a>
+        {% endif %}
+
         {% with product.images.first as first_image %}
         {% if first_image %}
         <img src="{{ first_image.image.url }}" alt="{{ product.name }}" style="max-width:200px;">
@@ -12,6 +31,7 @@
         <p>Немає фото</p>
         {% endif %}
         {% endwith %}
+
         <h3>{{ product.name }}</h3>
         <p>{{ product.price }} грн</p>
         <a href="{% url 'product_detail' product.pk %}">Детальніше</a>
@@ -20,4 +40,56 @@
     <p>Немає товарів</p>
     {% endfor %}
 </div>
+
+<script>
+    alert("JavaScript працює!");
+
+    document.addEventListener("DOMContentLoaded", function () {
+        console.log("DOM завантажився");
+
+        const hearts = document.querySelectorAll(".wishlist-heart");
+        console.log("Знайдено сердечок:", hearts.length);
+
+        hearts.forEach(function (heart) {
+            heart.addEventListener("click", function () {
+                const productId = this.getAttribute("data-product-id");
+                console.log("Клікнули на товар:", productId);
+
+                fetch(`/wishlist/toggle/${productId}/`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken"),
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Відповідь сервера:", data);
+                        if (data.status === "added") {
+                            this.src = this.src.replace("heart.png", "heart_filled.png");
+                        } else if (data.status === "removed") {
+                            this.src = this.src.replace("heart_filled.png", "heart.png");
+                        }
+                    });
+            });
+        });
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== "") {
+                const cookies = document.cookie.split(";");
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    });
+</script>
+
+<!-- <script src="{% static 'js/wishlist.js' %}"></script> -->
 {% endblock %}

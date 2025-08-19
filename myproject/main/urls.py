@@ -42,4 +42,8 @@ urlpatterns = [
     path('cart/', views.cart_view, name='cart'),
     path('cart/add/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
     path('search/', views.search_results, name='product_search'),
+    path('wishlist/', views.wishlist_view, name='wishlist'),
+    path('wishlist-guest/', views.wishlist_view, name='wishlist_guest'),
+    path('wishlist/toggle/<int:product_id>/', views.toggle_wishlist, name='toggle_wishlist'),
+    # path('wishlist/remove/<int:item_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
 ]
