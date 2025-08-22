@@ -12,12 +12,27 @@ from .models import Product
 from .forms import RegisterForm, UserForm
 import random
 
+from .models import Product, Category
+import random
 
 def home(request):
-    products = list(Product.objects.filter(available=True))
-    random.shuffle(products)
-    display_products = products[:5] 
-    return render(request, 'main/home.html', {'products': display_products})
+    products = Product.objects.filter(available=True)
+    categories = Category.objects.all()
+
+    category_filter = request.GET.get('category')
+    if category_filter:
+        products = products.filter(category__id=category_filter)
+
+    if not category_filter:
+        products = list(products)
+        random.shuffle(products)
+        products = products[:5]
+
+    return render(request, 'main/home.html', {
+        'products': products,
+        'categories': categories,
+        'selected_category': category_filter
+    })
 
 def women(request):
     products = Product.objects.filter(gender=False, available=True)

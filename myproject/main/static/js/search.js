@@ -39,10 +39,12 @@ function updateRecentList() {
         li.onclick = () => {
             document.getElementById('searchInput').value = term;
             toggleIcons();
+            document.getElementById('filter-form').submit();
         };
         list.appendChild(li);
     });
 }
+
 
 function clearRecentSearches() {
     localStorage.removeItem('recentSearches');

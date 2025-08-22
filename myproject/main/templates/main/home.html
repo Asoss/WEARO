@@ -6,9 +6,19 @@
 
 
 
-<div style="text-align:center; margin-top: 30px;">
-    <a href="{% url 'women' %}" style="padding: 15px 30px; background-color: pink; color: white; border-radius: 8px; text-decoration: none; margin-right: 20px;">Жіноче</a>
-    <a href="{% url 'men' %}" style="padding: 15px 30px; background-color: lightblue; color: white; border-radius: 8px; text-decoration: none;">Чоловіче</a>
+<div class="gender-bar">
+    <a href="{% url 'women' %}" class="gender-btn women">Жіноче</a>
+    <a href="{% url 'men' %}" class="gender-btn men">Чоловіче</a>
+</div>
+
+
+<div class="category-bar">
+    {% for category in categories %}
+        <a href="?category={{ category.id }}" 
+           class="cat-link {% if selected_category == category.id|stringformat:'s' %}active{% endif %}">
+            {{ category.name }}
+        </a>
+    {% endfor %}
 </div>
 
  <div class="gallery-grid">
@@ -75,6 +85,67 @@ body, main {
   margin: 5px 0 0;
 }
 
+.gender-bar {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
 
+.gender-btn {
+    padding: 14px 28px;
+    border-radius: 30px;
+    text-decoration: none;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 12px;
+    display: inline-block;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+.gender-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+}
+
+.gender-btn.women {
+    background: linear-gradient(135deg, #ff99cc, #ff66b2);
+}
+
+.gender-btn.men {
+    background: linear-gradient(135deg, #66b3ff, #3399ff);
+}
+
+.category-bar {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin: 15px 0 25px 0;
+    flex-wrap: wrap;
+}
+
+.cat-link {
+    font-size: 14px;
+    text-decoration: none;
+    color: #333;
+    background: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 6px 14px;
+    transition: all 0.3s;
+}
+
+.cat-link:hover {
+    background: #ffe6f0;
+    color: #d63384;
+    border-color: #d63384;
+}
+
+.cat-link.active {
+    background: #d63384;
+    color: #fff;
+    border-color: #d63384;
+}
 </style>
 {% endblock %}

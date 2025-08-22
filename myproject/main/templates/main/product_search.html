@@ -6,7 +6,10 @@
 
 <h1>Ваш результат за пошуком "{{ query }}"</h1>
 
-<form id="filter-form" method="GET" action="{% url 'product_search' %}" class="search-form" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+<form id="filter-form" method="GET" action="{% url 'product_search' %}" 
+      class="search-form" onsubmit="saveSearchTerm()"
+      style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+
     <!-- Вибір бренду -->
     <select name="brand" class="brand-select" style="padding: 5px;">
         <option value="">Всі бренди</option>
@@ -28,10 +31,15 @@
     </select>
 
     <!-- Мінімальна ціна -->
-    <input type="number" name="price_min" placeholder="Мін. ціна" style="padding: 5px;" value="{{ request.GET.price_min }}">
+    <input type="number" name="price_min" placeholder="Мін. ціна" style="padding: 5px;"
+           value="{{ request.GET.price_min }}">
 
     <!-- Максимальна ціна -->
-    <input type="number" name="price_max" placeholder="Макс. ціна" style="padding: 5px;" value="{{ request.GET.price_max }}">
+    <input type="number" name="price_max" placeholder="Макс. ціна" style="padding: 5px;"
+           value="{{ request.GET.price_max }}">
+
+    <!-- приховане поле для збереження пошуку -->
+    <input type="hidden" name="q" value="{{ request.GET.q }}">
 </form>
 
 <script>
