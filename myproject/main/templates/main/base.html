@@ -15,15 +15,25 @@
     <header style="padding: 10px; background: #f5f5f5;">
         <div class="header-inner">
             <div class="search-wrapper">
-                <form method="GET" action="{% url 'product_search' %}" class="search-form" onsubmit="saveSearchTerm()">
-                    <input type="text" name="q" placeholder="Пошук товарів за назвою або брендом..."
-                        class="search-input" id="searchInput" autocomplete="off" onfocus="showOverlay()"
+                
+                <form method="get" action="{% url 'product_search' %}" class="search-form" onsubmit="saveSearchTerm()">
+                    <input type="text" class="search-input" name="q" id="search-input" placeholder="Пошук..."  
+                    autocomplete="off" onfocus="showOverlay()"
                         oninput="updateRecentList()">
                     <button type="button" class="clear-btn" onclick="clearSearch()">×</button>
-                    <button type="submit" class="search-icon" id="searchButton">
+                    <button type="submit" class="search-icon" id="search-btn" disabled>
                         <img src="{% static 'icons/search.jpg' %}" alt="search" style="width: 14px;">
                     </button>
                 </form>
+
+                <script>
+                    const input = document.getElementById('search-input');
+                    const btn = document.getElementById('search-btn');
+
+                    input.addEventListener('input', function() {
+                        btn.disabled = this.value.trim() === '';
+                    });
+                </script>
                 <div class="recent-searches" id="recentSearches">
                     <h4>RECENT SEARCHES</h4>
                     <ul id="searchList"></ul>
