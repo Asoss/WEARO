@@ -11,4 +11,70 @@
     <a href="{% url 'men' %}" style="padding: 15px 30px; background-color: lightblue; color: white; border-radius: 8px; text-decoration: none;">Чоловіче</a>
 </div>
 
+ <div class="gallery-grid">
+  {% for product in products %}
+  <a href="{% url 'product_detail' product.pk %}" class="product-card">
+    <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" class="product-image">
+    <div class="product-info">
+      <p class="brand-name">{{ product.brand }}</p>
+      <p class="product-name">{{ product.name }}</p>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+<style>
+body, main {
+  margin: 0;
+  padding: 0;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr)); 
+  gap: 20px;
+  margin: 0; 
+  padding: 20px;
+}
+
+.product-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  height: 100%; 
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.product-image {
+  width: 100%;
+  height: 600px;
+  object-fit: cover;
+}
+
+.product-info {
+  padding: 10px;
+  background: #fff;
+}
+
+.brand-name {
+  font-size: 14px;
+  color: #555;
+  margin: 0;
+}
+
+.product-name {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 5px 0 0;
+}
+
+
+</style>
 {% endblock %}

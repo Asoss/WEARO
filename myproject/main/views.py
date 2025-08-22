@@ -10,10 +10,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from .models import Product
 from .forms import RegisterForm, UserForm
+import random
 
 
 def home(request):
-    return render(request, 'main/home.html')
+    products = list(Product.objects.filter(available=True))
+    random.shuffle(products)
+    display_products = products[:5] 
+    return render(request, 'main/home.html', {'products': display_products})
 
 def women(request):
     products = Product.objects.filter(gender=False, available=True)
