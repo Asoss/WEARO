@@ -20,11 +20,30 @@ def home(request):
 
 def women(request):
     products = Product.objects.filter(gender=False, available=True)
-    return render(request, 'main/product_list.html', {'products': products, 'title': 'Жіночі товари'})
+
+    wishlist_products = []
+    if request.user.is_authenticated:
+        wishlist_products = Wishlist.objects.filter(user=request.user).values_list("product_id", flat=True)
+
+    return render(request, "main/product_list.html", {
+        "products": products,
+        "wishlist": wishlist_products,
+        "title": "Жіночі товари"
+    })
+
 
 def men(request):
     products = Product.objects.filter(gender=True, available=True)
-    return render(request, 'main/product_list.html', {'products': products, 'title': 'Чоловічі товари'})
+
+    wishlist_products = []
+    if request.user.is_authenticated:
+        wishlist_products = Wishlist.objects.filter(user=request.user).values_list("product_id", flat=True)
+
+    return render(request, "main/product_list.html", {
+        "products": products,
+        "wishlist": wishlist_products,
+        "title": "Чоловічі товари"
+    })
 
 
 def product_detail(request, pk):

@@ -2,28 +2,36 @@
 {% load static %}
 
 {% block content %}
-<div class="wishlist-container">
+<div class="wishlist-container" style="position:relative;">
     <h2>
         Мої збережені речі
-        <span id="wishlist-count" style="font-size: 16px; color: gray;">({{ wishlist_count }})</span>
+        <span id="wishlist-count" style="font-size:16px;color:gray;">({{ wishlist_count }})</span>
     </h2>
 
     {% if saved_items %}
-    <div class="product-grid">
+    <div class="product-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;">
         {% for item in saved_items %}
         {% with item.product as product %}
-        <div class="product-card" data-product-id="{{ product.id }}">
+        <div class="product-card" data-product-id="{{ product.id }}"
+            style="position:relative;border:1px solid #ddd;border-radius:12px;padding:12px;">
+
+            <!-- Кнопка видалення біля кожного предмету -->
+            <button class="remove-from-wishlist" data-product-id="{{ product.id }}"
+                style="position:absolute;top:8px;right:8px;border:none;background:none;cursor:pointer;">
+                <img src="{% static 'icons/delete.png' %}" alt="Видалити" style="width:20px;height:20px;">
+            </button>
 
             {% with product.images.first as first_image %}
             {% if first_image %}
-            <img src="{{ first_image.image.url }}" alt="{{ product.name }}" style="max-width:200px;">
+            <img src="{{ first_image.image.url }}" alt="{{ product.name }}"
+                style="max-width:200px;display:block;margin:0 auto 8px;">
             {% else %}
             <p>Немає фото</p>
             {% endif %}
             {% endwith %}
 
-            <h3>{{ product.name }}</h3>
-            <p>{{ product.price }} грн</p>
+            <h3 style="margin:6px 0 4px;">{{ product.name }}</h3>
+            <p style="margin:0 0 8px;">{{ product.price }} грн</p>
             <a href="{% url 'product_detail' product.id %}">Детальніше</a>
         </div>
         {% endwith %}
@@ -32,5 +40,9 @@
     {% else %}
     <p>У вас ще немає збережених речей.</p>
     {% endif %}
+
 </div>
+
+<!-- ПІДКЛЮЧЕННЯ СКРИПТА -->
+<script src="{% static 'js/wishlist_remove.js' %}" defer></script>
 {% endblock %}
