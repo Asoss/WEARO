@@ -18,32 +18,28 @@ from django.views.decorators.http import require_POST
 def home(request):
     return render(request, 'main/home.html')
 
-def women(request):
-    products = Product.objects.filter(gender=False, available=True)
+def product_list_by_gender(request, gender: bool, title: str):
+    """Універсальна в’юшка для списку товарів за статтю"""
+    products = Product.objects.filter(gender=gender, available=True)
 
     wishlist_products = []
     if request.user.is_authenticated:
-        wishlist_products = Wishlist.objects.filter(user=request.user).values_list("product_id", flat=True)
+        wishlist_products = Wishlist.objects.filter(
+            user=request.user
+        ).values_list("product_id", flat=True)
 
     return render(request, "main/product_list.html", {
         "products": products,
-        "wishlist": wishlist_products,
-        "title": "Жіночі товари"
+        "wishlist_products": list(wishlist_products),
     })
+
+
+def women(request):
+    return product_list_by_gender(request, gender=False, title="Жіночі товари")
 
 
 def men(request):
-    products = Product.objects.filter(gender=True, available=True)
-
-    wishlist_products = []
-    if request.user.is_authenticated:
-        wishlist_products = Wishlist.objects.filter(user=request.user).values_list("product_id", flat=True)
-
-    return render(request, "main/product_list.html", {
-        "products": products,
-        "wishlist": wishlist_products,
-        "title": "Чоловічі товари"
-    })
+    return product_list_by_gender(request, gender=True, title="Чоловічі товари")
 
 
 def product_detail(request, pk):
@@ -232,6 +228,7 @@ def add_to_cart(request, product_id):
     request.session['cart'] = cart
 
     return redirect('cart')
+
 def women_view(request):
     return render(request, 'women/women.html')
 
@@ -243,6 +240,7 @@ def search_results(request):
     products = Product.objects.filter(name__icontains=query) if query else []
     return render(request, 'main/product_search.html', {'products': products})
 
+@login_required
 def wishlist_view(request):
     if not request.user.is_authenticated:
         return render(request, 'main/wishlist_guest.html', {
@@ -250,14 +248,14 @@ def wishlist_view(request):
         })
 
     saved_items = Wishlist.objects.filter(user=request.user).select_related('product')
-    count = saved_items.count()
+    products = [item.product for item in saved_items]  # дістаємо продукти напряму
+    count = len(products)
 
     return render(request, 'main/wishlist.html', {
         'title': 'Мої збережені речі',
-        'saved_items': saved_items,
+        'products': products,   # 👈 тепер шаблон бачить products
         'wishlist_count': count
     })
-
 @login_required
 def toggle_wishlist(request, product_id):
     print(f"Toggle wishlist для товару: {product_id}")  # для дебагу
@@ -276,13 +274,3 @@ def toggle_wishlist(request, product_id):
     except Product.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
 
-# @login_required
-# @require_POST
-# def remove_from_wishlist(request, item_id):
-#     try:
-#         item = Wishlist.objects.get(id=item_id, user=request.user)
-#         item.delete()
-#         count = Wishlist.objects.filter(user=request.user).count()
-#         return JsonResponse({"status": "removed", "count": count, "product_id": item.product.id})
-#     except Wishlist.DoesNotExist:
-#         return JsonResponse({"status": "error"}, status=404)
