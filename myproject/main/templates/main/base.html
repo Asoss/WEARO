@@ -41,12 +41,13 @@
                 </div>
             </div>
             <div class="authorization-container">
-                {% if user.is_authenticated %}
-                Вітаю, {{ user.username }} | <a href="{% url 'sign_out' %}">Вийти</a>
-                {% else %}
-                <a href="{% url 'login_email' %}">Увійти</a> | <a href="{% url 'register' %}">Реєстрація</a>
-                {% endif %}
-            </div>
+    {% if user.is_authenticated %}
+        Вітаю, <a href="{% url 'my_account' %}">{{ user.username }}</a> | <a href="{% url 'sign_out' %}">Вийти</a>
+    {% else %}
+        <a href="{% url 'login_email' %}">Увійти</a> | <a href="{% url 'register' %}">Реєстрація</a>
+    {% endif %}
+</div>
+
         </div>
     </header>
     <div class="search-overlay" id="searchOverlay" onclick="hideOverlay()"></div>
