@@ -248,28 +248,27 @@ def wishlist_view(request):
         })
 
     saved_items = Wishlist.objects.filter(user=request.user).select_related('product')
-    products = [item.product for item in saved_items]  # дістаємо продукти напряму
+    products = [item.product for item in saved_items]  
     count = len(products)
 
     return render(request, 'main/wishlist.html', {
         'title': 'Мої збережені речі',
-        'products': products,   # 👈 тепер шаблон бачить products
+        'products': products,   
         'wishlist_count': count
     })
 @login_required
 def toggle_wishlist(request, product_id):
-    print(f"Toggle wishlist для товару: {product_id}")  # для дебагу
-    
+    print(f"Toggle wishlist для товару: {product_id}")
     try:
         product = Product.objects.get(id=product_id)
         wishlist_item, created = Wishlist.objects.get_or_create(user=request.user, product=product)
 
         if not created:
             wishlist_item.delete()
-            print(f"Товар {product_id} видалено з wishlist")  # для дебагу
+            print(f"Товар {product_id} видалено з wishlist")  
             return JsonResponse({'status': 'removed'})
         else:
-            print(f"Товар {product_id} додано в wishlist")  # для дебагу
+            print(f"Товар {product_id} додано в wishlist")  
             return JsonResponse({'status': 'added'})
     except Product.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
