@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode
@@ -8,12 +9,12 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from .models import Product
+from .models import Product, Wishlist
 from .forms import RegisterForm, UserForm
 import random
-
+from django.contrib.auth.decorators import login_required
 from .models import Product, Category
-import random
+
 
 def home(request):
     products = Product.objects.filter(available=True)
@@ -34,14 +35,30 @@ def home(request):
         'selected_category': category_filter
     })
 
+
+
+def product_list_by_gender(request, gender: bool, title: str):
+    """Універсальна в’юшка для списку товарів за статтю"""
+    products = Product.objects.filter(gender=gender, available=True)
+
+    wishlist_products = []
+    if request.user.is_authenticated:
+        wishlist_products = Wishlist.objects.filter(
+            user=request.user
+        ).values_list("product_id", flat=True)
+
+    return render(request, "main/product_list.html", {
+        "products": products,
+        "wishlist_products": list(wishlist_products),
+    })
+
+
 def women(request):
-    products = Product.objects.filter(gender=False, available=True)
-    return render(request, 'main/product_list.html', {'products': products, 'title': 'Жіночі товари'})
+    return product_list_by_gender(request, gender=False, title="Жіночі товари")
+
 
 def men(request):
-    products = Product.objects.filter(gender=True, available=True)
-    return render(request, 'main/product_list.html', {'products': products, 'title': 'Чоловічі товари'})
-
+    return product_list_by_gender(request, gender=True, title="Чоловічі товари")
 
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
@@ -271,5 +288,36 @@ def search_results(request):
 
     return render(request, 'main/product_search.html', context)
 
+@login_required
+def wishlist_view(request):
+    if not request.user.is_authenticated:
+        return render(request, 'main/wishlist_guest.html', {
+            'title': 'Мої збережені речі'
+        })
 
-    
+    saved_items = Wishlist.objects.filter(user=request.user).select_related('product')
+    products = [item.product for item in saved_items]  
+    count = len(products)
+
+    return render(request, 'main/wishlist.html', {
+        'title': 'Мої збережені речі',
+        'products': products,   
+        'wishlist_count': count
+    })
+
+@login_required
+def toggle_wishlist(request, product_id):
+    print(f"Toggle wishlist для товару: {product_id}")
+    try:
+        product = Product.objects.get(id=product_id)
+        wishlist_item, created = Wishlist.objects.get_or_create(user=request.user, product=product)
+
+        if not created:
+            wishlist_item.delete()
+            print(f"Товар {product_id} видалено з wishlist")  
+            return JsonResponse({'status': 'removed'})
+        else:
+            print(f"Товар {product_id} додано в wishlist")  
+            return JsonResponse({'status': 'added'})
+    except Product.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)

@@ -1,0 +1,121 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<h1 style="text-align:center;">{{ title }}</h1>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: center;">
+    {% for product in products %}
+    <div class="product-card"
+        style="position:relative; margin:10px; border:1px solid #ddd; border-radius:12px; padding:10px; text-align:center;">
+
+
+        <img src="{% static 'icons/delete.png' %}" class="wishlist-toggle" data-product-id="{{ product.id }}"
+            style="position:absolute; top:10px; right:10px; width:24px; height:24px; cursor:pointer;">
+
+        {% with product.images.first as first_image %}
+        {% if first_image %}
+        <img src="{{ first_image.image.url }}" alt="{{ product.name }}" style="max-width:200px;">
+        {% else %}
+        <p>Немає фото</p>
+        {% endif %}
+        {% endwith %}
+
+        <h3>{{ product.name }}</h3>
+        <p>{{ product.price }} грн</p>
+        <a href="{% url 'product_detail' product.pk %}">Детальніше</a>
+    </div>
+    {% empty %}
+    <p>Ваш список бажань порожній ❤️</p>
+    {% endfor %}
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        console.log("wishlist.js завантажився ✅");
+
+        const buttons = document.querySelectorAll(".wishlist-toggle");
+        console.log("Знайдено сердечок:", buttons.length);
+
+        buttons.forEach(function (btn) {
+            btn.addEventListener("click", function (e) {
+                e.preventDefault();
+                console.log("Натиснули сердечко ✅");
+
+                const productId = this.getAttribute("data-product-id");
+                console.log("ID продукту:", productId);
+
+                if (!productId) {
+                    console.error("Product ID не знайдено!");
+                    return;
+                }
+
+                const card = this.closest(".product-card");
+                if (!card) {
+                    console.error("Карточка товару не знайдена!");
+                    return;
+                }
+
+                fetch(`/wishlist/toggle/${productId}/`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken"),
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                })
+                    .then(response => {
+                        console.log("Статус відповіді:", response.status);
+                        if (!response.ok) {
+                            throw new Error("Сервер повернув помилку: " + response.status);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("Відповідь сервера:", data);
+
+                        if (data.status === "removed") {
+                            card.style.opacity = "0.5";
+                            setTimeout(() => {
+                                card.remove();
+                                console.log("Карточка видалена ✅");
+
+                                const countEl = document.querySelector("#wishlist-count");
+                                if (countEl) {
+                                    const currentCountText = countEl.textContent;
+                                    const currentCount = parseInt(currentCountText.match(/\d+/)?.[0] || "0");
+                                    const newCount = Math.max(0, currentCount - 1);
+                                    countEl.textContent = `(${newCount})`;
+                                    console.log("Лічильник оновлено:", newCount);
+                                }
+                            }, 300);
+                        } else if (data.status === "added") {
+                            console.log("Товар додано до вішліста ✅");
+                        } else {
+                            console.log("Невідомий статус:", data.status);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Помилка при обробці:", error);
+                    });
+            });
+        });
+
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== "") {
+                const cookies = document.cookie.split(";");
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.startsWith(name + "=")) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    });
+</script>
+{% endblock %}
