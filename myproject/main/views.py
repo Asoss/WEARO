@@ -220,6 +220,7 @@ def cart_view(request):
     cart_ids = request.session.get('cart', [])
     products = Product.objects.filter(id__in=cart_ids)
     return render(request, 'cart/cart.html', {'products': products})
+
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
 
@@ -256,6 +257,7 @@ def wishlist_view(request):
         'products': products,   
         'wishlist_count': count
     })
+
 @login_required
 def toggle_wishlist(request, product_id):
     print(f"Toggle wishlist для товару: {product_id}")
