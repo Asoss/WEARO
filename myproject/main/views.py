@@ -112,8 +112,6 @@ def sign_out(request):
     logout(request)
     return redirect('home')
 
-def page404(request):
-    return render(request, 'main/page404.html')
 
 def register(request):
     if request.method == "POST":

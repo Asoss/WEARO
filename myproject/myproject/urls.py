@@ -16,6 +16,7 @@ urlpatterns = [
     path('help/delivery/', views.delivery_info, name='delivery_info'),
     path('women/', views.women_view, name='women'),
     path('men/', views.men_view, name='men'),
+
 ]
 
 if settings.DEBUG:
