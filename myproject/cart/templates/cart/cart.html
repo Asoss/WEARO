@@ -1,66 +1,41 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/cart.css' %}">
+
+<h1 class="text-center my-4">🛒 Ваш кошик</h1>
+
 <div class="cart-container">
-  <div class="cart-icon">🛒</div>
-  <div class="cart-title">Your cart is empty</div>
-  <div class="cart-text">
-    Start adding items to your cart. <br>
-    When you're ready, we’ll take you through checkout. Easy.
+  {% if products %}
+  {% for product in products %}
+  <div class="cart-item">
+    <div class="cart-image">
+      {% if product.images.all %}
+      <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
+      {% else %}
+      <img src="{% static 'img/no-image.png' %}" alt="Немає фото">
+      {% endif %}
+    </div>
+
+    <div class="cart-info">
+      <h3>{{ product.name }}</h3>
+      <p><strong>Ціна:</strong> {{ product.price }} грн</p>
+
+      <a href="{% url 'product_detail' product.id %}" class="details-btn">Детальніше</a>
+      <form method="post" action="{% url 'remove_from_cart' product.id %}" class="remove-form">
+        {% csrf_token %}
+        <button type="submit" class="remove-btn">✖</button>
+      </form>
+    </div>
   </div>
-    <a href="{% url 'home' %}" class="cart-button">START SHOPPING</a>
+  {% endfor %}
+  {% else %}
+  <p class="text-center text-muted">Ваш кошик порожній 🛍</p>
+  {% endif %}
 </div>
 
-<div class="footer-icons">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook" style="height:28px;">
+<div class="text-center mt-4">
+  <a href="{% url 'home' %}" class="home-btn">На головну</a>
 </div>
-
-<style>
-  .cart-container {
-    padding: 100px 20px;
-    text-align: center;
-    font-family: Arial, sans-serif;
-  }
-
-  .cart-icon {
-    font-size: 48px;
-    margin-bottom: 20px;
-  }
-
-  .cart-title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-
-  .cart-text {
-    color: #444;
-    font-size: 16px;
-    margin-bottom: 30px;
-  }
-
-.cart-button {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #000;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-}
-.cart-button:hover {
-    background-color: #333;
-}
-
-  .footer-icons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
-    padding: 40px 20px;
-    border-top: 1px solid #eee;
-  }
-
-  .footer-icons img {
-    height: 30px;
-  }
-</style>
+{% endblock %}

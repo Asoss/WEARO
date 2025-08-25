@@ -9,6 +9,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/auth.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <style>
+        .cart-link {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 12px;
+        }
+
+        .cart-icon {
+            width: 26px;
+            height: auto;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .cart-link:hover .cart-icon {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+    </style>
 </head>
 
 <body>
@@ -17,40 +35,54 @@
             <div class="search-wrapper">
                 <form method="GET" action="{% url 'product_search' %}" class="search-form" onsubmit="saveSearchTerm()">
                     <input type="text" name="q" placeholder="Пошук товарів за назвою або брендом..."
-                        class="search-input" id="searchInput" autocomplete="off" onfocus="showOverlay()"
+                        class="search-input" id="search-input" autocomplete="off" onfocus="showOverlay()"
                         oninput="updateRecentList()">
                     <button type="button" class="clear-btn" onclick="clearSearch()">×</button>
                     <button type="submit" class="search-icon" id="searchButton">
                         <img src="{% static 'icons/search.jpg' %}" alt="search" style="width: 14px;">
                     </button>
                 </form>
+
+                <script>
+                    const input = document.getElementById('search-input');
+                    const btn = document.getElementById('searchButton');
+                    input.addEventListener('input', function () {
+                        btn.disabled = this.value.trim() === '';
+                    });
+                </script>
+
                 <div class="recent-searches" id="recentSearches">
                     <h4>RECENT SEARCHES</h4>
                     <ul id="searchList"></ul>
                     <a href="#" onclick="clearRecentSearches()">CLEAR</a>
                 </div>
             </div>
+
             <div class="authorization-container">
                 {% if user.is_authenticated %}
-                <a href="{% url 'wishlist' %}" class="wishlist-btn">
-                    <img src="{% static 'icons/heart.png' %}" alt="Wishlist" style="width:20px; vertical-align:middle;">
-                </a>
+                    <a href="{% url 'wishlist' %}" class="wishlist-btn">
+                        <img src="{% static 'icons/heart.png' %}" alt="Wishlist" style="width:20px; vertical-align:middle;">
+                    </a>
+                    <a href="{% url 'cart' %}" class="cart-link">
+                        <img src="{% static 'icons/cart.png' %}" alt="Кошик" class="cart-icon">
+                    </a>
+                    Вітаю, <a href="{% url 'my_account' %}">{{ user.username }}</a> |
+                    <a href="{% url 'sign_out' %}">Вийти</a>
                 {% else %}
-                <a href="{% url 'login_email' %}?next={% url 'login_password' %}" class="wishlist-btn">
-                    <img src="{% static 'icons/heart.png' %}" alt="Wishlist" style="width:20px; vertical-align:middle;">
-                </a>
-                {% endif %}
-
-                {% if user.is_authenticated %}
-                Вітаю, {{ user.username }} | <a href="{% url 'sign_out' %}">Вийти</a>
-                {% else %}
-                <a href="{% url 'login_email' %}">Увійти</a> | <a href="{% url 'register' %}">Реєстрація</a>
+                    <a href="{% url 'login_email' %}">Увійти</a> |
+                    <a href="{% url 'register' %}">Реєстрація</a> |
+                    <a href="{% url 'wishlist' %}" class="wishlist-btn">
+                        <img src="{% static 'icons/heart.png' %}" alt="Wishlist" style="width:20px; vertical-align:middle;">
+                    </a>
+                    <a href="{% url 'cart' %}" class="cart-link">
+                        <img src="{% static 'icons/cart.png' %}" alt="Кошик" class="cart-icon">
+                    </a>
                 {% endif %}
             </div>
         </div>
     </header>
-    <div class="search-overlay" id="searchOverlay" onclick="hideOverlay()"></div>
 
+    <div class="search-overlay" id="searchOverlay" onclick="hideOverlay()"></div>
 
     <main style="padding: 20px;">
         {% block content %}
@@ -60,6 +92,7 @@
     <footer style="text-align: center; margin-top: 30px; padding: 10px; border-top: 1px solid #ccc;">
         2025 Магазин одягу "Wearo"
     </footer>
+
     <script src="{% static 'js/search.js' %}"></script>
 </body>
 

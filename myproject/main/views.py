@@ -238,6 +238,7 @@ def cart_view(request):
     cart_ids = request.session.get('cart', [])
     products = Product.objects.filter(id__in=cart_ids)
     return render(request, 'cart/cart.html', {'products': products})
+
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
 
@@ -246,6 +247,8 @@ def add_to_cart(request, product_id):
     request.session['cart'] = cart
 
     return redirect('cart')
+
+
 def women_view(request):
     return render(request, 'women/women.html')
 
