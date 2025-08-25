@@ -9,7 +9,7 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from .models import Product, Wishlist
+from .models import Product, UserDetails, Wishlist
 from .forms import RegisterForm, UserForm
 import random
 from django.contrib.auth.decorators import login_required
@@ -223,7 +223,7 @@ def complete_register(request):
 
         if birth_date and gender:
             if request.user.is_authenticated:
-                user_details = request.user.userdetails
+                user_details, created = UserDetails.objects.get_or_create(user=request.user)
                 user_details.birth_date = birth_date
                 user_details.gender = gender
                 user_details.save()
@@ -233,6 +233,7 @@ def complete_register(request):
             return render(request, "main/complete_reg.html", {"error": error})
 
     return render(request, "main/complete_reg.html")
+
 
 def cart_view(request):
     cart_ids = request.session.get('cart', [])

@@ -39,6 +39,7 @@ function updateRecentList() {
         li.onclick = () => {
             document.getElementById('searchInput').value = term;
             toggleIcons();
+            hideOverlay();
             document.getElementById('filter-form').submit();
         };
         list.appendChild(li);
@@ -67,5 +68,7 @@ function toggleIcons() {
 
 document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('searchInput');
-    input.addEventListener('input', toggleIcons);
+    if (input) {
+        input.addEventListener('input', toggleIcons);
+    }
 });

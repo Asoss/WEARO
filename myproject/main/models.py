@@ -92,7 +92,6 @@ class UserDetails(models.Model):
     GENDER_CHOICES = [
         ('M', 'Чоловік'),
         ('F', 'Жінка'),
-        ('O', 'Інше'),
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)

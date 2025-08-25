@@ -35,7 +35,7 @@
             <div class="search-wrapper">
                 <form method="GET" action="{% url 'product_search' %}" class="search-form" onsubmit="saveSearchTerm()">
                     <input type="text" name="q" placeholder="Пошук товарів за назвою або брендом..."
-                        class="search-input" id="search-input" autocomplete="off" onfocus="showOverlay()"
+                        class="search-input" id="searchInput" autocomplete="off" onfocus="showOverlay()"
                         oninput="updateRecentList()">
                     <button type="button" class="clear-btn" onclick="clearSearch()">×</button>
                     <button type="submit" class="search-icon" id="searchButton">
@@ -44,7 +44,7 @@
                 </form>
 
                 <script>
-                    const input = document.getElementById('search-input');
+                    const input = document.getElementById('searchInput');
                     const btn = document.getElementById('searchButton');
                     input.addEventListener('input', function () {
                         btn.disabled = this.value.trim() === '';
@@ -60,23 +60,23 @@
 
             <div class="authorization-container">
                 {% if user.is_authenticated %}
-                    <a href="{% url 'wishlist' %}" class="wishlist-btn">
-                        <img src="{% static 'icons/heart.png' %}" alt="Wishlist" style="width:20px; vertical-align:middle;">
-                    </a>
-                    <a href="{% url 'cart' %}" class="cart-link">
-                        <img src="{% static 'icons/cart.png' %}" alt="Кошик" class="cart-icon">
-                    </a>
-                    Вітаю, <a href="{% url 'my_account' %}">{{ user.username }}</a> |
-                    <a href="{% url 'sign_out' %}">Вийти</a>
+                <a href="{% url 'wishlist' %}" class="wishlist-btn">
+                    <img src="{% static 'icons/heart.png' %}" alt="Wishlist" style="width:20px; vertical-align:middle;">
+                </a>
+                <a href="{% url 'cart' %}" class="cart-link">
+                    <img src="{% static 'icons/cart.png' %}" alt="Кошик" class="cart-icon">
+                </a>
+                Вітаю, <a href="{% url 'my_account' %}">{{ user.username }}</a> |
+                <a href="{% url 'sign_out' %}">Вийти</a>
                 {% else %}
-                    <a href="{% url 'login_email' %}">Увійти</a> |
-                    <a href="{% url 'register' %}">Реєстрація</a> |
-                    <a href="{% url 'wishlist' %}" class="wishlist-btn">
-                        <img src="{% static 'icons/heart.png' %}" alt="Wishlist" style="width:20px; vertical-align:middle;">
-                    </a>
-                    <a href="{% url 'cart' %}" class="cart-link">
-                        <img src="{% static 'icons/cart.png' %}" alt="Кошик" class="cart-icon">
-                    </a>
+                <a href="{% url 'login_email' %}">Увійти</a> |
+                <a href="{% url 'register' %}">Реєстрація</a> |
+                <a href="{% url 'wishlist' %}" class="wishlist-btn">
+                    <img src="{% static 'icons/heart.png' %}" alt="Wishlist" style="width:20px; vertical-align:middle;">
+                </a>
+                <a href="{% url 'cart' %}" class="cart-link">
+                    <img src="{% static 'icons/cart.png' %}" alt="Кошик" class="cart-icon">
+                </a>
                 {% endif %}
             </div>
         </div>
