@@ -1,7 +1,9 @@
+from django.shortcuts import render
 from django.urls import path,include
 from django.contrib import admin
 from main import views
 from django.contrib.auth import views as auth_views
+
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -37,7 +39,6 @@ urlpatterns = [
         name="password_reset_complete"
     ),
     path('register/', views.register, name='register'),
-    path('page404/', views.page404, name='page404'),
     path("complete-register/", views.complete_register, name="complete_reg"),
     path('cart/', include('cart.urls')),
     path('search/', views.search_results, name='product_search'),
@@ -46,3 +47,4 @@ urlpatterns = [
     path('wishlist/toggle/<int:product_id>/', views.toggle_wishlist, name='toggle_wishlist'),
 
 ]
+

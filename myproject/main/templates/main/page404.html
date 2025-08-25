@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="uk">
+
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>404%</title>
   <style>
     * {
@@ -27,16 +29,16 @@
     .box {
       display: inline-block;
       border: 4.5px solid black;
-      padding: -10px 80px;
+      padding: 20px 80px;
     }
 
     .percentage {
-        font-family: Impact, Charcoal, sans-serif;
-        font-size: 150px;
-        padding: 7px;
-        font-weight: normal;
-        color: #000;
-}
+      font-family: Impact, Charcoal, sans-serif;
+      font-size: 150px;
+      padding: 7px;
+      font-weight: normal;
+      color: #000;
+    }
 
     .text {
       margin-top: 60px;
@@ -55,21 +57,38 @@
       cursor: pointer;
       text-transform: uppercase;
       letter-spacing: 0.7px;
+      text-decoration: none;
+      display: inline-block;
     }
 
     .button:hover {
       background-color: #555;
     }
+
+    @media (max-width: 768px) {
+      .container {
+        transform: scale(1);
+      }
+
+      .percentage {
+        font-size: 100px;
+      }
+
+      .box {
+        padding: 10px 40px;
+      }
+    }
   </style>
 </head>
+
 <body>
 
   <div class="container">
     <div class="box">
       <div class="percentage" id="counter">0%</div>
     </div>
-    <div class="text"><b>На жаль, цієї сторінки поки не існує<b></div>
-    <a href="{% url 'home' %}"><button class="button"><b>Повернутись назад<b></button></a>
+    <div class="text"><b>На жаль, цієї сторінки поки не існує</b></div>
+    <a href="{% url 'home' %}" class="button"><b>Повернутись назад</b></a>
   </div>
 
   <script>
@@ -104,4 +123,5 @@
   </script>
 
 </body>
+
 </html>

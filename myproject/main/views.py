@@ -324,3 +324,7 @@ def toggle_wishlist(request, product_id):
             return JsonResponse({'status': 'added'})
     except Product.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
+
+
+def custom_404(request, exception):
+    return render(request, "main/page404.html", status=404)
