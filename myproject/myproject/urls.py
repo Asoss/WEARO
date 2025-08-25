@@ -22,3 +22,4 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler404 = 'main.views.custom_404'
+urlpatterns += static('/static/', document_root='static')
