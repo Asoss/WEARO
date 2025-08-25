@@ -41,4 +41,8 @@ urlpatterns = [
     path("complete-register/", views.complete_register, name="complete_reg"),
     path('cart/', include('cart.urls')),
     path('search/', views.search_results, name='product_search'),
+    path('wishlist/', views.wishlist_view, name='wishlist'),
+    path('wishlist-guest/', views.wishlist_view, name='wishlist_guest'),
+    path('wishlist/toggle/<int:product_id>/', views.toggle_wishlist, name='toggle_wishlist'),
+
 ]
