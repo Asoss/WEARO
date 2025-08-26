@@ -14,6 +14,7 @@ from .forms import RegisterForm, UserForm
 import random
 from django.contrib.auth.decorators import login_required
 from .models import Product, Category
+from django.core.paginator import Paginator
 
 
 def home(request):
@@ -265,29 +266,39 @@ def search_results(request):
 
     if query:
         products = products.filter(name__icontains=query)
-
     if brand_filter:
         products = products.filter(brand=brand_filter)
-
     if size_filter:
         products = products.filter(model_size=size_filter)
-
     if price_min:
         products = products.filter(price__gte=price_min)
-
     if price_max:
         products = products.filter(price__lte=price_max)
 
     brands = ['Nike', 'Adidas', 'Puma', 'Zara', 'H&M', "Levi's", 'ONLY & SONS', 'COLLUSION', 'New Balance', 'Converse']
-    sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL','W']
+    sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'W']
+
+    paginator = Paginator(products, 1)  # вибираєм скікі товарів хочем показать
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    seen = page_obj.end_index()
+    total = paginator.count
+    remaining = total - seen
+    percent = int((seen / total) * 100) if total > 0 else 0
 
     context = {
-        'products': products,
+        'products': page_obj,
         'brands': brands,
         'sizes': sizes,
-        'query': query,  
+        'query': query,
+        'paginator': paginator,
+        'page_obj': page_obj,
+        'remaining': remaining,
+        'seen': seen,
+        'total': total,
+        'percent': percent,
     }
-
     return render(request, 'main/product_search.html', context)
 
 @login_required

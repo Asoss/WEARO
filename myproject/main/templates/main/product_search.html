@@ -7,82 +7,126 @@
 <h1>Ваш результат за пошуком "{{ query }}"</h1>
 
 <form id="filter-form" method="GET" action="{% url 'product_search' %}" 
-      class="search-form" onsubmit="saveSearchTerm()"
       style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-
-    <!-- Вибір бренду -->
-    <select name="brand" class="brand-select" style="padding: 5px;">
+    <select name="brand" style="padding: 5px;">
         <option value="">Всі бренди</option>
         {% for brand in brands %}
-            <option value="{{ brand }}" {% if request.GET.brand == brand %}selected{% endif %}>
-                {{ brand }}
-            </option>
+        <option value="{{ brand }}" {% if request.GET.brand == brand %}selected{% endif %}>
+            {{ brand }}
+        </option>
         {% endfor %}
     </select>
 
-    <!-- Вибір розміру -->
-    <select name="size" class="size-select" style="padding: 5px;">
+    <select name="size" style="padding: 5px;">
         <option value="">Всі розміри</option>
         {% for size in sizes %}
-            <option value="{{ size }}" {% if request.GET.size == size %}selected{% endif %}>
-                {{ size }}
-            </option>
+        <option value="{{ size }}" {% if request.GET.size == size %}selected{% endif %}>
+            {{ size }}
+        </option>
         {% endfor %}
     </select>
 
-    <!-- Мінімальна ціна -->
     <input type="number" name="price_min" placeholder="Мін. ціна" style="padding: 5px;"
            value="{{ request.GET.price_min }}">
-
-    <!-- Максимальна ціна -->
     <input type="number" name="price_max" placeholder="Макс. ціна" style="padding: 5px;"
            value="{{ request.GET.price_max }}">
-
-    <!-- приховане поле для збереження пошуку -->
     <input type="hidden" name="q" value="{{ request.GET.q }}">
 </form>
 
 <script>
     const form = document.getElementById('filter-form');
-
-    // Автопідвантаження при зміні селектів
     form.querySelectorAll('select').forEach(el => {
-        el.addEventListener('change', () => {
-            form.submit();
-        });
+        el.addEventListener('change', () => form.submit());
     });
-
-    // Автопідвантаження при введенні чисел з паузою 500ms
     let timeout;
     form.querySelectorAll('input[type="number"]').forEach(el => {
         el.addEventListener('input', () => {
             clearTimeout(timeout);
-            timeout = setTimeout(() => {
-                form.submit();
-            }, 500);
+            timeout = setTimeout(() => form.submit(), 500);
         });
     });
 </script>
 
 {% if products %}
-<div style="display: flex; flex-wrap: wrap; justify-content: center; margin-top: 20px;">
+<div id="products-container" style="display:flex; flex-wrap:wrap; justify-content:center; margin-top:20px;">
     {% for product in products %}
-    <div class="product">
-        {% with product.images.first as first_image %}
-        {% if first_image %}
-        <img src="{{ first_image.image.url }}" alt="{{ product.name }}">
-        {% else %}
-        <p>Немає фото</p>
-        {% endif %}
-        {% endwith %}
-        <h3>{{ product.name }}</h3>
-        <p>{{ product.price }} грн</p>
-        <a href="{% url 'product_detail' product.pk %}">Детальніше</a>
-    </div>
+        <div class="product" style="margin:10px; border:1px solid #ddd; padding:10px; width:200px; text-align:center;">
+            {% with product.images.first as first_image %}
+                {% if first_image %}
+                    <img src="{{ first_image.image.url }}" alt="{{ product.name }}" style="max-width:100%;">
+                {% else %}
+                    <p>Немає фото</p>
+                {% endif %}
+            {% endwith %}
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.price }} грн</p>
+            <a href="{% url 'product_detail' product.pk %}">Детальніше</a>
+        </div>
     {% endfor %}
 </div>
+
+<div style="text-align:center; margin:20px auto; width:60%;">
+    <p>Ви переглянули {{ seen }} з {{ total }} товарів</p>
+    <div style="background:#eee; height:6px; border-radius:4px;">
+        <div style="background:#0070f3; width:{{ percent }}%; height:6px; border-radius:4px;"></div>
+    </div>
+</div>
+
+
+<div style="text-align:center; margin:20px;">
+    {% if page_obj.has_next %}
+        <button id="load-more" 
+                data-next-page="{{ page_obj.next_page_number }}" 
+                style="padding:10px 20px; font-size:16px; border:1px solid #000; background:#fff; cursor:pointer;">
+            LOAD MORE
+        </button>
+    {% endif %}
+</div>
+
 {% else %}
 <p style="text-align:center;">Нічого не знайдено за запитом "{{ request.GET.q }}"</p>
 {% endif %}
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const loadMoreBtn = document.getElementById("load-more");
+    if (!loadMoreBtn) return;
+
+    loadMoreBtn.addEventListener("click", () => {
+        const nextPage = loadMoreBtn.dataset.nextPage;
+        const url = new URL(window.location.href);
+        url.searchParams.set("page", nextPage);
+
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, "text/html");
+
+                const newProducts = doc.querySelectorAll("#products-container .product");
+                const productsContainer = document.getElementById("products-container");
+                newProducts.forEach(prod => productsContainer.appendChild(prod));
+
+                const newProgress = doc.querySelector("div[style*='background:#eee']");
+                const oldProgress = document.querySelector("div[style*='background:#eee']");
+                if (newProgress && oldProgress) {
+                    oldProgress.innerHTML = newProgress.innerHTML;
+                }
+                const newText = doc.querySelector("p:contains('Ви переглянули')");
+                const oldText = document.querySelector("p:contains('Ви переглянули')");
+                if (newText && oldText) {
+                    oldText.innerHTML = newText.innerHTML;
+                }
+
+                const newBtn = doc.querySelector("#load-more");
+                if (newBtn) {
+                    loadMoreBtn.dataset.nextPage = newBtn.dataset.nextPage;
+                } else {
+                    loadMoreBtn.remove();
+                }
+            });
+    });
+});
+</script>
 
 {% endblock %}
