@@ -22,7 +22,7 @@
         {% endif %}
         {% else %}
 
-        <a href="{% url 'login_email' %}?next={{ request.get_full_path }}">
+        <a href="{% url 'login_email' %}">
             <img src="{% static 'icons/heart.png' %}"
                 style="position:absolute; top:10px; right:10px; width:24px; height:24px;">
         </a>

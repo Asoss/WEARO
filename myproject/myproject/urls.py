@@ -16,7 +16,11 @@ urlpatterns = [
     path('help/delivery/', views.delivery_info, name='delivery_info'),
     path('women/', views.women_view, name='women'),
     path('men/', views.men_view, name='men'),
+
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler404 = 'main.views.custom_404'
+urlpatterns += static('/static/', document_root='static')
