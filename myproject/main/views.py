@@ -301,7 +301,7 @@ def search_results(request):
     }
     return render(request, 'main/product_search.html', context)
 
-@login_required
+
 def wishlist_view(request):
     if not request.user.is_authenticated:
         return render(request, 'main/wishlist_guest.html', {
@@ -318,7 +318,7 @@ def wishlist_view(request):
         'wishlist_count': count
     })
 
-@login_required
+
 def toggle_wishlist(request, product_id):
     print(f"Toggle wishlist для товару: {product_id}")
     try:
