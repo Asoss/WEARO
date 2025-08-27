@@ -4,14 +4,40 @@
 {% block content %}
 <h1 style="text-align:center;">{{ title }}</h1>
 
+<form method="get" action="" style="margin-bottom:20px; text-align:center;">
+    <select name="brand">
+        <option value="">Всі бренди</option>
+        {% for brand in brands %}
+            <option value="{{ brand }}" {% if request.GET.brand == brand %}selected{% endif %}>
+                {{ brand }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <select name="size">
+        <option value="">Всі розміри</option>
+        {% for size in sizes %}
+            <option value="{{ size }}" {% if request.GET.size == size %}selected{% endif %}>
+                {{ size }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <input type="number" name="price_min" placeholder="Мін. ціна" value="{{ request.GET.price_min }}">
+    <input type="number" name="price_max" placeholder="Макс. ціна" value="{{ request.GET.price_max }}">
+
+    <button type="submit">Фільтрувати</button>
+</form>
+
+
 <div style="display: flex; flex-wrap: wrap; justify-content: center;">
     {% for product in products %}
     <div class="product-card"
         style="position:relative; margin:10px; border:1px solid #ddd; border-radius:12px; padding:10px; text-align:center;">
-
-
-        <img src="{% static 'icons/delete.png' %}" class="wishlist-toggle" data-product-id="{{ product.id }}"
-            style="position:absolute; top:10px; right:10px; width:24px; height:24px; cursor:pointer;">
+        
+        <img src="{% static 'icons/delete.png' %}" class="wishlist-toggle" 
+             data-product-id="{{ product.id }}"
+             style="position:absolute; top:10px; right:10px; width:24px; height:24px; cursor:pointer;">
 
         {% with product.images.first as first_image %}
         {% if first_image %}
@@ -29,7 +55,6 @@
     <p>Ваш список бажань порожній ❤️</p>
     {% endfor %}
 </div>
-
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
