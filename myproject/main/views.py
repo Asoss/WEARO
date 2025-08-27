@@ -256,7 +256,17 @@ def men_view(request):
     return render(request, 'men/men.html')
 
 def search_results(request):
-    query = request.GET.get('q', '')
+    query = request.GET.get('q', '').strip().lower()
+    
+    developer_keywords = [
+        'developers', 'dev', 'team', 'about', 'creators', 
+        'розробники', 'команда', 'творці', 'автори',
+        'secret',
+    ]
+    
+    if any(keyword in query for keyword in developer_keywords):
+        return redirect('developers_page')
+    
     brand_filter = request.GET.get('brand', '')
     size_filter = request.GET.get('size', '')
     price_min = request.GET.get('price_min')
@@ -275,13 +285,12 @@ def search_results(request):
     if price_max:
         products = products.filter(price__lte=price_max)
 
-    # Додаємо сортування для стабільної пагінації
-    products = products.order_by('id')  # або 'name', 'price', '-created_at', тощо
+    products = products.order_by('id')
 
     brands = ['Nike', 'Adidas', 'Puma', 'Zara', 'H&M', "Levi's", 'ONLY & SONS', 'COLLUSION', 'New Balance', 'Converse']
     sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'W']
 
-    paginator = Paginator(products, 1)  # вибираєм скікі товарів хочем показать
+    paginator = Paginator(products, 1)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -294,7 +303,7 @@ def search_results(request):
         'products': page_obj,
         'brands': brands,
         'sizes': sizes,
-        'query': query,
+        'query': request.GET.get('q', ''),
         'paginator': paginator,
         'page_obj': page_obj,
         'remaining': remaining,
@@ -303,6 +312,9 @@ def search_results(request):
         'percent': percent,
     }
     return render(request, 'main/product_search.html', context)
+
+def developers_page(request):
+    return render(request, 'main/developers.html')
 
 def wishlist_view(request):
     if not request.user.is_authenticated:

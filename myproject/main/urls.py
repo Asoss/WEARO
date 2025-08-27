@@ -45,6 +45,7 @@ urlpatterns = [
     path('wishlist/', views.wishlist_view, name='wishlist'),
     path('wishlist-guest/', views.wishlist_view, name='wishlist_guest'),
     path('wishlist/toggle/<int:product_id>/', views.toggle_wishlist, name='toggle_wishlist'),
+    path('secret/developers/', views.developers_page, name='developers_page'),
 
 ]
 
