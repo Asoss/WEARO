@@ -326,6 +326,42 @@ def wishlist_view(request):
     products = [item.product for item in saved_items]  
     count = len(products)
 
+    # ---- Фільтри ----
+    brand_filter = request.GET.get("brand", "")
+    size_filter = request.GET.get("size", "")
+    price_min = request.GET.get("price_min")
+    price_max = request.GET.get("price_max")
+
+    products_qs = Product.objects.filter(id__in=[p.id for p in products])
+
+    if brand_filter:
+        products_qs = products_qs.filter(brand=brand_filter)
+
+    if size_filter:
+        products_qs = products_qs.filter(model_size=size_filter)
+
+    if price_min:
+        products_qs = products_qs.filter(price__gte=price_min)
+
+    if price_max:
+        products_qs = products_qs.filter(price__lte=price_max)
+
+    # Списки для select у формі
+    brands = Product.objects.values_list("brand", flat=True).distinct()
+    sizes = Product.objects.values_list("model_size", flat=True).distinct()
+
+    return render(request, 'main/wishlist.html', {
+        'title': 'Мої збережені речі',
+        'products': products_qs,
+        'wishlist_count': count,
+        'brands': brands,
+        'sizes': sizes,
+    })
+
+    saved_items = Wishlist.objects.filter(user=request.user).select_related('product')
+    products = [item.product for item in saved_items]  
+    count = len(products)
+
     return render(request, 'main/wishlist.html', {
         'title': 'Мої збережені речі',
         'products': products,   
@@ -352,3 +388,4 @@ def toggle_wishlist(request, product_id):
 
 def custom_404(request, exception):
     return render(request, "main/page404.html", status=404)
+    
