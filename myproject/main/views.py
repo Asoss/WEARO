@@ -275,6 +275,9 @@ def search_results(request):
     if price_max:
         products = products.filter(price__lte=price_max)
 
+    # Додаємо сортування для стабільної пагінації
+    products = products.order_by('id')  # або 'name', 'price', '-created_at', тощо
+
     brands = ['Nike', 'Adidas', 'Puma', 'Zara', 'H&M', "Levi's", 'ONLY & SONS', 'COLLUSION', 'New Balance', 'Converse']
     sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'W']
 
@@ -300,7 +303,6 @@ def search_results(request):
         'percent': percent,
     }
     return render(request, 'main/product_search.html', context)
-
 
 def wishlist_view(request):
     if not request.user.is_authenticated:

@@ -66,12 +66,11 @@
 </div>
 
 <div style="text-align:center; margin:20px auto; width:60%;">
-    <p>Ви переглянули {{ seen }} з {{ total }} товарів</p>
+    <p id="progress-text">Ви переглянули {{ seen }} з {{ total }} товарів</p>
     <div style="background:#eee; height:6px; border-radius:4px;">
-        <div style="background:#0070f3; width:{{ percent }}%; height:6px; border-radius:4px;"></div>
+        <div id="progress-bar" style="background:#0070f3; width:{{ percent }}%; height:6px; border-radius:4px;"></div>
     </div>
 </div>
-
 
 <div style="text-align:center; margin:20px;">
     {% if page_obj.has_next %}
@@ -103,27 +102,35 @@ document.addEventListener("DOMContentLoaded", () => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, "text/html");
 
+                // Додаємо нові товари
                 const newProducts = doc.querySelectorAll("#products-container .product");
                 const productsContainer = document.getElementById("products-container");
                 newProducts.forEach(prod => productsContainer.appendChild(prod));
 
-                const newProgress = doc.querySelector("div[style*='background:#eee']");
-                const oldProgress = document.querySelector("div[style*='background:#eee']");
-                if (newProgress && oldProgress) {
-                    oldProgress.innerHTML = newProgress.innerHTML;
-                }
-                const newText = doc.querySelector("p:contains('Ви переглянули')");
-                const oldText = document.querySelector("p:contains('Ви переглянули')");
-                if (newText && oldText) {
-                    oldText.innerHTML = newText.innerHTML;
+                // Оновлюємо прогрес бар
+                const newProgressBar = doc.querySelector("#progress-bar");
+                const progressBar = document.getElementById("progress-bar");
+                if (newProgressBar && progressBar) {
+                    progressBar.style.width = newProgressBar.style.width;
                 }
 
+                // Оновлюємо текст прогресу
+                const newProgressText = doc.querySelector("#progress-text");
+                const progressText = document.getElementById("progress-text");
+                if (newProgressText && progressText) {
+                    progressText.textContent = newProgressText.textContent;
+                }
+
+                // Перевіряємо чи є наступна сторінка
                 const newBtn = doc.querySelector("#load-more");
-                if (newBtn) {
+                if (newBtn && newBtn.dataset.nextPage) {
                     loadMoreBtn.dataset.nextPage = newBtn.dataset.nextPage;
                 } else {
                     loadMoreBtn.remove();
                 }
+            })
+            .catch(error => {
+                console.error('Error loading more products:', error);
             });
     });
 });
