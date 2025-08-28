@@ -1,0 +1,207 @@
+/* ===========================
+   БАЗОВІ СТИЛІ
+=========================== */
+body,
+main {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto Flex', sans-serif;
+}
+
+/* ===========================
+   ВЕРХНЯ ЧОРНА ЛІНІЯ
+=========================== */
+.top-header {
+    background: #000;
+    color: white;
+    padding: 6px 0;
+    font-size: 12px;
+    text-align: center;
+}
+
+.top-header a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.top-header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.top-left {
+    font-size: 12px;
+}
+
+.language-selector {
+    background: #000;
+    color: #fff;
+    border: none;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 2px 4px;
+}
+
+.language-selector:focus {
+    outline: none;
+}
+
+/* ===========================
+   ОСНОВНИЙ HEADER
+=========================== */
+.main-header {
+    background: #fff;
+    padding: 15px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+}
+
+.main-header-content {
+    max-width: 1500px;
+    margin: 0 -50px;
+    padding: 0 100px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+/* Центрований блок */
+.header-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    flex: 1;
+}
+
+/* Посилання (Жіночий/Чоловічий) */
+.gender-link {
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #333;
+    padding: 10px 20px;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.gender-link:hover {
+    background: #000;
+    color: #fff;
+}
+
+.gender-link.active {
+    background: #000;
+    color: #fff;
+}
+
+/* Логотип */
+.logo img {
+    height: 35px;
+    width: auto;
+}
+
+.logo-text {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #000;
+    text-decoration: none;
+}
+
+/* ===========================
+   AUTH LINKS (тепер знизу)
+=========================== */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #666;
+    margin-left: auto;
+}
+
+.header-right a {
+    color: #333;
+    text-decoration: none;
+}
+
+.header-right a:hover {
+    text-decoration: underline;
+}
+
+/* ===========================
+   НАВІГАЦІЯ
+=========================== */
+.navigation {
+    background: #000000;
+    padding: 0;
+}
+
+.nav-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.nav-menu {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+}
+
+.nav-item {
+    color: white;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 12px 20px;
+    transition: background-color 0.3s;
+}
+
+.nav-item:last-child {
+    border-right: none;
+}
+
+.nav-item:hover {
+    background: #555;
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+@media (max-width: 768px) {
+    .main-header-content {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .header-center {
+        gap: 20px;
+    }
+
+    .header-right {
+        margin-top: 10px;
+    }
+
+    .nav-menu {
+        flex-wrap: wrap;
+        gap: 0;
+    }
+
+    .nav-item {
+        padding: 10px 15px;
+        font-size: 12px;
+    }
+
+    .top-header-content {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
