@@ -6,7 +6,7 @@
 
 
 
-<div class="gender-bar">
+{% comment %} <div class="gender-bar">
     <a href="{% url 'women' %}" class="gender-btn women">Жіноче</a>
     <a href="{% url 'men' %}" class="gender-btn men">Чоловіче</a>
 </div>
@@ -19,7 +19,7 @@
             {{ category.name }}
         </a>
     {% endfor %}
-</div>
+</div> {% endcomment %}
 
  <div class="gallery-grid">
   {% for product in products %}

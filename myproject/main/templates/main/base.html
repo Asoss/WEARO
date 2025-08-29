@@ -1,88 +1,94 @@
 <!DOCTYPE html>
 <html lang="uk">
-
 <head>
     <meta charset="UTF-8">
     <title>Магазин одягу</title>
-
     {% load static %}
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
-    <style>
-        .cart-link {
-            display: inline-flex;
-            align-items: center;
-            margin-left: 12px;
-        }
-
-        .cart-icon {
-            width: 26px;
-            height: auto;
-            transition: transform 0.2s ease, opacity 0.2s ease;
-        }
-
-        .cart-link:hover .cart-icon {
-            transform: scale(1.1);
-            opacity: 0.8;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
 </head>
-
 <body>
-    <header style="padding: 10px; background: #f5f5f5;">
-        <div class="header-inner">
-            <div class="search-wrapper">
-                <form method="GET" action="{% url 'product_search' %}" class="search-form" onsubmit="saveSearchTerm()">
-                    <input type="text" name="q" placeholder="Пошук товарів за назвою або брендом..."
-                        class="search-input" id="searchInput" autocomplete="off" onfocus="showOverlay()"
-                        oninput="updateRecentList()">
-                    <button type="button" class="clear-btn" onclick="clearSearch()">×</button>
-                    <button type="submit" class="search-icon" id="searchButton">
-                        <img src="{% static 'icons/search.jpg' %}" alt="search" style="width: 14px;">
-                    </button>
-                </form>
-
-                <script>
-                    const input = document.getElementById('searchInput');
-                    const btn = document.getElementById('searchButton');
-                    input.addEventListener('input', function () {
-                        btn.disabled = this.value.trim() === '';
-                    });
-                </script>
-
-                <div class="recent-searches" id="recentSearches">
-                    <h4>RECENT SEARCHES</h4>
-                    <ul id="searchList"></ul>
-                    <a href="#" onclick="clearRecentSearches()">CLEAR</a>
+    <!-- Верхня частина header -->
+    <div class="top-header">
+        <div class="top-header-content">
+            <div class="top-left">
+                <a href="/help">Допомога та поширені запитання</a>
+            </div>
+           <div class="top-right">
+                <div class="custom-select" id="languageSelector">
+                    <div class="selected">
+                        <img src="{% static 'icons/ua.png' %}" alt="UA">
+                        <span>Українська</span>
+                    </div>
+                    <ul class="options">
+                        <li data-value="uk" data-flag="{% static 'icons/ua.png' %}">
+                            <img src="{% static 'icons/ua.png' %}" alt="UA">
+                            <span>Українська</span>
+                        </li>
+                        <li data-value="en" data-flag="{% static 'icons/gb.png' %}">
+                            <img src="{% static 'icons/gb.png' %}" alt="EN">
+                            <span>English</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div class="authorization-container">
+    <!-- Основна частина header -->
+    <header class="main-header">
+        <div class="main-header-content">
+            <div class="header-center">
+                <a href="{% url 'women' %}" class="gender-link {% if request.path == '/women/' %}active{% endif %}">
+                    Жіночий одяг
+                </a>
+                <a href="{% url 'home' %}" class="logo">
+                    <img src="{% static 'icons/wearo.jpg' %}" alt="WEARO">
+                </a>
+                <a href="{% url 'men' %}" class="gender-link {% if request.path == '/men/' %}active{% endif %}">
+                    Чоловічий одяг
+                </a>
+            </div>
+
+            <div class="header-right">
                 {% if user.is_authenticated %}
-                <a href="{% url 'wishlist' %}" class="wishlist-btn">
-                    <img src="{% static 'icons/heart.png' %}" alt="Wishlist" style="width:20px; vertical-align:middle;">
-                </a>
-                <a href="{% url 'cart' %}" class="cart-link">
-                    <img src="{% static 'icons/cart.png' %}" alt="Кошик" class="cart-icon">
-                </a>
-                Вітаю, <a href="{% url 'my_account' %}">{{ user.username }}</a> |
-                <a href="{% url 'sign_out' %}">Вийти</a>
+                    <span>Вітаємо, {{ user.username }}</span>
+                    <span>|</span>
+                    <a href="{% url 'wishlist' %}">Вподобано</a>
+                    <span>|</span>
+                    <a href="{% url 'cart' %}">Кошик</a>
                 {% else %}
-                <a href="{% url 'login_email' %}">Увійти</a> |
-                <a href="{% url 'register' %}">Реєстрація</a> |
-                <a href="{% url 'wishlist' %}" class="wishlist-btn">
-                    <img src="{% static 'icons/heart.png' %}" alt="Wishlist" style="width:20px; vertical-align:middle;">
-                </a>
-                <a href="{% url 'cart' %}" class="cart-link">
-                    <img src="{% static 'icons/cart.png' %}" alt="Кошик" class="cart-icon">
-                </a>
+                    <a href="{% url 'login_email' %}">Увійти</a>
+                    <span>|</span>
+                    <a href="{% url 'register' %}">Реєстрація</a>
+                    <span>|</span>
+                    <a href="{% url 'wishlist' %}">Вподобано</a>
+                    <span>|</span>
+                    <a href="{% url 'cart' %}">Кошик</a>
                 {% endif %}
             </div>
         </div>
     </header>
 
-    <div class="search-overlay" id="searchOverlay" onclick="hideOverlay()"></div>
+    <!-- Навігаційне меню -->
+    <nav class="navigation">
+        <div class="nav-content">
+            <div class="nav-menu">
+                <a href="#" class="nav-item">Розпродаж</a>
+                <a href="#" class="nav-item">Бренди</a>
+                <a href="#" class="nav-item">Новинки</a>
+                <a href="#" class="nav-item">Тренди</a>
+                <a href="#" class="nav-item">Одяг</a>
+                <a href="#" class="nav-item">Спортивний одяг</a>
+                <a href="#" class="nav-item">Взуття</a>
+                <a href="#" class="nav-item">Аксесуари</a>
+                <a href="#" class="nav-item">Косметика</a>
+                <a href="#" class="nav-item">Персональне</a>
+            </div>
+        </div>
+    </nav>
 
     <main style="padding: 20px;">
         {% block content %}
@@ -93,7 +99,6 @@
         2025 Магазин одягу "Wearo"
     </footer>
 
-    <script src="{% static 'js/search.js' %}"></script>
+    <script src="{% static 'js/lang.js' %}"></script>
 </body>
-
 </html>
