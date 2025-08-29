@@ -16,11 +16,23 @@
             <div class="top-left">
                 <a href="/help">Допомога та поширені запитання</a>
             </div>
-            <div class="top-right">
-                <select class="language-selector">
-                    <option value="uk">🇺🇦 Українська</option>
-                    <option value="en">🇬🇧 English</option>
-                </select>
+           <div class="top-right">
+                <div class="custom-select" id="languageSelector">
+                    <div class="selected">
+                        <img src="{% static 'icons/ua.png' %}" alt="UA">
+                        <span>Українська</span>
+                    </div>
+                    <ul class="options">
+                        <li data-value="uk" data-flag="{% static 'icons/ua.png' %}">
+                            <img src="{% static 'icons/ua.png' %}" alt="UA">
+                            <span>Українська</span>
+                        </li>
+                        <li data-value="en" data-flag="{% static 'icons/gb.png' %}">
+                            <img src="{% static 'icons/gb.png' %}" alt="EN">
+                            <span>English</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -86,5 +98,7 @@
     <footer style="text-align: center; margin-top: 30px; padding: 10px; border-top: 1px solid #ccc;">
         2025 Магазин одягу "Wearo"
     </footer>
+
+    <script src="{% static 'js/lang.js' %}"></script>
 </body>
 </html>
