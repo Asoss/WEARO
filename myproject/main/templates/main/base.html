@@ -5,7 +5,7 @@
     <title>Магазин одягу</title>
     {% load static %}
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <link rel="stylesheet" href="{% static 'css/auth.css' %}">
 </head>
@@ -95,9 +95,103 @@
         {% endblock %}
     </main>
 
-    <footer style="text-align: center; margin-top: 30px; padding: 10px; border-top: 1px solid #ccc;">
-        2025 Магазин одягу "Wearo"
-    </footer>
+<footer class="site-footer">
+    <div class="footer-blue-line"></div>
+    <div class="footer-gray-line"></div>
+    
+    <div class="footer-top">
+        <div class="newsletter">
+            <p>Приєднуйтесь до WEARO та будьте в курсі новин!</p>
+            <div class="social-icons">
+                <a href="#"><img src="{% static 'icons/fb.jfif' %}" alt="Facebook"></a>
+                <span class="divider">|</span>
+                <a href="#"><img src="{% static 'icons/inst.jpg' %}" alt="Instagram"></a>
+                <span class="divider">|</span>
+                <a href="#"><img src="{% static 'icons/pint.jpg' %}" alt="Pinterest"></a>
+            </div>
+        </div>
+
+    <div class="support">
+        <p>Якщо у вас виникли якісь труднощі зверніться в службу підтримки</p>
+        <form class="form-inline">
+            <input type="text" placeholder="Задати запитання">
+        <button type="submit">Надіслати</button>
+            </form>
+        </div>
+
+        <div class="payments">
+            <p>Платіжні системи:</p>
+            <div class="payment-icons">
+                <img src="{% static 'icons/mast-card.jpg' %}" alt="Mastercard">
+                <img src="{% static 'icons/visa-card.jpg' %}" alt="Visa">
+                <img src="{% static 'icons/pp-card.jpg' %}" alt="PayPal">
+                <img src="{% static 'icons/mono-card.jpg' %}" alt="Mono">
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <div class="footer-columns">
+            <div class="footer-column">
+                <h4>ДОПОМОГА ТА ІНФОРМАЦІЯ</h4>
+                <ul>
+                    <li><a href="#">Допомога</a></li>
+                    <li><a href="#">Відстежити замовлення</a></li>
+                    <li><a href="#">Доставка і повернення</a></li>
+                    <li><a href="#">Мапа сайту</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h4>ПРО КОМПАНІЮ WEARO</h4>
+                <ul>
+                    <li><a href="#">Про нас</a></li>
+                    <li><a href="#">Доставка в WEARO</a></li>
+                    <li><a href="#">Корпоративна відповідальність</a></li>
+                    <li><a href="#">Сайт для інвесторів</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h4>БІЛЬШЕ ВІД WEARO</h4>
+                <ul>
+                    <li><a href="#">Мобільні додатки</a></li>
+                    <li><a href="#">Подарункові сертифікати</a></li>
+                    <li><a href="#">Чорна п'ятниця</a></li>
+                    <li><a href="#">ASOS x Thrift+</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-countries">
+            <h4>КУПУЙТЕ ТАКОЖ У:</h4>
+            <div class="country-flag-highlighted">
+                <img src="{% static 'icons/ch.jpg' %}" alt="Швейцарія">
+                <a href="#" style="color: white">CH</a>
+            </div>
+            <div class="custom-space"></div>
+            <p class="international-sites">Наші міжнародні сайти:</p>
+            <ul class="flags">
+                <li><img src="{% static 'icons/ch.jpg' %}" alt="Швейцарія"></li>
+                <li><img src="{% static 'icons/md.jpg' %}" alt="Молдова"></li>
+                <li><img src="{% static 'icons/cn.jpg' %}" alt="Китай"></li>
+                <li><img src="{% static 'icons/co.jpg' %}" alt="Колумбія"></li>
+                <li><img src="{% static 'icons/ua.png' %}" alt="Україна"></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer-copy">
+        <div class="footer-copy-left">
+            <p>© WEARO 2025 року</p>
+        </div>
+        <div class="footer-copy-right">
+            <div class="footer-links">
+                <a href="#">Конфіденційність</a> | <a href="#">Файли cookie</a> | <a href="#">Умови</a> | <a href="#">Спеціальні можливості</a>
+            </div>
+        </div>
+    </div>
+</footer>
 
     <script src="{% static 'js/lang.js' %}"></script>
 </body>
