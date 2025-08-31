@@ -350,7 +350,7 @@ main {
 /* Синя лінія */
 .footer-blue-line {
     width: 100%;
-    height: 19px;
+    height: 20px;
     background-color: #2c4eb6;
     margin: 0;
 }
@@ -367,12 +367,17 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 20px 40px;
-    background: #f7f7f7;
+    padding: 15px 40px;
+    padding-bottom: 50px;
+    background: white;
     color: #000;
     flex-wrap: wrap;
 }
-
+.newsletter,
+.support,
+.payments {
+    flex: 1;
+}
 .footer-top p {
     margin-bottom: 10px;
     font-size: 16px;
@@ -382,7 +387,6 @@ main {
 /* --------- Соц. іконки з рисочками --------- */
 .newsletter {
     text-align: left;
-    flex: 1;
 }
 
 .social-icons {
@@ -395,33 +399,26 @@ main {
 .social-icons a img {
     width: 28px;
     height: 28px;
+    padding: 4px 9px;
 }
 
-.social-icons .divider {
-    font-size: 20px;
-    color: #000;
-    font-weight: bold;
+.social-icons a:not(:last-child) img {
+    border-right: 3px solid #000;
 }
+
 
 .social-icons a img:hover {
     opacity: 0.7;
 }
 
-.social-icons a:not(:last-child)::after {
-    content: "";
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 1px;
-    height: 18px;
-    background: #000;
-}
+
 
 /* --------- Support Form (inline) --------- */
 .support {
     text-align: center;
-    flex: 1;
+    padding: 0 60px;
+    box-sizing: border-box;
+    padding-left: 150px;
 }
 
 .support form.support-inline-form {
@@ -439,12 +436,12 @@ main {
 }
 
 .support .form-inline input {
-    padding: 8px 12px;
+    padding: 8px 19px;
     border: 2px solid #000;
     border-right: none;
     outline: none;
     font-size: 16px;
-    width: 343px;
+    width:343px;
     margin-left:30px;
 }
 
@@ -467,21 +464,18 @@ main {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 16px;
     font-weight: 500;
 }
 
 /* --------- Payments --------- */
 .payments {
     text-align: right;
-    flex: 1;
 }
 
 .payments p {
-    font-size: 16px;
-    font-weight: 500;
-    margin-left: 227px;
-    text-align: left ;
+    text-align: left;
+    margin-left: auto;
+    width: fit-content;
 }
 
 .payment-icons {
@@ -494,7 +488,7 @@ main {
     width: 50px;
     height: 32px;
     object-fit: contain;
-    border-right: 2px solid #000;
+    border-right: 3px solid #000;
     padding: 4px 8px;
 }
 
@@ -520,9 +514,8 @@ main {
 .footer-column h4 {
     font-size: 16px;
     margin-bottom: 15px;
-    font-weight: bold;
     text-transform: uppercase;
-    color: #fff;
+    color: white;
 }
 
 .footer-column ul {
@@ -536,8 +529,8 @@ main {
 }
 
 .footer-column ul li a {
-    color: #fff;
-    font-size: 15px;
+    color: white;
+    font-size: 14px;
     text-decoration: none;
     transition: color 0.2s ease;
 }
@@ -556,7 +549,7 @@ main {
     margin-bottom: 15px;
     font-weight: bold;
     text-transform: uppercase;
-    color: #fff;
+    color: white;
     text-align: center;
 }
 .international-sites {
@@ -567,8 +560,7 @@ main {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 10px;
-    padding: 4px 8px;
+    padding: 4px 2px;
 }
 
 .country-flag-highlighted img {
@@ -578,19 +570,15 @@ main {
 }
 
 .country-flag-highlighted span {
-    color: #fff;
+    color: white;
     font-weight: bold;
     font-size: 14px;
 }
 
-.custom-space {
-    height: 20px;
-}
 
 .international-sites {
-    font-size: 15px;
-    color: #fff;
-    margin-bottom: 12px;
+    font-size: 14px;
+    color: white;
     text-align: center;
 }
 
