@@ -15,7 +15,7 @@ body,
     font-family: 'Roboto Flex', sans-serif;
 }
 
-form {
+form .auth {
     display: flex;
     flex-direction: column;
 }
