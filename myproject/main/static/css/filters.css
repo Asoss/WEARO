@@ -1,0 +1,193 @@
+/* Контейнер для фільтрів */
+.filters-container {
+    position: fixed;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 260px;
+    background: #fff;
+    border: 1px solid #000;
+    border-left: none;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Заголовок фільтрів з іконкою */
+.filters-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    background: #fff;
+    border-bottom: 1px solid #000;
+    font-weight: 600;
+    font-size: 14px;
+    color: #000;
+}
+
+.filters-header img {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+}
+
+/* Блок фільтра */
+.filter-block {
+    border-bottom: 1px solid #000;
+}
+
+/* Заголовок фільтра */
+.filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    cursor: pointer;
+    background: #fff;
+}
+
+.filter-header span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #000;
+}
+
+/* Кнопка розгортання */
+.toggle-btn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    color: #000;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Контент фільтра */
+.filter-content {
+    padding: 10px 15px 15px 15px;
+    display: block;
+    background: #fff;
+}
+
+/* Повзунок ціни */
+.price-range {
+    margin: 15px 0;
+    position: relative;
+    height: 40px;
+}
+
+.price-slider {
+    position: absolute;
+    width: 100%;
+    pointer-events: none;
+    background: none;
+    height: 5px;
+}
+
+.price-slider::-webkit-slider-thumb {
+    pointer-events: auto;
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #000;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.price-slider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: #000;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+.price-values {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #000;
+    margin-top: 5px;
+}
+
+/* Поля введення ціни */
+.filter-content input[type="number"] {
+    width: 70px;
+    padding: 6px 8px;
+    border: 1px solid #000;
+    font-size: 12px;
+    background: #fff;
+    color: #000;
+}
+
+.filter-content input[type="number"]:focus {
+    outline: none;
+    border-color: #000;
+}
+
+/* Розміри як кнопки */
+.size-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.size-btn {
+    padding: 8px 4px;
+    border: 1px solid #000;
+    background: #fff;
+    text-align: center;
+    font-size: 12px;
+    cursor: pointer;
+    color: #000;
+}
+
+.size-btn.active {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+}
+
+/* Чекбокси */
+.filter-content label {
+    display: flex;
+    align-items: center;
+    padding: 6px 0;
+    cursor: pointer;
+    font-size: 12px;
+    color: #000;
+}
+
+.filter-content input[type="checkbox"] {
+    margin-right: 8px;
+    transform: scale(0.9);
+    accent-color: #000;
+}
+
+/* Основний контент */
+.main-content {
+    margin-left: 280px;
+    /* зсув від фільтрів */
+    padding: 20px;
+}
+
+/* Адаптивність */
+@media (max-width: 768px) {
+    .filters-container {
+        position: static;
+        width: 100%;
+        transform: none;
+        margin-bottom: 20px;
+        border: 1px solid #000;
+        box-shadow: none;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+}
