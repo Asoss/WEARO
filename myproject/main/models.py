@@ -32,13 +32,19 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     brand = models.CharField(max_length=100, blank=True)
     color = models.ForeignKey(Color, on_delete=models.SET_NULL, null=True, blank=True)
-    available = models.BooleanField(default=True)
-    model_height = models.PositiveIntegerField(blank=True, null=True, help_text="Зріст моделі в см")
-    model_size = models.CharField(max_length=10, blank=True, help_text="Розмір одягу на моделі (наприклад, S)")
-    care = models.TextField(blank=True, help_text="Про догляд")  
-    extra_details = models.TextField(blank=True, help_text="Про мене")
+    stock = models.PositiveIntegerField(default=1, help_text="Кількість доступних одиниць товару")
+    look_after_me = models.TextField(blank=True, help_text="Про догляд")  
+    about_me = models.TextField(blank=True, help_text="Про мене", default="Машинне прання згідно з інструкціями на етикетках з догляду")
+    product_details = models.TextField(blank=True, help_text="Деталі продукту")
     gender = models.IntegerField(choices=GENDER_CHOICES, default=0)
+    discount = models.PositiveIntegerField(default=0, help_text="Знижка у відсотках")
 
+    @property
+    def final_price(self):
+        if self.discount > 0:
+            return self.price * (1 - self.discount / 100)
+        return self.price
+    
     def __str__(self):
         return self.name
 

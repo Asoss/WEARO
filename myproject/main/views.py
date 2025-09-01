@@ -18,7 +18,7 @@ from django.core.paginator import Paginator
 
 
 def home(request):
-    products = Product.objects.filter(available=True)
+    products = Product.objects.filter( stock__gt=0)
     categories = Category.objects.all()
 
     category_filter = request.GET.get('category')
@@ -40,7 +40,7 @@ def home(request):
 
 def product_list_by_gender(request, gender: bool, title: str):
     """Універсальна в’юшка для списку товарів за статтю"""
-    products = Product.objects.filter(gender=gender, available=True)
+    products = Product.objects.filter(gender=gender, stock__gt=0)
 
     wishlist_products = []
     if request.user.is_authenticated:
@@ -55,11 +55,11 @@ def product_list_by_gender(request, gender: bool, title: str):
 
 
 def women(request):
-    return product_list_by_gender(request, gender=False, title="Жіночі товари")
+    return product_list_by_gender(request, gender=0, title="Жіночі товари")
 
 
 def men(request):
-    return product_list_by_gender(request, gender=True, title="Чоловічі товари")
+    return product_list_by_gender(request, gender=1, title="Чоловічі товари")
 
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
