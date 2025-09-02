@@ -204,9 +204,9 @@
 
 .search-bar input {
     border: none;
-    padding: 14px 18px;
+    padding: 7px 9px;
     outline: none;
-    width: 500px;
+    width: 600px;
     font-size: 16px;
 }
 
