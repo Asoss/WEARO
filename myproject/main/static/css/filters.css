@@ -1,192 +1,3 @@
-/* Контейнер для фільтрів */
-.filters-container {
-    position: static;
-    width: 260px;
-    background: #fff;
-    border: 1px solid #000;
-    border-left: none;
-}
-
-/* Заголовок фільтрів з іконкою */
-.filters-header {
-    display: flex;
-    align-items: center;
-    padding: 12px 15px;
-    background: #fff;
-    border-bottom: 1px solid #000;
-    font-weight: 600;
-    font-size: 14px;
-    color: #000;
-}
-
-.filters-header img {
-    width: 16px;
-    height: 16px;
-    margin-right: 8px;
-}
-
-/* Блок фільтра */
-.filter-block {
-    border-bottom: 1px solid #000;
-}
-
-/* Заголовок фільтра */
-.filter-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 15px;
-    cursor: pointer;
-    background: #fff;
-}
-
-.filter-header span {
-    font-size: 14px;
-    font-weight: 500;
-    color: #000;
-}
-
-/* Кнопка розгортання */
-.toggle-btn {
-    background: none;
-    border: none;
-    font-size: 16px;
-    font-weight: bold;
-    color: #000;
-    cursor: pointer;
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Контент фільтра */
-.filter-content {
-    padding: 10px 15px 15px 15px;
-    display: block;
-    background: #fff;
-}
-
-/* Повзунок ціни */
-.price-range {
-    margin: 15px 0;
-    position: relative;
-    height: 40px;
-}
-
-.price-slider {
-    position: absolute;
-    width: 100%;
-    pointer-events: none;
-    background: none;
-    height: 5px;
-}
-
-.price-slider::-webkit-slider-thumb {
-    pointer-events: auto;
-    -webkit-appearance: none;
-    width: 15px;
-    height: 15px;
-    background: #000;
-    border-radius: 50%;
-    cursor: pointer;
-}
-
-.price-slider::-moz-range-thumb {
-    width: 15px;
-    height: 15px;
-    background: #000;
-    border-radius: 50%;
-    cursor: pointer;
-    border: none;
-}
-
-.price-values {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    color: #000;
-    margin-top: 5px;
-}
-
-/* Поля введення ціни */
-.filter-content input[type="number"] {
-    width: 70px;
-    padding: 6px 8px;
-    border: 1px solid #000;
-    font-size: 12px;
-    background: #fff;
-    color: #000;
-}
-
-.filter-content input[type="number"]:focus {
-    outline: none;
-    border-color: #000;
-}
-
-/* Розміри як кнопки */
-.size-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin: 10px 0;
-}
-
-.size-btn {
-    padding: 8px 4px;
-    border: 1px solid #000;
-    background: #fff;
-    text-align: center;
-    font-size: 12px;
-    cursor: pointer;
-    color: #000;
-}
-
-.size-btn.active {
-    background: #000;
-    color: #fff;
-    border-color: #000;
-}
-
-/* Чекбокси */
-.filter-content label {
-    display: flex;
-    align-items: center;
-    padding: 6px 0;
-    cursor: pointer;
-    font-size: 12px;
-    color: #000;
-}
-
-.filter-content input[type="checkbox"] {
-    margin-right: 8px;
-    transform: scale(0.9);
-    accent-color: #000;
-}
-
-/* Основний контент */
-.main-content {
-    margin-left: 280px;
-}
-
-/* Адаптивність */
-@media (max-width: 768px) {
-    .filters-container {
-        position: static;
-        width: 100%;
-        transform: none;
-        margin-bottom: 20px;
-        border: 1px solid #000;
-        box-shadow: none;
-    }
-
-    .main-content {
-        margin-left: 0;
-    }
-}
-
-
 /* Пошук */
 .search-bar {
     text-align: center;
@@ -212,7 +23,6 @@
 
 .search-bar button {
     background: transparent;
-    /* прозорий фон */
     border: none;
     padding: 0 14px;
     cursor: pointer;
@@ -283,3 +93,392 @@
     transform: scale(1.03);
 }
 
+/* Основний лайаут сторінки */
+.page-container {
+    display: flex;
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Контейнер для фільтрів */
+.filters-container {
+    position: static;
+    width: 260px;
+    flex-shrink: 0;
+    background: #fff;
+    border: 1px solid #000;
+    border-left: none;
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+}
+
+/* Заголовок фільтрів з іконкою */
+.filters-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    background: #fff;
+    border-bottom: 1px solid #000;
+    font-weight: 600;
+    font-size: 14px;
+    color: #000;
+}
+
+.filters-header img {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+}
+
+/* Блок фільтра */
+.filter-block {
+    border-bottom: 1px solid #000;
+}
+
+.filter-block:last-child {
+    border-bottom: none;
+}
+
+/* Заголовок фільтра */
+.filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    cursor: pointer;
+    background: #fff;
+    transition: background-color 0.2s;
+}
+
+.filter-header:hover {
+    background-color: #f9f9f9;
+}
+
+.filter-header span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #000;
+}
+
+/* Кнопка розгортання */
+.toggle-btn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    color: #000;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+
+.toggle-btn:hover {
+    color: #333;
+}
+
+/* Контент фільтра */
+.filter-content {
+    padding: 10px 15px 15px 15px;
+    background: #fff;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.filter-content[style*="block"] {
+    max-height: none;
+    padding: 10px 15px 15px 15px;
+}
+
+/* Повзунок ціни */
+.price-range {
+    margin: 15px 0;
+    position: relative;
+    height: 40px;
+}
+
+.price-slider {
+    position: absolute;
+    width: 100%;
+    pointer-events: none;
+    background: none;
+    height: 5px;
+    background: #000;
+    outline: none;
+}
+
+.price-slider::-webkit-slider-track {
+    background: #000;
+    height: 2px;
+}
+
+.price-slider::-webkit-slider-thumb {
+    pointer-events: auto;
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #000;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+.price-slider::-moz-range-track {
+    background: #000;
+    height: 2px;
+    border: none;
+}
+
+.price-slider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: #000;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+.price-values {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #000;
+    margin-top: 15px;
+}
+
+/* Поля введення ціни */
+.filter-content input[type="number"] {
+    width: 70px;
+    padding: 6px 8px;
+    border: 1px solid #000;
+    font-size: 12px;
+    background: #fff;
+    color: #000;
+}
+
+.filter-content input[type="number"]:focus {
+    outline: none;
+    border-color: #000;
+}
+
+/* Розміри як квадратні кнопки */
+.size-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 10px 0;
+}
+
+.size-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid #000;
+    border-radius: 6px;
+    background: #fff;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    color: #000;
+    transition: all 0.2s ease;
+}
+
+.size-btn:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-1px);
+}
+
+.size-btn.selected,
+.size-btn.active {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+}
+
+/* Чекбокси */
+.filter-content label {
+    display: flex;
+    align-items: center;
+    padding: 6px 0;
+    cursor: pointer;
+    font-size: 12px;
+    color: #000;
+    transition: all 0.2s ease;
+}
+
+.filter-content label:hover {
+    background-color: #f5f5f5;
+    padding-left: 5px;
+    border-radius: 4px;
+}
+
+.filter-content input[type="checkbox"] {
+    margin-right: 8px;
+    transform: scale(0.9);
+    accent-color: #000;
+}
+
+/* Кнопка згорнути - чорний текст з підкресленням */
+.collapse-btn {
+    font-size: 12px;
+    color: #000 !important;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    margin-top: 15px;
+    padding: 5px 0;
+    transition: opacity 0.2s;
+}
+
+.collapse-btn:hover {
+    opacity: 0.7;
+}
+
+/* Кнопка застосувати фільтри */
+.apply-filters-btn {
+    width: calc(100% - 30px);
+    margin: 20px 15px;
+    padding: 12px;
+    background-color: #000;
+    color: white;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.apply-filters-btn:hover {
+    background-color: #333;
+    transform: translateY(-1px);
+}
+
+/* Контент товарів */
+.main-content {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Стилі товарів */
+.product {
+    position: relative;
+    width: 280px;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    background: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.product img[alt*="heart"] {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.product img:not([alt*="heart"]) {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.product h3 {
+    margin: 15px 0 10px 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+}
+
+.product p {
+    font-size: 18px;
+    font-weight: bold;
+    color: #000;
+    margin: 0 0 15px 0;
+}
+
+.product a {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #000;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.product a:hover {
+    background: #333;
+}
+
+/* Адаптивність */
+@media (max-width: 768px) {
+    .page-container {
+        flex-direction: column;
+        padding: 0 15px;
+    }
+
+    .filters-container {
+        position: static;
+        width: 100%;
+        transform: none;
+        margin-bottom: 20px;
+        border: 1px solid #000;
+        box-shadow: none;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .search-bar input {
+        width: 300px;
+    }
+
+    .categories {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .size-grid {
+        justify-content: center;
+    }
+
+    .size-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 13px;
+    }
+
+    .filter-content label {
+        font-size: 13px;
+        padding: 8px 0;
+    }
+
+    .product {
+        width: 100%;
+        max-width: 280px;
+        margin: 0 auto;
+    }
+}
