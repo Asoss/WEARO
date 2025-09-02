@@ -2,124 +2,172 @@
 {% load static %}
 
 {% block content %}
-  <link rel="stylesheet" href="{% static 'css/filters.css' %}" />
+<link rel="stylesheet" href="{% static 'css/filters.css' %}">
 
-  <!-- 🔽 ФІЛЬТРИ -->
-  <div class="filters-container">
+<!-- Пошук -->
+<div class="search-bar">
+    <form method="get" action="{% url 'product_search' %}">
+        <input type="text" name="q" placeholder="Пошук" value="{{ request.GET.q|default:'' }}">
+        <button type="submit">
+            <img src="{% static 'icons/search.jpg' %}" alt="Пошук">
+        </button>
+    </form>
+</div>
+
+<!-- Breadcrumb -->
+<div class="breadcrumb">
+    <a href="{% url 'home' %}">Головна</a> \ 
+    <span>{{ title }}</span>
+</div>
+
+<!-- Заголовок -->
+<h1 class="page-title">{{ title|upper }}</h1>
+
+<!-- Категорії -->
+<div class="categories">
+    <div class="category">
+        <img src="{% static 'category/women/jeans.jpg' %}" alt="Джинси">
+        <p>ДЖИНСИ</p>
+    </div>
+    <div class="category">
+        <img src="{% static 'category/women/pants.jpg' %}" alt="Штани">
+        <p>ШТАНИ</p>
+    </div>
+    <div class="category">
+        <img src="{% static 'category/women/sweaters.jpg' %}" alt="Светри">
+        <p>СВЕТРИ ТА СВІНШОТИ</p>
+    </div>
+    <div class="category">
+        <img src="{% static 'category/women/tops.jpg' %}" alt="Футболки">
+        <p>ТОПИ ТА ФУТБОЛКИ</p>
+    </div>
+</div>
+
+<!-- ФІЛЬТРИ -->
+<div class="filters-container">
     <div class="filters-header">
-      <img src="{% static 'icons/filter.jpg' %}" alt="Filter" />
-      Фільтри
+        <img src="{% static 'icons/filter.jpg' %}" alt="Filter" />
+        Фільтри
     </div>
 
     <!-- Ціна -->
     <div class="filter-block">
-      <div class="filter-header">
-        <span>Ціна</span>
-        <button class="toggle-btn">+</button>
-      </div>
-      <div class="filter-content" style="display: none;">
-        <div class="price-range">
-          <input type="range" id="priceSliderMin" min="0" max="10000" value="0" class="price-slider" />
-          <input type="range" id="priceSliderMax" min="0" max="10000" value="10000" class="price-slider" />
-          <div class="price-values">
-            <span id="priceMin">0</span> грн — <span id="priceMax">∞</span> грн
-          </div>
+        <div class="filter-header">
+            <span>Ціна</span>
+            <button class="toggle-btn">+</button>
         </div>
-      </div>
+        <div class="filter-content" style="display: none;">
+            <div class="price-range">
+                <input type="range" id="priceSliderMin" min="0" max="10000" value="0" class="price-slider" />
+                <input type="range" id="priceSliderMax" min="0" max="10000" value="10000" class="price-slider" />
+                <div class="price-values">
+                    <span id="priceMin">0</span> грн — <span id="priceMax">∞</span> грн
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Розмір -->
     <div class="filter-block">
-      <div class="filter-header">
-        <span>Розмір</span>
-        <button class="toggle-btn">+</button>
-      </div>
-      <div class="filter-content" style="display: none;">
-        <div class="size-grid">
-          <div class="size-btn">36</div>
-          <div class="size-btn">37</div>
-          <div class="size-btn">38</div>
-          <div class="size-btn">39</div>
-          <div class="size-btn">40</div>
-          <div class="size-btn">41</div>
-          <div class="size-btn">42</div>
-          <div class="size-btn">43</div>
-          <div class="size-btn">44</div>
-          <div class="size-btn">45</div>
-          <div class="size-btn">46</div>
-          <div class="size-btn">47</div>
-          <div class="size-btn">48</div>
-          <div class="size-btn">49</div>
+        <div class="filter-header">
+            <span>Розмір</span>
+            <button class="toggle-btn">+</button>
         </div>
-
-        <div style="margin-top: 15px;">
-          <strong style="font-size: 12px; color: #000;">Довжина</strong>
-          <div class="size-grid" style="margin-top: 5px;">
-            <div class="size-btn">29</div>
-            <div class="size-btn">39</div>
-            <div class="size-btn">40</div>
-            <div class="size-btn">41</div>
-            <div class="size-btn">42</div>
-            <div class="size-btn">43</div>
-          </div>
+        <div class="filter-content" style="display: none;">
+            <div class="size-grid">
+                <div class="size-btn">36</div>
+                <div class="size-btn">37</div>
+                <div class="size-btn">38</div>
+                <div class="size-btn">39</div>
+                <div class="size-btn">40</div>
+                <div class="size-btn">41</div>
+                <div class="size-btn">42</div>
+                <div class="size-btn">43</div>
+                <div class="size-btn">44</div>
+                <div class="size-btn">45</div>
+                <div class="size-btn">46</div>
+                <div class="size-btn">47</div>
+                <div class="size-btn">48</div>
+                <div class="size-btn">49</div>
+            </div>
+            <div style="margin-top: 15px;">
+                <strong style="font-size: 12px; color: #000;">Довжина</strong>
+                <div class="size-grid" style="margin-top: 5px;">
+                    <div class="size-btn">29</div>
+                    <div class="size-btn">39</div>
+                    <div class="size-btn">40</div>
+                    <div class="size-btn">41</div>
+                    <div class="size-btn">42</div>
+                    <div class="size-btn">43</div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
 
-    <!-- Сповіщення про наявність товару -->
+    <!-- Сповіщення -->
     <div class="filter-block">
-      <div class="filter-header">
-        <span>Сповіщення про наявність товару</span>
-        <button class="toggle-btn">+</button>
-      </div>
-      <div class="filter-content" style="display: none;">
-        <label><input type="checkbox" />Розпродажені прямий (2)</label>
-        <label><input type="checkbox" checked />Вільний прямий (3)</label>
-        <label><input type="checkbox" checked />Розслаблена прилич (45)</label>
-        <label><input type="checkbox" checked />Вільний прямий (1)</label>
-        <label><input type="checkbox" />Мішковина (1)</label>
-        <label><input type="checkbox" />Прямий (1)</label>
-        <label><input type="checkbox" />Вільний (1)</label>
-      </div>
-    </div>
-  </div>
-  <!-- 🔼 КІНЕЦЬ ФІЛЬТРІВ -->
-
-  <!-- Основний контент -->
-  <div class="main-content">
-    <h1 style="text-align:center;">{{ title }}</h1>
-
-    <div style="display: flex; flex-wrap: wrap; justify-content: center;">
-      {% for product in products %}
-        <div class="product" style="position:relative; margin:10px; border:1px solid #ddd; padding:10px;">
-          {% if user.is_authenticated %}
-            {% if product.id in wishlist_products %}
-              <img src="{% static 'icons/heart_filled.png' %}" data-filled="{% static 'icons/heart_filled.png' %}" data-empty="{% static 'icons/heart.png' %}" class="wishlist-heart" data-product-id="{{ product.id }}" style="position:absolute; top:10px; right:10px; width:24px; height:24px; cursor:pointer;" />
-            {% else %}
-              <img src="{% static 'icons/heart.png' %}" data-filled="{% static 'icons/heart_filled.png' %}" data-empty="{% static 'icons/heart.png' %}" class="wishlist-heart" data-product-id="{{ product.id }}" style="position:absolute; top:10px; right:10px; width:24px; height:24px; cursor:pointer;" />
-            {% endif %}
-          {% else %}
-            <a href="{% url 'login_email' %}"><img src="{% static 'icons/heart.png' %}" style="position:absolute; top:10px; right:10px; width:24px; height:24px;" /></a>
-          {% endif %}
-
-          {% with first_image=product.images.first %}
-            {% if first_image %}
-              <img src="{{ first_image.image.url }}" alt="{{ product.name }}" style="max-width:200px;" />
-            {% else %}
-              <p>Немає фото</p>
-            {% endif %}
-          {% endwith %}
-
-          <h3>{{ product.name }}</h3>
-          <p>{{ product.final_price }} грн</p>
-          <a href="{% url 'product_detail' product.pk %}">Детальніше</a>
+        <div class="filter-header">
+            <span>Сповіщення про наявність товару</span>
+            <button class="toggle-btn">+</button>
         </div>
-      {% empty %}
-        <p>Немає товарів</p>
-      {% endfor %}
+        <div class="filter-content" style="display: none;">
+            <label><input type="checkbox" />Розпродажені прямий (2)</label>
+            <label><input type="checkbox" checked />Вільний прямий (3)</label>
+            <label><input type="checkbox" checked />Розслаблена прилич (45)</label>
+            <label><input type="checkbox" checked />Вільний прямий (1)</label>
+            <label><input type="checkbox" />Мішковина (1)</label>
+            <label><input type="checkbox" />Прямий (1)</label>
+            <label><input type="checkbox" />Вільний (1)</label>
+        </div>
     </div>
-  </div>
+</div>
+<!-- КІНЕЦЬ ФІЛЬТРІВ -->
 
-  <script src="{% static 'js/filters.js' %}"></script>
-  <script src="{% static 'js/wishlist.js' %}"></script>
+<!-- Товари -->
+<div class="main-content">
+    <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+        {% for product in products %}
+        <div class="product" style="position:relative; margin:10px; border:1px solid #ddd; padding:10px;">
+            {% if user.is_authenticated %}
+                {% if product.id in wishlist_products %}
+                    <img src="{% static 'icons/heart_filled.png' %}" 
+                         data-filled="{% static 'icons/heart_filled.png' %}" 
+                         data-empty="{% static 'icons/heart.png' %}" 
+                         class="wishlist-heart" 
+                         data-product-id="{{ product.id }}" 
+                         style="position:absolute; top:10px; right:10px; width:24px; height:24px; cursor:pointer;" />
+                {% else %}
+                    <img src="{% static 'icons/heart.png' %}" 
+                         data-filled="{% static 'icons/heart_filled.png' %}" 
+                         data-empty="{% static 'icons/heart.png' %}" 
+                         class="wishlist-heart" 
+                         data-product-id="{{ product.id }}" 
+                         style="position:absolute; top:10px; right:10px; width:24px; height:24px; cursor:pointer;" />
+                {% endif %}
+            {% else %}
+                <a href="{% url 'login_email' %}">
+                    <img src="{% static 'icons/heart.png' %}" style="position:absolute; top:10px; right:10px; width:24px; height:24px;" />
+                </a>
+            {% endif %}
+
+            {% with first_image=product.images.first %}
+                {% if first_image %}
+                    <img src="{{ first_image.image.url }}" alt="{{ product.name }}" style="max-width:200px;" />
+                {% else %}
+                    <p>Немає фото</p>
+                {% endif %}
+            {% endwith %}
+
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.final_price }} грн</p>
+            <a href="{% url 'product_detail' product.pk %}">Детальніше</a>
+        </div>
+        {% empty %}
+            <p>Немає товарів</p>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="{% static 'js/filters.js' %}"></script>
+<script src="{% static 'js/wishlist.js' %}"></script>
 {% endblock %}

@@ -1,14 +1,10 @@
 /* Контейнер для фільтрів */
 .filters-container {
-    position: fixed;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
+    position: static;
     width: 260px;
     background: #fff;
     border: 1px solid #000;
     border-left: none;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Заголовок фільтрів з іконкою */
@@ -172,8 +168,6 @@
 /* Основний контент */
 .main-content {
     margin-left: 280px;
-    /* зсув від фільтрів */
-    padding: 20px;
 }
 
 /* Адаптивність */
@@ -191,3 +185,101 @@
         margin-left: 0;
     }
 }
+
+
+/* Пошук */
+.search-bar {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.search-bar form {
+    display: inline-flex;
+    border: 2px solid #000;
+    border-radius: 0;
+    overflow: hidden;
+    align-items: center;
+    background: #fff;
+}
+
+.search-bar input {
+    border: none;
+    padding: 14px 18px;
+    outline: none;
+    width: 500px;
+    font-size: 16px;
+}
+
+.search-bar button {
+    background: transparent;
+    /* прозорий фон */
+    border: none;
+    padding: 0 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-bar button img {
+    width: 20px;
+    height: 20px;
+    filter: invert(0);
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    text-align: center;
+    font-size: 14px;
+    margin: 10px 0 30px 0;
+}
+
+.breadcrumb a {
+    color: #666;
+    text-decoration: none;
+}
+
+.breadcrumb span {
+    color: #000;
+    font-weight: 500;
+}
+
+/* Заголовок */
+.page-title {
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 40px;
+}
+
+/* Категорії */
+.categories {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin: 0 auto 60px auto;
+    max-width: 1400px;
+}
+
+.category {
+    text-align: center;
+    transition: transform 0.2s ease-in-out;
+}
+
+.category img {
+    width: 100%;
+    height: 410px;
+    object-fit: cover;
+    border-radius: 0;
+}
+
+.category p {
+    margin-top: 12px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.category:hover {
+    transform: scale(1.03);
+}
+
