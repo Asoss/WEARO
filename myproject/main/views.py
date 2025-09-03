@@ -277,7 +277,7 @@ def search_results(request):
     products = Product.objects.all()
 
     if query:
-        products = products.filter(name__icontains=query)
+        products = products.filter(name__iregex=rf'{query}')
     if brand_filter:
         products = products.filter(brand=brand_filter)
     if size_filter:

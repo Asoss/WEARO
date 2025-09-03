@@ -1,13 +1,13 @@
 function showOverlay() {
     document.getElementById('searchOverlay').style.display = 'block';
-    document.getElementById('recentSearches').style.display = 'block';
-    updateRecentList();
+    // document.getElementById('recentSearches').style.display = 'block'; // 🔒 вимкнено
+    // updateRecentList(); // 🔒 вимкнено
     toggleIcons();
 }
 
 function hideOverlay() {
     document.getElementById('searchOverlay').style.display = 'none';
-    document.getElementById('recentSearches').style.display = 'none';
+    // document.getElementById('recentSearches').style.display = 'none'; // 🔒 вимкнено
 }
 
 function clearSearch() {
@@ -16,6 +16,7 @@ function clearSearch() {
     toggleIcons();
 }
 
+/* 🔒 saveSearchTerm повністю закоментований
 function saveSearchTerm() {
     const input = document.getElementById('searchInput');
     const value = input.value.trim();
@@ -28,7 +29,9 @@ function saveSearchTerm() {
         }
     }
 }
+*/
 
+/* 🔒 updateRecentList закоментований
 function updateRecentList() {
     const list = document.getElementById('searchList');
     list.innerHTML = '';
@@ -45,23 +48,25 @@ function updateRecentList() {
         list.appendChild(li);
     });
 }
+*/
 
-
+/* 🔒 clearRecentSearches закоментований
 function clearRecentSearches() {
     localStorage.removeItem('recentSearches');
     updateRecentList();
 }
+*/
 
 function toggleIcons() {
     const input = document.getElementById('searchInput');
-    const clearBtn = document.querySelector('.clear-btn');
+    // const clearBtn = document.querySelector('.clear-btn'); // 🔒 прибрав
     const searchIcon = document.querySelector('.search-icon');
 
     if (input.value.trim()) {
-        clearBtn.style.display = 'block';
+        // clearBtn.style.display = 'block'; // 🔒 вимкнено
         searchIcon.style.backgroundColor = '#0077cc';
     } else {
-        clearBtn.style.display = 'none';
+        // clearBtn.style.display = 'none'; // 🔒 вимкнено
         searchIcon.style.backgroundColor = 'white';
     }
 }
@@ -70,5 +75,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('searchInput');
     if (input) {
         input.addEventListener('input', toggleIcons);
+    }
+
+    // робимо нечутливим до регістру (автоматично переводимо в lowerCase)
+    const form = document.getElementById('filter-form');
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            const field = document.getElementById('searchInput');
+            field.value = field.value.trim();
+        });
     }
 });

@@ -37,8 +37,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 filterContent.style.display = 'none';
                 toggleBtn.textContent = '+';
             }
-
-            console.log('Згорнути клік працює!'); // для перевірки
         });
     });
 
@@ -60,6 +58,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 this.style.backgroundColor = '#fff';
                 this.style.color = '#000';
             }
+
+            // Застосовуємо фільтри після зміни
+            applyFilters();
         });
     });
 
@@ -69,7 +70,8 @@ document.addEventListener('DOMContentLoaded', function () {
     filterCheckboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function () {
             console.log('Filter changed:', this.parentElement.textContent.trim());
-            // Тут можна додати логіку для застосування фільтрів
+            // Застосовуємо фільтри після зміни
+            applyFilters();
         });
     });
 
@@ -81,16 +83,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (priceSliderMin && priceSliderMax) {
         function updatePriceDisplay() {
-            const minVal = parseInt(priceSliderMin.value);
-            const maxVal = parseInt(priceSliderMax.value);
+            let minVal = parseInt(priceSliderMin.value);
+            let maxVal = parseInt(priceSliderMax.value);
 
-            // Перевіряємо, щоб мінімальне значення не було більше максимального
+            // Щоб мін не перетягував макс
             if (minVal >= maxVal) {
-                priceSliderMin.value = maxVal - 100;
+                minVal = maxVal - 1;
+                priceSliderMin.value = minVal;
+            }
+
+            // Щоб макс не йшов нижче мін
+            if (maxVal <= minVal) {
+                maxVal = minVal + 1;
+                priceSliderMax.value = maxVal;
             }
 
             priceMinSpan.textContent = priceSliderMin.value;
-            priceMaxSpan.textContent = priceSliderMax.value === '10000' ? '∞' : priceSliderMax.value;
+            priceMaxSpan.textContent = priceSliderMax.value === '10000' ? '10000' : priceSliderMax.value;
+
+            applyFilters();
         }
 
         priceSliderMin.addEventListener('input', updatePriceDisplay);
@@ -116,8 +127,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (blockTitle === 'Розмір') {
                 // Перевіряємо чи це в секції розміру чи довжини
-                const sizeSection = btn.closest('.size-grid').previousElementSibling;
-                if (sizeSection && sizeSection.tagName === 'STRONG') {
+                const lengthSection = btn.closest('.size-grid').previousElementSibling;
+                if (lengthSection && lengthSection.tagName === 'STRONG' && lengthSection.textContent.includes('Довжина')) {
                     selectedLengths.push(btn.textContent);
                 } else {
                     selectedSizes.push(btn.textContent);
@@ -147,7 +158,34 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Тут можна додати логіку для відправки фільтрів на сервер
+        // Отримуємо всі товари
+        const products = document.querySelectorAll('.product-item');
+
+        products.forEach(product => {
+            let showProduct = true;
+
+            // Фільтрація по ціні
+            if (priceSliderMin && priceSliderMax) {
+                const priceText = product.querySelector('.product-price').textContent;
+                const price = parseFloat(priceText.replace(/[^\d.]/g, ''));
+                const minPrice = parseFloat(priceSliderMin.value);
+                const maxPrice = parseFloat(priceSliderMax.value);
+
+                if (price < minPrice || (maxPrice < 10000 && price > maxPrice)) {
+                    showProduct = false;
+                }
+            }
+
+            // Тут можна додати інші фільтри по розмірах, кольорах і т.д.
+
+            // Показуємо/ховаємо товар
+            if (showProduct) {
+                product.style.display = 'block';
+            } else {
+                product.style.display = 'none';
+            }
+        });
+
         console.log('Applied filters:', {
             sizes: selectedSizes,
             lengths: selectedLengths,
@@ -160,17 +198,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Додаємо кнопку "Застосувати фільтри" (опціонально)
-    const filtersContainer = document.querySelector('.filters-container');
-    if (filtersContainer) {
-        const applyButton = document.createElement('button');
-        applyButton.textContent = 'Застосувати фільтри';
-        applyButton.className = 'apply-filters-btn';
-
-        applyButton.addEventListener('click', function (e) {
-            e.preventDefault();
-            applyFilters();
-        });
-        filtersContainer.appendChild(applyButton);
-    }
+    // Експортуємо функцію для використання в інших частинах коду
+    window.applyFilters = applyFilters;
 });
