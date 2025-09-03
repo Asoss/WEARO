@@ -51,6 +51,8 @@ def product_list_by_gender(request, gender: bool, title: str):
     return render(request, "main/product_list.html", {
         "products": products,
         "wishlist_products": list(wishlist_products),
+        "title": title,
+        "gender": gender,
     })
 
 
@@ -275,7 +277,7 @@ def search_results(request):
     products = Product.objects.all()
 
     if query:
-        products = products.filter(name__icontains=query)
+        products = products.filter(name__iregex=rf'{query}')
     if brand_filter:
         products = products.filter(brand=brand_filter)
     if size_filter:
@@ -337,9 +339,6 @@ def wishlist_view(request):
     if brand_filter:
         products_qs = products_qs.filter(brand=brand_filter)
 
-    if size_filter:
-        products_qs = products_qs.filter(model_size=size_filter)
-
     if price_min:
         products_qs = products_qs.filter(price__gte=price_min)
 
@@ -348,14 +347,12 @@ def wishlist_view(request):
 
     # Списки для select у формі
     brands = Product.objects.values_list("brand", flat=True).distinct()
-    sizes = Product.objects.values_list("model_size", flat=True).distinct()
 
     return render(request, 'main/wishlist.html', {
         'title': 'Мої збережені речі',
         'products': products_qs,
         'wishlist_count': count,
         'brands': brands,
-        'sizes': sizes,
     })
 
     saved_items = Wishlist.objects.filter(user=request.user).select_related('product')

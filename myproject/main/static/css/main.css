@@ -22,20 +22,6 @@
     font-weight: bold;
 }
 
-.search-wrapper {
-    position: relative;
-    width: 600px;
-}
-
-.search-input {
-    width: 100%;
-    padding: 12px 50px 12px 20px;
-    border-radius: 25px 25px 0 0;
-    border: 1px solid #000;
-    font-size: 15px;
-    outline: none;
-}
-
 .clear-btn {
     all: unset;
     position: absolute;
@@ -49,27 +35,7 @@
     z-index: 3;
 }
 
-.search-icon {
-    position: absolute;
-    top: 50%;
-    right: -70px;
-    transform: translateY(-50%);
-    width: 39px;
-    height: 39px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: white;
-    border: none;
-    cursor: pointer;
-    z-index: 3;
-    transition: background-color 0.3s ease;
-}
 
-.search-input:not(:placeholder-shown)~.search-icon {
-    background-color: #0077cc;
-}
 
 .search-overlay {
     display: none;
@@ -82,11 +48,6 @@
     z-index: 1;
 }
 
-.search-form {
-    text-align: center;
-    position: relative;
-    z-index: 2;
-}
 
 
 .recent-searches {
@@ -131,14 +92,6 @@
     color: #333;
 }
 
-.search-container {
-    display: flex;
-    justify-content: left;
-    margin-left: 40px;
-    position: relative;
-    z-index: 5;
-}
-
 .authorization-container {
     display: flex;
     gap: 10px;
@@ -153,13 +106,3 @@
     margin: 0 auto;
 }
 
-.wishlist-btn {
-    text-decoration: none;
-    color: black;
-    font-weight: 500;
-    margin-right: 10px;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    transition: color 0.2s ease;
-}

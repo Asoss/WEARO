@@ -1,118 +1,244 @@
-{% extends "main/base.html" %}
+{% extends 'main/base.html' %}
 {% load static %}
 
 {% block content %}
-<h1 style="text-align:center;">{{ title }}</h1>
+<link rel="stylesheet" href="{% static 'css/filters.css' %}">
 
-<div style="display: flex; flex-wrap: wrap; justify-content: center;">
-    {% for product in products %}
-    <div class="product" style="position:relative; margin:10px; border:1px solid #ddd; padding:10px;">
-
-        {% if user.is_authenticated %}
-        {% if product.id in wishlist_products %}
-
-        <img src="{% static 'icons/heart_filled.png' %}" data-filled="{% static 'icons/heart_filled.png' %}"
-            data-empty="{% static 'icons/heart.png' %}" class="wishlist-heart" data-product-id="{{ product.id }}"
-            style="position:absolute; top:10px; right:10px; width:24px; height:24px; cursor:pointer;">
-        {% else %}
-
-        <img src="{% static 'icons/heart.png' %}" data-filled="{% static 'icons/heart_filled.png' %}"
-            data-empty="{% static 'icons/heart.png' %}" class="wishlist-heart" data-product-id="{{ product.id }}"
-            style="position:absolute; top:10px; right:10px; width:24px; height:24px; cursor:pointer;">
-        {% endif %}
-        {% else %}
-
-        <a href="{% url 'login_email' %}">
-            <img src="{% static 'icons/heart.png' %}"
-                style="position:absolute; top:10px; right:10px; width:24px; height:24px;">
-        </a>
-        {% endif %}
-
-        {% with product.images.first as first_image %}
-        {% if first_image %}
-        <img src="{{ first_image.image.url }}" alt="{{ product.name }}" style="max-width:200px;">
-        {% else %}
-        <p>Немає фото</p>
-        {% endif %}
-        {% endwith %}
-
-        <h3>{{ product.name }}</h3>
-        <p>{{ product.final_price }} грн</p>
-        <a href="{% url 'product_detail' product.pk %}">Детальніше</a>
-    </div>
-    {% empty %}
-    <p>Немає товарів</p>
-    {% endfor %}
+<!-- Пошук -->
+<div class="search-bar">
+    <form id="filter-form" method="get" action="{% url 'product_search' %}">
+        <input type="text" id="searchInput" name="q" placeholder="Пошук"
+               value="{{ request.GET.q|default:'' }}">
+        <button type="submit">
+            <img src="{% static 'icons/search.jpg' %}" alt="Пошук">
+        </button>
+    </form>
 </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        console.log("wishlist_add.js завантажився ✅");
 
-        const hearts = document.querySelectorAll(".wishlist-heart");
-        console.log("Знайдено сердечок:", hearts.length);
+<!-- Breadcrumb -->
+<div class="breadcrumb">
+    <a href="{% url 'home' %}">Головна</a> \ 
+    <span>{{ title }}</span>
+</div>
 
-        hearts.forEach(function (heart) {
-            heart.addEventListener("click", function () {
-                const productId = this.getAttribute("data-product-id");
-                console.log("Клік на товар ID:", productId);
+<!-- Заголовок -->
+<h1 class="page-title">{{ title|upper }}</h1>
 
-                if (!productId) {
-                    console.error("Product ID не знайдено!");
-                    return;
-                }
+<!-- Категорії -->
+<div class="categories">
+    <div class="category">
+        <img src="{% static 'category/women/jeans.jpg' %}" alt="Джинси">
+        <p>ДЖИНСИ</p>
+    </div>
+    <div class="category">
+        <img src="{% static 'category/women/pants.jpg' %}" alt="Штани">
+        <p>ШТАНИ</p>
+    </div>
+    <div class="category">
+        <img src="{% static 'category/women/sweaters.jpg' %}" alt="Светри">
+        <p>СВЕТРИ ТА СВІНШОТИ</p>
+    </div>
+    <div class="category">
+        <img src="{% static 'category/women/tops.jpg' %}" alt="Футболки">
+        <p>ТОПИ ТА ФУТБОЛКИ</p>
+    </div>
+</div>
 
-                const currentHeart = this;
+<!-- Основний контейнер з фільтрами та товарами -->
+<div class="page-container">
+    <!-- ФІЛЬТРИ -->
+    <div class="filters-container">
+        <div class="filters-header">
+            <img src="{% static 'icons/filter.jpg' %}" alt="Filter" />
+            Фільтри
+        </div>
 
-                fetch(`/wishlist/toggle/${productId}/`, {
-                    method: "POST",
-                    headers: {
-                        "X-CSRFToken": getCookie("csrftoken"),
-                        "X-Requested-With": "XMLHttpRequest",
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({})
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error("HTTP error! status: " + response.status);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log("Відповідь сервера:", data);
+        <!-- Ціна -->
+        <div class="filter-block">
+            <div class="filter-header">
+                <span>Ціна</span>
+                <button class="toggle-btn">+</button>
+            </div>
+            <div class="filter-content" style="display: none;">
+                <div class="price-range">
+                    <input type="range" id="priceSliderMin" min="0" max="10000" value="0" class="price-slider" />
+                    <input type="range" id="priceSliderMax" min="0" max="10000" value="10000" class="price-slider" />
+                    <div class="price-values">
+                        Від<span id="priceMin">500</span> до <span id="priceMax">10000</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                        if (data.status === "added") {
-                            console.log("✅ Додано до вішліста");
-                            currentHeart.src = currentHeart.dataset.filled;
-                            currentHeart.classList.add("active");
-                        } else if (data.status === "removed") {
-                            console.log("❌ Видалено з вішліста");
-                            currentHeart.src = currentHeart.dataset.empty;
-                            currentHeart.classList.remove("active");
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Помилка wishlist:", error);
-                    });
-            });
-        });
-    });
+        <!-- Розмір -->
+        <div class="filter-block">
+            <div class="filter-header">
+                <span>Розмір</span>
+                <button class="toggle-btn">+</button>
+            </div>
+            <div class="filter-content" style="display: none;">
+                <div class="size-grid">
+                    <div class="size-btn">36</div>
+                    <div class="size-btn">37</div>
+                    <div class="size-btn">38</div>
+                    <div class="size-btn">39</div>
+                    <div class="size-btn">40</div>
+                    <div class="size-btn">41</div>
+                    <div class="size-btn">42</div>
+                    <div class="size-btn">43</div>
+                    <div class="size-btn">44</div>
+                    <div class="size-btn">45</div>
+                    <div class="size-btn">46</div>
+                    <div class="size-btn">47</div>
+                    <div class="size-btn">48</div>
+                    <div class="size-btn">49</div>
+                </div>
+                <div style="margin-top: 15px;">
+                    <strong style="font-size: 12px; color: #000;">Довжина</strong>
+                    <div class="size-grid" style="margin-top: 5px;">
+                        <div class="size-btn">29</div>
+                        <div class="size-btn">30</div>
+                        <div class="size-btn">31</div>
+                        <div class="size-btn">32</div>
+                        <div class="size-btn">33</div>
+                        <div class="size-btn">34</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== "") {
-            const cookies = document.cookie.split(";");
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + "=")) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-</script>
+        <!-- Сповіщення про наявність товару -->
+        <div class="filter-block">
+            <div class="filter-header">
+                <span>Сповіщення про наявність товару</span>
+                <button class="toggle-btn">+</button>
+            </div>
+            <div class="filter-content" style="display: none;">
+                <label><input type="checkbox" />Розпродажені прямий (2)</label>
+                <label><input type="checkbox" />Вільний прямий (3)</label>
+                <label><input type="checkbox" />Розслаблена прилич (45)</label>
+                <label><input type="checkbox"/>Вільний прямий (1)</label>
+                <label><input type="checkbox" />Мішковина (1)</label>
+                <label><input type="checkbox" />Прямий (1)</label>
+                <label><input type="checkbox" />Вільний (1)</label>
+            </div>
+        </div>
 
+        <!-- Колір -->
+        <div class="filter-block">
+            <div class="filter-header">
+                <span>Колір</span>
+                <button class="toggle-btn">+</button>
+            </div>
+            <div class="filter-content" style="display: none;">
+                <label><input type="checkbox" />Чорний (2)</label>
+                <label><input type="checkbox" />Сірий (3)</label>
+                <label><input type="checkbox" />Блакитний (45)</label>
+                <label><input type="checkbox" />Рожевий (1)</label>
+                <label><input type="checkbox" />Фіолетовий (1)</label>
+                <label><input type="checkbox" />Червоний (1)</label>
+                <label><input type="checkbox" />Жовтий (1)</label>
+                <label><input type="checkbox" />Зелений (1)</label>
+                <label><input type="checkbox" />Бежавий (1)</label>
+                <label><input type="checkbox" />Білий (1)</label>
+                <label><input type="checkbox" />Смарагдовий (1)</label>
+                <label><input type="checkbox" />Червоно вишневий (1)</label>
+                <button type="button" class="collapse-btn">Згорнути</button>
+            </div>
+        </div>
+
+        <!-- Розтяжність -->
+        <div class="filter-block">
+            <div class="filter-header">
+                <span>Розтяжність</span>
+                <button class="toggle-btn">+</button>
+            </div>
+            <div class="filter-content" style="display: none;">
+                <label><input type="checkbox" />Висока (12)</label>
+                <label><input type="checkbox" />Середня (8)</label>
+                <label><input type="checkbox" />Низька (5)</label>
+                <label><input type="checkbox" />Без розтяжності (3)</label>
+                <button type="button" class="collapse-btn">Згорнути</button>
+            </div>
+        </div>
+
+        <!-- Матеріал -->
+        <div class="filter-block">
+            <div class="filter-header">
+                <span>Матеріал</span>
+                <button class="toggle-btn">+</button>
+            </div>
+            <div class="filter-content" style="display: none;">
+                <label><input type="checkbox" />Бавовна (25)</label>
+                <label><input type="checkbox" />Джинс (15)</label>
+                <label><input type="checkbox" />Поліестер (10)</label>
+                <label><input type="checkbox" />Еластан (8)</label>
+                <label><input type="checkbox" />Льон (6)</label>
+                <label><input type="checkbox" />Віскоза (4)</label>
+                <button type="button" class="collapse-btn">Згорнути</button>
+            </div>
+        </div>
+    </div>
+    <!-- КІНЕЦЬ ФІЛЬТРІВ -->
+
+    <!-- Товари -->
+    <div class="main-content">
+        <div class="products-grid">
+            {% for product in products %}
+            <div class="product-item" 
+                 data-price="{{ product.final_price }}"
+                 data-size="{{ product.size|default:'' }}"
+                 data-color="{{ product.color|default:'' }}"
+                 data-material="{{ product.material|default:'' }}">
+                
+                <div class="product-image-container">
+                    <!-- Wishlist heart -->
+                    {% if user.is_authenticated %}
+                        {% if product.id in wishlist_products %}
+                            <img src="{% static 'icons/heart_filled.png' %}" 
+                                 data-filled="{% static 'icons/heart_filled.png' %}" 
+                                 data-empty="{% static 'icons/heart.png' %}" 
+                                 class="wishlist-heart" 
+                                 data-product-id="{{ product.id }}" />
+                        {% else %}
+                            <img src="{% static 'icons/heart.png' %}" 
+                                 data-filled="{% static 'icons/heart_filled.png' %}" 
+                                 data-empty="{% static 'icons/heart.png' %}" 
+                                 class="wishlist-heart" 
+                                 data-product-id="{{ product.id }}" />
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'login_email' %}">
+                            <img src="{% static 'icons/heart.png' %}" class="wishlist-heart-login" />
+                        </a>
+                    {% endif %}
+
+                    <!-- Product image -->
+                    {% with first_image=product.images.first %}
+                        {% if first_image %}
+                            <img src="{{ first_image.image.url }}" alt="{{ product.name }}" class="product-image" />
+                        {% else %}
+                            <div class="no-image">Немає фото</div>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+
+                <div class="product-info">
+                    <h3 class="product-name">{{ product.name }}</h3>
+                    <p class="product-price">{{ product.final_price }} грн</p>
+                    <a href="{% url 'product_detail' product.pk %}" class="product-link">Детальніше</a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="no-products">
+                <p>Немає товарів</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/search.js' %}"></script>
+<script src="{% static 'js/filters.js' %}"></script>
+<script src="{% static 'js/wishlist.js' %}"></script>
 {% endblock %}
