@@ -12,9 +12,9 @@ from django.contrib.auth.models import User
 from .models import Product, UserDetails, Wishlist
 from .forms import RegisterForm, UserForm
 import random
-from django.contrib.auth.decorators import login_required
 from .models import Product, Category
 from django.core.paginator import Paginator
+from django.db.models import Q
 
 
 def home(request):
@@ -259,16 +259,16 @@ def men_view(request):
 
 def search_results(request):
     query = request.GET.get('q', '').strip().lower()
-    
+    gender = request.GET.get('gender')
+
     developer_keywords = [
         'developers', 'dev', 'team', 'about', 'creators', 
         'розробники', 'команда', 'творці', 'автори',
         'secret',
     ]
-    
     if any(keyword in query for keyword in developer_keywords):
         return redirect('developers_page')
-    
+
     brand_filter = request.GET.get('brand', '')
     size_filter = request.GET.get('size', '')
     price_min = request.GET.get('price_min')
@@ -276,8 +276,17 @@ def search_results(request):
 
     products = Product.objects.all()
 
+    # фільтруємо по gender, якщо передано
+    if gender is not None:
+        products = products.filter(gender=gender)
+
     if query:
-        products = products.filter(name__iregex=rf'{query}')
+        words = query.split()
+        q_filter = Q()
+        for word in words:
+            q_filter |= Q(name__icontains=word)
+        products = products.filter(q_filter)
+
     if brand_filter:
         products = products.filter(brand=brand_filter)
     if size_filter:
@@ -292,7 +301,7 @@ def search_results(request):
     brands = ['Nike', 'Adidas', 'Puma', 'Zara', 'H&M', "Levi's", 'ONLY & SONS', 'COLLUSION', 'New Balance', 'Converse']
     sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'W']
 
-    paginator = Paginator(products, 1)
+    paginator = Paginator(products, 6)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -306,6 +315,7 @@ def search_results(request):
         'brands': brands,
         'sizes': sizes,
         'query': request.GET.get('q', ''),
+        'gender': gender,
         'paginator': paginator,
         'page_obj': page_obj,
         'remaining': remaining,

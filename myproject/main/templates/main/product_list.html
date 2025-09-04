@@ -28,22 +28,31 @@
 <!-- Категорії -->
 <div class="categories">
     <div class="category">
-        <img src="{% static 'category/women/jeans.jpg' %}" alt="Джинси">
-        <p>ДЖИНСИ</p>
+        <a href="{% url 'product_search' %}?q=Джинси&gender=0">
+            <img src="{% static 'category/women/jeans.jpg' %}" alt="Джинси">
+            <p>ДЖИНСИ</p>
+        </a>
     </div>
     <div class="category">
-        <img src="{% static 'category/women/pants.jpg' %}" alt="Штани">
-        <p>ШТАНИ</p>
+        <a href="{% url 'product_search' %}?q=Штани&gender=0">
+            <img src="{% static 'category/women/pants.jpg' %}" alt="Штани">
+            <p>ШТАНИ</p>
+        </a>
     </div>
     <div class="category">
-        <img src="{% static 'category/women/sweaters.jpg' %}" alt="Светри">
-        <p>СВЕТРИ ТА СВІНШОТИ</p>
+        <a href="{% url 'product_search' %}?q=Светр або Світшот&gender=0">
+            <img src="{% static 'category/women/sweaters.jpg' %}" alt="Светри та світшоти">
+            <p>СВЕТРИ ТА СВІТШОТИ</p>
+        </a>
     </div>
     <div class="category">
-        <img src="{% static 'category/women/tops.jpg' %}" alt="Футболки">
-        <p>ТОПИ ТА ФУТБОЛКИ</p>
+        <a href="{% url 'product_search' %}?q=Топ або Футболка&gender=0">
+            <img src="{% static 'category/women/tops.jpg' %}" alt="Топи та футболки">
+            <p>ТОПИ ТА ФУТБОЛКИ</p>
+        </a>
     </div>
 </div>
+
 
 <!-- Основний контейнер з фільтрами та товарами -->
 <div class="page-container">
