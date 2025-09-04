@@ -9,12 +9,11 @@
     <form id="filter-form" method="get" action="{% url 'product_search' %}">
         <input type="text" id="searchInput" name="q" placeholder="Пошук"
                value="{{ request.GET.q|default:'' }}">
-        <button type="submit">
+        <button type="submit" class="search-icon">
             <img src="{% static 'icons/search.jpg' %}" alt="Пошук">
         </button>
     </form>
 </div>
-
 
 <!-- Breadcrumb -->
 <div class="breadcrumb">
@@ -27,32 +26,60 @@
 
 <!-- Категорії -->
 <div class="categories">
-    <div class="category">
-        <a href="{% url 'product_search' %}?q=Джинси&gender=0">
-            <img src="{% static 'category/women/jeans.jpg' %}" alt="Джинси">
-            <p>ДЖИНСИ</p>
-        </a>
-    </div>
-    <div class="category">
-        <a href="{% url 'product_search' %}?q=Штани&gender=0">
-            <img src="{% static 'category/women/pants.jpg' %}" alt="Штани">
-            <p>ШТАНИ</p>
-        </a>
-    </div>
-    <div class="category">
-        <a href="{% url 'product_search' %}?q=Светр або Світшот&gender=0">
-            <img src="{% static 'category/women/sweaters.jpg' %}" alt="Светри та світшоти">
-            <p>СВЕТРИ ТА СВІТШОТИ</p>
-        </a>
-    </div>
-    <div class="category">
-        <a href="{% url 'product_search' %}?q=Топ або Футболка&gender=0">
-            <img src="{% static 'category/women/tops.jpg' %}" alt="Топи та футболки">
-            <p>ТОПИ ТА ФУТБОЛКИ</p>
-        </a>
-    </div>
+    {% if gender == 0 %}
+        <!-- ЖІНОЧІ -->
+        <div class="category">
+            <a href="{% url 'product_search' %}?q=Джинси&gender=0">
+                <img src="{% static 'category/women/jeans.jpg' %}" alt="Джинси">
+                <p>ДЖИНСИ</p>
+            </a>
+        </div>
+        <div class="category">
+            <a href="{% url 'product_search' %}?q=Штани&gender=0">
+                <img src="{% static 'category/women/pants.jpg' %}" alt="Штани">
+                <p>ШТАНИ</p>
+            </a>
+        </div>
+        <div class="category">
+            <a href="{% url 'product_search' %}?q=Светр або Світшот&gender=0">
+                <img src="{% static 'category/women/sweaters.jpg' %}" alt="Светри та світшоти">
+                <p>СВЕТРИ ТА СВІТШОТИ</p>
+            </a>
+        </div>
+        <div class="category">
+            <a href="{% url 'product_search' %}?q=Топ або Футболка&gender=0">
+                <img src="{% static 'category/women/tops.jpg' %}" alt="Топи та футболки">
+                <p>ТОПИ ТА ФУТБОЛКИ</p>
+            </a>
+        </div>
+    {% elif gender == 1 %}
+        <!-- ЧОЛОВІЧІ -->
+        <div class="category">
+            <a href="{% url 'product_search' %}?q=Джинси&gender=1">
+                <img src="{% static 'category/men/jeans.jpg' %}" alt="Джинси">
+                <p>ДЖИНСИ</p>
+            </a>
+        </div>
+        <div class="category">
+            <a href="{% url 'product_search' %}?q=Штани&gender=1">
+                <img src="{% static 'category/men/pants.jpg' %}" alt="Штани">
+                <p>ШТАНИ</p>
+            </a>
+        </div>
+        <div class="category">
+            <a href="{% url 'product_search' %}?q=Светр або Світшот&gender=1">
+                <img src="{% static 'category/men/sweaters.jpg' %}" alt="Светри та світшоти">
+                <p>СВЕТРИ ТА СВІТШОТИ</p>
+            </a>
+        </div>
+        <div class="category">
+            <a href="{% url 'product_search' %}?q=Футболка&gender=1">
+                <img src="{% static 'category/men/tshirts.jpg' %}" alt="Футболки">
+                <p>ФУТБОЛКИ</p>
+            </a>
+        </div>
+    {% endif %}
 </div>
-
 
 <!-- Основний контейнер з фільтрами та товарами -->
 <div class="page-container">
