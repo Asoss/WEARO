@@ -4,148 +4,285 @@
 
 {% block content %}
 
-
-
-{% comment %} <div class="gender-bar">
-    <a href="{% url 'women' %}" class="gender-btn women">Жіноче</a>
-    <a href="{% url 'men' %}" class="gender-btn men">Чоловіче</a>
+<!-- Hero секція -->
+<div class="hero">
+  <img src="{% static 'home_page/main.jpg' %}" alt="Hero Image" class="hero-img">
 </div>
 
+<!-- Три фото з ховером -->
+<div class="hover-gallery">
+  <div class="hover-item">
+    <img src="{% static 'home_page/pants0.png' %}" alt="Photo 1" class="default">
+    <img src="{% static 'home_page/pants.jpg' %}" alt="Photo 1 Hover" class="hover">
+  </div>
+  <div class="hover-item">
+    <img src="{% static 'home_page/styles0.jpg' %}" alt="Photo 2" class="default">
+    <img src="{% static 'home_page/styles.jpg' %}" alt="Photo 2 Hover" class="hover">
+  </div>
+  <div class="hover-item">
+    <img src="{% static 'home_page/closes0.jpg' %}" alt="Photo 3" class="default">
+    <img src="{% static 'home_page/closes.jpg' %}" alt="Photo 3 Hover" class="hover">
+  </div>
+</div>
 
-<div class="category-bar">
-    {% for category in categories %}
-        <a href="?category={{ category.id }}" 
-           class="cat-link {% if selected_category == category.id|stringformat:'s' %}active{% endif %}">
-            {{ category.name }}
-        </a>
-    {% endfor %}
-</div> {% endcomment %}
-
- <div class="gallery-grid">
-  {% for product in products %}
-  <a href="{% url 'product_detail' product.pk %}" class="product-card">
-    <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" class="product-image">
-    <div class="product-info">
-      <p class="brand-name">{{ product.brand }}</p>
-      <p class="product-name">{{ product.name }}</p>
+<!-- Унікальні колекції -->
+<h2 class="section-title">УНІКАЛЬНІ КОЛЕКЦІЇ</h2>
+<div class="carousel">
+  <button class="carousel-btn left" onclick="moveCarousel(-1)">&#10094;</button>
+  <div class="carousel-track" id="carouselTrack">
+    {% for product in products|slice:":10" %}
+    <div class="carousel-item">
+      <a href="{% url 'product_detail' product.pk %}">
+        <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
+        <p class="product-name">{{ product.name }}</p>
+        <p class="price">₴{{ product.price }}</p>
+      </a>
     </div>
-  </a>
-  {% endfor %}
+    {% endfor %}
+  </div>
+  <button class="carousel-btn right" onclick="moveCarousel(1)">&#10095;</button>
 </div>
+
+<!-- Друга велика картинка -->
+<div class="hero hero-text">
+  <img src="{% static 'home_page/ownstyle.jpg' %}" alt="Second Hero" class="hero-img">
+  <div class="hero-overlay">
+    <p class="small-text">Керуй трендами</p>
+    <h3 class="big-text">СТВОРИ СВІЙ ВЛАСНИЙ СТИЛЬ</h3>
+    <a href="{% url 'product_search' %}?q=одяг&gender=0" class="link-text">Підібрати одяг</a>
+  </div>
+</div>
+
+{% if recently_viewed %}
+<h2 class="section-title">НЕЩОДАВНО ПЕРЕГЛЯНУТІ</h2>
+<div class="carousel">
+  <button class="carousel-btn left" onclick="moveCarousel(-1, 'recentTrack')">&#10094;</button>
+  <div class="carousel-track" id="recentTrack">
+    {% for product in recently_viewed %}
+    <div class="carousel-item">
+      <a href="{% url 'product_detail' product.pk %}">
+        {% if product.images.first %}
+          <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
+        {% else %}
+          <img src="{% static 'img/no-photo.png' %}" alt="Немає фото">
+        {% endif %}
+        <p class="product-name">{{ product.name }}</p>
+        <p class="price">₴{{ product.price }}</p>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+  <button class="carousel-btn right" onclick="moveCarousel(1, 'recentTrack')">&#10095;</button>
+</div>
+{% endif %}
+
+<h2 class="section-title">ШУКАЄТЕ БІЛЬШЕ ВАРІАНТІВ?</h2>
+<div class="options-buttons">
+  <a href="{% url 'product_search' %}?q=Джинси&gender=0" class="option-btn">Жіночі джинси</a>
+  <a href="{% url 'product_search' %}?q=Шорти&gender=0" class="option-btn">Жіночі шорти</a>
+  <a href="{% url 'product_search' %}?q=Штани&gender=0" class="option-btn">Жіночі штани</a>
+  <a href="{% url 'product_search' %}?q=Топи блузки сорочки&gender=0" class="option-btn">Жіночі топи, блузки та сорочки</a>
+  <a href="{% url 'product_search' %}?q=Джинси з прямими штанинами&gender=0" class="option-btn">Жіночі джинси з прямими штанинами</a>
+  <a href="{% url 'product_search' %}?q=Вільні та мішкуваті джинси&gender=0" class="option-btn">Жіночі вільні та мішкуваті джинси</a>
+</div>
+
 <style>
-body, main {
-  margin: 0;
-  padding: 0;
-}
-
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr)); 
-  gap: 20px;
-  margin: 0; 
-  padding: 20px;
-}
-
-.product-card {
-  display: block;
-  text-decoration: none;
-  color: inherit;
-  border: 1px solid #eee;
-  border-radius: 8px;
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
-  height: 100%; 
-}
-
-.product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.product-image {
+/* Hero */
+.hero {
   width: 100%;
-  height: 600px;
+  margin-bottom: 30px;
+}
+.hero-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Hover gallery */
+.hover-gallery {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin: 40px 0;
+}
+.hover-item {
+  position: relative;
+  width: 100%%;
+  height: 100%%;
+  overflow: hidden;
+}
+.hover-item img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  display: block;
+  transition: opacity 0.3s ease-in-out;
+}
+.hover-item img.hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+.hover-item:hover img.hover {
+  opacity: 1;
+}
+.hover-item:hover img.default {
+  opacity: 0;
 }
 
-.product-info {
-  padding: 10px;
-  background: #fff;
-}
-
-.brand-name {
-  font-size: 14px;
-  color: #555;
-  margin: 0;
-}
-
-.product-name {
-  font-size: 16px;
+/* Section title */
+.section-title {
+  text-align: center;
+  margin: 40px 0 20px;
+  font-size: 28px;
   font-weight: bold;
-  margin: 5px 0 0;
 }
 
-.gender-bar {
-    text-align: center;
-    margin-top: 30px;
-    margin-bottom: 15px;
+/* Carousel */
+.carousel {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto 60px;
+  overflow: hidden;
+}
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+.carousel-item {
+  min-width: 25%;
+  box-sizing: border-box;
+  padding: 10px;
+  text-align: center;
+}
+.carousel-item img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.carousel-item .product-name {
+  font-size: 14px;
+  margin: 8px 0 4px;
+}
+.carousel-item .price {
+  font-weight: bold;
+  color: #000;
 }
 
-.gender-btn {
-    padding: 14px 28px;
-    border-radius: 30px;
-    text-decoration: none;
-    color: #fff;
-    font-size: 18px;
-    font-weight: 600;
-    margin: 0 12px;
-    display: inline-block;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    transition: all 0.3s ease;
+/* Buttons */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.8);
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 50%;
+  transition: background 0.3s;
+  z-index: 10;
 }
 
-.gender-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+.carousel-btn:hover {
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+}
+.carousel-btn.left {
+  left: 10px;
+}
+.carousel-btn.right {
+  right: 10px;
 }
 
-.gender-btn.women {
-    background: linear-gradient(135deg, #ff99cc, #ff66b2);
+.options-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin: 30px 0 60px;
 }
 
-.gender-btn.men {
-    background: linear-gradient(135deg, #66b3ff, #3399ff);
+.option-btn {
+  padding: 10px 18px;
+  border: 1.5px solid #000;
+  border-radius: 4px;
+  background: #fff;
+  color: #000;
+  text-decoration: none;
+  font-size: 15px;
+  transition: all 0.3s ease;
 }
 
-.category-bar {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    margin: 15px 0 25px 0;
-    flex-wrap: wrap;
+.option-btn:hover {
+  background: #000;
+  color: #fff;
 }
 
-.cat-link {
-    font-size: 14px;
-    text-decoration: none;
-    color: #333;
-    background: #f8f8f8;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    padding: 6px 14px;
-    transition: all 0.3s;
+
+.hero-text {
+  position: relative;
 }
 
-.cat-link:hover {
-    background: #ffe6f0;
-    color: #d63384;
-    border-color: #d63384;
+.hero-overlay {
+  position: absolute;
+  top:10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #000;
+  text-align: center;
 }
 
-.cat-link.active {
-    background: #d63384;
-    color: #fff;
-    border-color: #d63384;
+.hero-overlay .small-text {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 8px 0;
+  text-align: left;
+}
+
+.hero-overlay .big-text {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 0 0 12px 0;
+  line-height: 1.2;
+}
+
+.hero-overlay .link-text {
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: underline;
+  color: #000;
+  display: block;
+  text-align: right;
 }
 </style>
+
+
+<script>
+let positions = {};
+
+function moveCarousel(direction, trackId) {
+  const track = document.getElementById(trackId);
+  const items = track.querySelectorAll('.carousel-item');
+  const visibleItems = 4;
+  const totalItems = items.length;
+
+  if (totalItems <= visibleItems) return; // нема що крутити
+
+  const itemWidth = items[0].offsetWidth;
+  const maxPosition = -(itemWidth * (totalItems - visibleItems));
+
+  if (!(trackId in positions)) positions[trackId] = 0;
+  positions[trackId] += direction * itemWidth;
+
+  // робимо циклічну карусель
+  if (positions[trackId] < maxPosition) positions[trackId] = 0;
+  if (positions[trackId] > 0) positions[trackId] = maxPosition;
+
+  track.style.transform = `translateX(${positions[trackId]}px)`;
+}
+</script>
+
 {% endblock %}

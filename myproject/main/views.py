@@ -18,22 +18,26 @@ from django.db.models import Q
 
 
 def home(request):
-    products = Product.objects.filter( stock__gt=0)
+    products = Product.objects.filter(stock__gt=0)
     categories = Category.objects.all()
 
     category_filter = request.GET.get('category')
     if category_filter:
         products = products.filter(category__id=category_filter)
-
-    if not category_filter:
+    else:
         products = list(products)
         random.shuffle(products)
         products = products[:5]
 
+
+    viewed = request.session.get('viewed_products', [])
+    recently_viewed = Product.objects.filter(pk__in=viewed)
+
     return render(request, 'main/home.html', {
         'products': products,
         'categories': categories,
-        'selected_category': category_filter
+        'selected_category': category_filter,
+        'recently_viewed': recently_viewed
     })
 
 
@@ -66,14 +70,14 @@ def men(request):
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
 
-    
     viewed = request.session.get('viewed_products', [])
-    if pk not in viewed:
-        viewed.insert(0, pk)
-    
+
+    if pk in viewed:
+        viewed.remove(pk)
+    viewed.insert(0, pk)
+
     viewed = viewed[:5]
     request.session['viewed_products'] = viewed
-
 
     recently_viewed = Product.objects.filter(pk__in=viewed).exclude(pk=pk)
 
@@ -81,7 +85,6 @@ def product_detail(request, pk):
         'product': product,
         'recently_viewed': recently_viewed
     })
-
 
 
 def my_account(request):
