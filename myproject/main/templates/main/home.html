@@ -28,7 +28,7 @@
 <!-- Унікальні колекції -->
 <h2 class="section-title">УНІКАЛЬНІ КОЛЕКЦІЇ</h2>
 <div class="carousel">
-  <button class="carousel-btn left" onclick="moveCarousel(-1)">&#10094;</button>
+  <button class="carousel-btn left" onclick="moveCarousel(-1, 'carouselTrack')">&#10094;</button>
   <div class="carousel-track" id="carouselTrack">
     {% for product in products|slice:":10" %}
     <div class="carousel-item">
@@ -40,7 +40,7 @@
     </div>
     {% endfor %}
   </div>
-  <button class="carousel-btn right" onclick="moveCarousel(1)">&#10095;</button>
+  <button class="carousel-btn right" onclick="moveCarousel(1, 'carouselTrack')">&#10095;</button>
 </div>
 
 <!-- Друга велика картинка -->
