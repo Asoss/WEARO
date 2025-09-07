@@ -52,23 +52,31 @@
                 </a>
             </div>
 
-            <div class="header-right">
-                {% if user.is_authenticated %}
-                    <span>Вітаємо, {{ user.username }}</span>
-                    <span>|</span>
-                    <a href="{% url 'wishlist' %}">Вподобано</a>
-                    <span>|</span>
-                    <a href="{% url 'cart' %}">Кошик</a>
-                {% else %}
-                    <a href="{% url 'login_email' %}">Увійти</a>
-                    <span>|</span>
-                    <a href="{% url 'register' %}">Реєстрація</a>
-                    <span>|</span>
-                    <a href="{% url 'wishlist' %}">Вподобано</a>
-                    <span>|</span>
-                    <a href="{% url 'cart' %}">Кошик</a>
-                {% endif %}
-            </div>
+       <div class="header-right">
+    {% if user.is_authenticated %}
+        <span>Вітаємо, {{ user.username }}</span>
+        <span>|</span>
+        <a href="{% url 'wishlist' %}">
+            Вподобано <span class="badge">{{ wishlist_count }}</span>
+        </a>
+        <span>|</span>
+        <a href="{% url 'cart' %}">
+            Кошик <span class="badge">{{ cart_count }}</span>
+        </a>
+    {% else %}
+        <a href="{% url 'login_email' %}">Увійти</a>
+        <span>|</span>
+        <a href="{% url 'register' %}">Реєстрація</a>
+        <span>|</span>
+        <a href="{% url 'wishlist' %}">
+            Вподобано <span class="badge">{{ wishlist_count }}</span>
+        </a>
+        <span>|</span>
+        <a href="{% url 'cart' %}">
+            Кошик <span class="badge">{{ cart_count }}</span>
+        </a>
+    {% endif %}
+</div>
         </div>
     </header>
 

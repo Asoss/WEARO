@@ -1,5 +1,5 @@
-    document.addEventListener("DOMContentLoaded", function () {
-        console.log("wishlist_add.js завантажився ✅");
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("wishlist_add.js завантажився ✅");
 
     const hearts = document.querySelectorAll(".wishlist-heart");
     console.log("Знайдено сердечок:", hearts.length);
@@ -26,12 +26,18 @@
                 body: JSON.stringify({})
             })
                 .then(response => {
+                    if (response.status === 403) {
+                        alert("Щоб зберігати товари у вподобаних — спершу увійдіть 👤");
+                        window.location.href = "/login/"; // або {% url 'login_email' %}
+                        return;
+                    }
                     if (!response.ok) {
                         throw new Error("HTTP error! status: " + response.status);
                     }
                     return response.json();
                 })
                 .then(data => {
+                    if (!data) return;
                     console.log("Відповідь сервера:", data);
 
                     if (data.status === "added") {
@@ -48,20 +54,20 @@
                     console.error("Помилка wishlist:", error);
                 });
         });
-        });
     });
 
     function getCookie(name) {
         let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
+        if (document.cookie && document.cookie !== "") {
             const cookies = document.cookie.split(";");
-    for (let i = 0; i < cookies.length; i++) {
+            for (let i = 0; i < cookies.length; i++) {
                 const cookie = cookies[i].trim();
-    if (cookie.substring(0, name.length + 1) === (name + "=")) {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-    break;
+                if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
                 }
             }
         }
-    return cookieValue;
+        return cookieValue;
     }
+});
