@@ -4,6 +4,19 @@
 
 {% block content %}
 
+<!-- Пошук -->
+<div class="search-bar">
+    <form id="filter-form" method="get" action="{% url 'product_search' %}">
+        <input type="text" id="searchInput" name="q" placeholder="Пошук"
+               value="{{ request.GET.q|default:'' }}">
+        <button type="submit" class="search-icon">
+            <img src="{% static 'icons/search.jpg' %}" alt="Пошук">
+        </button>
+    </form>
+</div>
+
+
+
 <!-- Hero секція -->
 <div class="hero">
   <img src="{% static 'home_page/main.jpg' %}" alt="Hero Image" class="hero-img">
@@ -257,9 +270,55 @@
   display: block;
   text-align: right;
 }
+
+/* Пошук */
+.search-bar {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.search-bar form {
+    display: inline-flex;
+    border: 2px solid #000;
+    border-radius: 4px;
+    overflow: hidden;
+    align-items: center;
+    background: #fff;
+}
+
+.search-bar input {
+    border: none;
+    padding: 7px 9px;
+    outline: none;
+    width: 650px;
+    font-size: 16px;
+    height: 23px;
+}
+
+.search-bar button {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 20px;
+    width: 20px;
+    padding: 0;
+    margin: 0;
+}
+
+/* Іконка пошуку */
+.search-bar button img {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+
+}
+
 </style>
 
-
+<script src="{% static 'js/search.js' %}"></script>
 <script>
 let positions = {};
 
