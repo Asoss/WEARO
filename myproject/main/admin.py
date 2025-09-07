@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Category, Product, ProductImage, Color
+from .forms import ProductForm
 
 
 class ProductImageInline(admin.TabularInline):
@@ -9,8 +10,9 @@ class ProductImageInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price', 'stock', 'category')
-    list_filter = ('stock', 'brand', 'color', 'category')
+    form = ProductForm
+    list_display = ('name', 'price', 'discount', 'final_price', 'stock', 'category')
+    list_filter = ('stock', 'brand', 'color', 'category', 'discount')
     search_fields = ('name', 'brand')
     inlines = [ProductImageInline]
 
