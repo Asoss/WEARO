@@ -1,12 +1,32 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import UserDetails
+from .models import UserDetails, Product
 import re #регулярні вирази
 
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
+
+class ProductForm(forms.ModelForm):
+    sizes = forms.CharField(required=False, help_text="Введення розміру через кому, напр. 36,37,38")
+    lengths = forms.CharField(required=False, help_text="Введення довжини через кому, напр. 30,32,34")
+
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+    def clean_sizes(self):
+        data = self.cleaned_data['sizes']
+        if data:
+            return [int(x.strip()) for x in data.split(',') if x.strip().isdigit()]
+        return []
+
+    def clean_lengths(self):
+        data = self.cleaned_data['lengths']
+        if data:
+            return [int(x.strip()) for x in data.split(',') if x.strip().isdigit()]
+        return []
 
 class UserDetailsForm(forms.ModelForm):
     class Meta:

@@ -33,18 +33,30 @@ class Product(models.Model):
     brand = models.CharField(max_length=100, blank=True)
     color = models.ForeignKey(Color, on_delete=models.SET_NULL, null=True, blank=True)
     stock = models.PositiveIntegerField(default=1, help_text="Кількість доступних одиниць товару")
-    look_after_me = models.TextField(blank=True, help_text="Про догляд")  
-    about_me = models.TextField(blank=True, help_text="Про мене", default="Машинне прання згідно з інструкціями на етикетках з догляду")
+    look_after_me = models.TextField(blank=True, help_text="Про догляд", default="Машинне прання згідно з інструкціями на етикетках з догляду")  
+    about_me = models.TextField(blank=True, help_text="Про мене")
     product_details = models.TextField(blank=True, help_text="Деталі продукту")
     gender = models.IntegerField(choices=GENDER_CHOICES, default=0)
     discount = models.PositiveIntegerField(default=0, help_text="Знижка у відсотках")
+    sizes = models.JSONField(default=list, blank=True, null=True)
+    lengths = models.JSONField(default=list, blank=True, null=True)
+    rating_sum = models.PositiveIntegerField(default=0)
+    rating_count = models.PositiveIntegerField(default=0)
 
-    @property
+    
     def final_price(self):
         if self.discount > 0:
             return self.price * (1 - self.discount / 100)
         return self.price
     
+    def save(self, *args, **kwargs):
+        if not self.sizes:
+            self.sizes = [36, 37, 38, 39, 40]
+        if not self.lengths:
+            self.lengths = [30, 32, 34]
+        super().save(*args, **kwargs)
+
+
     def __str__(self):
         return self.name
 
