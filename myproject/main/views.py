@@ -381,21 +381,28 @@ def wishlist_view(request):
 
 def toggle_wishlist(request, product_id):
     print(f"Toggle wishlist для товару: {product_id}")
+    if not request.user.is_authenticated:
+        return JsonResponse({'status': 'error', 'message': 'auth_required'}, status=403)
+
     try:
         product = Product.objects.get(id=product_id)
-        wishlist_item, created = Wishlist.objects.get_or_create(user=request.user, product=product)
+        wishlist_item, created = Wishlist.objects.get_or_create(
+            user=request.user, product=product
+        )
 
         if not created:
             wishlist_item.delete()
-            print(f"Товар {product_id} видалено з wishlist")  
+            print(f"Товар {product_id} видалено з wishlist")
             return JsonResponse({'status': 'removed'})
         else:
-            print(f"Товар {product_id} додано в wishlist")  
+            print(f"Товар {product_id} додано в wishlist")
             return JsonResponse({'status': 'added'})
     except Product.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
-
+    
 
 def custom_404(request, exception):
     return render(request, "main/page404.html", status=404)
+
+
     
