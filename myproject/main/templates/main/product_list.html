@@ -223,7 +223,7 @@
         <div class="products-grid">
             {% for product in products %}
             <div class="product-item" 
-                 data-price="{{ product.final_price }}"
+                 data-price="{{ product.price }}"
                  data-size="{{ product.size|default:'' }}"
                  data-color="{{ product.color|default:'' }}"
                  data-material="{{ product.material|default:'' }}">
@@ -262,7 +262,7 @@
 
                 <div class="product-info">
                     <h3 class="product-name">{{ product.name }}</h3>
-                    <p class="product-price">{{ product.final_price }} грн</p>
+                    <p class="product-price">{{ product.price }} грн</p>
                     <a href="{% url 'product_detail' product.pk %}" class="product-link">Детальніше</a>
                 </div>
             </div>
