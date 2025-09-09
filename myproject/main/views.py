@@ -9,6 +9,9 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.views.decorators.http import require_POST
+
+from cart.models import Cart, CartItem
 from .models import Product, UserDetails, Wishlist
 from .forms import RegisterForm, UserForm
 import random
@@ -238,22 +241,6 @@ def complete_register(request):
 
     return render(request, "main/complete_reg.html")
 
-
-def cart_view(request):
-    cart_ids = request.session.get('cart', [])
-    products = Product.objects.filter(id__in=cart_ids)
-    return render(request, 'cart/cart.html', {'products': products})
-
-def add_to_cart(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-
-    cart = request.session.get('cart', [])
-    cart.append(product.id)
-    request.session['cart'] = cart
-
-    return redirect('cart')
-
-
 def women_view(request):
     return render(request, 'women/women.html')
 
@@ -338,12 +325,11 @@ def wishlist_view(request):
         })
 
     saved_items = Wishlist.objects.filter(user=request.user).select_related('product')
-    products = [item.product for item in saved_items]  
+    products = [item.product for item in saved_items]
     count = len(products)
 
     # ---- Фільтри ----
     brand_filter = request.GET.get("brand", "")
-    size_filter = request.GET.get("size", "")
     price_min = request.GET.get("price_min")
     price_max = request.GET.get("price_max")
 
@@ -368,37 +354,19 @@ def wishlist_view(request):
         'brands': brands,
     })
 
-    saved_items = Wishlist.objects.filter(user=request.user).select_related('product')
-    products = [item.product for item in saved_items]  
-    count = len(products)
-
-    return render(request, 'main/wishlist.html', {
-        'title': 'Мої збережені речі',
-        'products': products,   
-        'wishlist_count': count
-    })
-
 
 def toggle_wishlist(request, product_id):
-    print(f"Toggle wishlist для товару: {product_id}")
-    if not request.user.is_authenticated:
-        return JsonResponse({'status': 'error', 'message': 'auth_required'}, status=403)
+    product = get_object_or_404(Product, id=product_id)
+    wishlist_item, created = Wishlist.objects.get_or_create(user=request.user, product=product)
 
-    try:
-        product = Product.objects.get(id=product_id)
-        wishlist_item, created = Wishlist.objects.get_or_create(
-            user=request.user, product=product
-        )
+    if not created:
+        wishlist_item.delete()
+        status = "removed"
+    else:
+        status = "added"
 
-        if not created:
-            wishlist_item.delete()
-            print(f"Товар {product_id} видалено з wishlist")
-            return JsonResponse({'status': 'removed'})
-        else:
-            print(f"Товар {product_id} додано в wishlist")
-            return JsonResponse({'status': 'added'})
-    except Product.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
+    count = Wishlist.objects.filter(user=request.user).count()
+    return JsonResponse({"status": status, "count": count})
     
 
 def custom_404(request, exception):

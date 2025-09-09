@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+from myproject import settings
 
+
+product = models.ForeignKey("main.Product", on_delete=models.CASCADE)
 
 class Color(models.Model):
     name = models.CharField(max_length=50, unique=True)
