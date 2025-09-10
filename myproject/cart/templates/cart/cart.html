@@ -22,7 +22,7 @@
       <h3>{{ item.product.name }}</h3>
       <p><strong>Ціна:</strong> {{ item.product.price }} грн</p>
       <p><strong>Кількість:</strong> {{ item.quantity }}</p>
-      <p><strong>Разом:</strong> {{ item.product.price|floatformat:2|add:item.quantity|floatformat:2 }} грн</p>
+      <p><strong>Разом:</strong> {{ item.subtotal }} грн</p>
 
       <a href="{% url 'product_detail' item.product.id %}" class="details-btn">Детальніше</a>
       <form method="post" action="{% url 'remove_from_cart' item.product.id %}" class="remove-form">

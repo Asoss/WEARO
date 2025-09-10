@@ -101,6 +101,11 @@ class Product(models.Model):
             self.lengths = [30, 32, 34]
         super().save(*args, **kwargs)
 
+    def average_rating(self):
+        if self.rating_count == 0:
+            return 0
+        return round(self.rating_sum / self.rating_count, 1)
+
 
     def __str__(self):
         return self.name
@@ -175,3 +180,10 @@ class Wishlist(models.Model):
     def __str__(self):
         return f"{self.user.username} → {self.product.name}"
 
+class ProductRating(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="ratings")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        unique_together = ("product", "user")

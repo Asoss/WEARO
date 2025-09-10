@@ -9,7 +9,11 @@ def cart_view(request):
     cart = Cart.objects.filter(user=request.user).first()
     items = cart.items.select_related("product") if cart else []
 
-    total_price = sum(item.product.price * item.quantity for item in items)
+    # додаємо поле subtotal для кожного item
+    for item in items:
+        item.subtotal = item.product.price * item.quantity
+
+    total_price = sum(item.subtotal for item in items)
 
     return render(request, "cart/cart.html", {
         "cart": cart,
@@ -17,17 +21,22 @@ def cart_view(request):
         "total_price": total_price,
     })
 
-
 @require_POST
 def move_to_cart(request, product_id):
+    if not request.user.is_authenticated:
+        return redirect("login_email")
+    
     product = get_object_or_404(Product, id=product_id)
     cart, _ = Cart.objects.get_or_create(user=request.user)
+
     cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
     if not created:
         cart_item.quantity += 1
         cart_item.save()
+
     Wishlist.objects.filter(user=request.user, product=product).delete()
-    return redirect("cart")  
+
+    return redirect("cart")
 
 def remove_from_cart(request, product_id):
     cart = Cart.objects.filter(user=request.user).first()
@@ -36,4 +45,4 @@ def remove_from_cart(request, product_id):
         if cart_item:
             cart_item.delete()
 
-    return redirect('cart') 
+    return redirect("cart")

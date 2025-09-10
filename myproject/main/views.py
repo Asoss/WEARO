@@ -1,3 +1,4 @@
+import json
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.tokens import default_token_generator
@@ -10,14 +11,17 @@ from django.template.loader import render_to_string
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 
 from cart.models import Cart, CartItem
-from .models import Product, UserDetails, Wishlist
+from .models import Product, ProductRating, UserDetails, Wishlist
 from .forms import RegisterForm, UserForm
 import random
 from .models import Product, Category
 from django.core.paginator import Paginator
 from django.db.models import Q
+
+from main import models
 
 
 def home(request):
@@ -372,5 +376,52 @@ def toggle_wishlist(request, product_id):
 def custom_404(request, exception):
     return render(request, "main/page404.html", status=404)
 
+@login_required
+def rate_product(request):
+    if request.method == "POST":
+        product_id = None
+        rating = None
 
-    
+        # спочатку пробуємо як form-data
+        if request.POST.get("product_id"):
+            product_id = request.POST.get("product_id")
+            rating = request.POST.get("rating")
+        else:
+            # якщо form-data нема → парсимо JSON
+            try:
+                data = json.loads(request.body)
+                product_id = data.get("product_id")
+                rating = data.get("rating")
+            except (json.JSONDecodeError, TypeError):
+                return JsonResponse({"success": False, "error": "Invalid JSON"}, status=400)
+
+        # валідація
+        if not product_id or not rating:
+            return JsonResponse({"success": False, "error": "Missing data"}, status=400)
+
+        product = get_object_or_404(Product, id=product_id)
+
+        # оновлюємо або створюємо рейтинг користувача
+        obj, created = ProductRating.objects.update_or_create(
+            user=request.user,
+            product=product,
+            defaults={"rating": rating}
+        )
+
+        # перерахуємо середнє і кількість
+        ratings = ProductRating.objects.filter(product=product)
+        count = ratings.count()
+        avg = round(ratings.aggregate(avg=models.Avg("rating"))["avg"], 1) if count > 0 else 0
+
+        # зберігаємо у товар
+        product.rating_count = count
+        product.rating_avg = avg
+        product.save(update_fields=["rating_count", "rating_avg"])
+
+        return JsonResponse({
+            "success": True,
+            "count": count,
+            "avg": avg
+        })
+
+    return JsonResponse({"success": False, "error": "Invalid method"}, status=405)
