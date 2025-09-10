@@ -1,27 +1,39 @@
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from main.models import Product
+from cart.models import Cart, CartItem
+from main.models import Product, Wishlist
+from django.views.decorators.http import require_POST
 
 
 def cart_view(request):
-    cart_ids = request.session.get('cart', [])
-    products = Product.objects.filter(id__in=cart_ids)
-    return render(request, 'cart/cart.html', {'products': products})
+    cart = Cart.objects.filter(user=request.user).first()
+    items = cart.items.select_related("product") if cart else []
+
+    total_price = sum(item.product.price * item.quantity for item in items)
+
+    return render(request, "cart/cart.html", {
+        "cart": cart,
+        "items": items,
+        "total_price": total_price,
+    })
 
 
-def add_to_cart(request, product_id):
+@require_POST
+def move_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    cart = request.session.get('cart', [])
-    if product.id not in cart:
-        cart.append(product.id)
-    request.session['cart'] = cart
-    request.session.modified = True
-    return redirect('cart')  
-
+    cart, _ = Cart.objects.get_or_create(user=request.user)
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    if not created:
+        cart_item.quantity += 1
+        cart_item.save()
+    Wishlist.objects.filter(user=request.user, product=product).delete()
+    return redirect("cart")  
 
 def remove_from_cart(request, product_id):
-    cart = request.session.get('cart', [])
-    if product_id in cart:
-        cart.remove(product_id)
-        request.session['cart'] = cart
-        request.session.modified = True
-    return redirect('cart')
+    cart = Cart.objects.filter(user=request.user).first()
+    if cart:
+        cart_item = CartItem.objects.filter(cart=cart, product_id=product_id).first()
+        if cart_item:
+            cart_item.delete()
+
+    return redirect('cart') 

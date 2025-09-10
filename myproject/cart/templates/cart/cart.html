@@ -7,29 +7,34 @@
 <h1 class="text-center my-4">🛒 Ваш кошик</h1>
 
 <div class="cart-container">
-  {% if products %}
-  {% for product in products %}
+  {% if items %}
+  {% for item in items %}
   <div class="cart-item">
     <div class="cart-image">
-      {% if product.images.all %}
-      <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
+      {% if item.product.images.all %}
+      <img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.name }}">
       {% else %}
       <img src="{% static 'img/no-image.png' %}" alt="Немає фото">
       {% endif %}
     </div>
 
     <div class="cart-info">
-      <h3>{{ product.name }}</h3>
-      <p><strong>Ціна:</strong> {{ product.price }} грн</p>
+      <h3>{{ item.product.name }}</h3>
+      <p><strong>Ціна:</strong> {{ item.product.price }} грн</p>
+      <p><strong>Кількість:</strong> {{ item.quantity }}</p>
+      <p><strong>Разом:</strong> {{ item.product.price|floatformat:2|add:item.quantity|floatformat:2 }} грн</p>
 
-      <a href="{% url 'product_detail' product.id %}" class="details-btn">Детальніше</a>
-      <form method="post" action="{% url 'remove_from_cart' product.id %}" class="remove-form">
+      <a href="{% url 'product_detail' item.product.id %}" class="details-btn">Детальніше</a>
+      <form method="post" action="{% url 'remove_from_cart' item.product.id %}" class="remove-form">
         {% csrf_token %}
         <button type="submit" class="remove-btn">✖</button>
       </form>
     </div>
   </div>
   {% endfor %}
+  <div class="cart-total text-center mt-4">
+    <h3>Всього: {{ total_price }} грн</h3>
+  </div>
   {% else %}
   <p class="text-center text-muted">Ваш кошик порожній 🛍</p>
   {% endif %}
