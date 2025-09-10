@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from decimal import Decimal
 
 
 class Color(models.Model):
@@ -27,8 +28,30 @@ class Product(models.Model):
         (0, 'Жіноче'),
         (1, 'Чоловіче'),
     ]
+    PATTERN_CHOICES = [
+        ('none', 'Відсутній'),
+        ('striped', 'Смугастий'),
+        ('checked', 'Клітинка'),
+        ('floral', 'Квітковий'),
+        ('other', 'Інший'),
+    ]
+    STRETCH_CHOICES = [
+        ('low', 'Низька'),
+        ('medium', 'Середня'),
+        ('high', 'Висока'),
+    ]
+
+    CLOTHING_STYLE_CHOICES = [
+        ('relaxed_straight', 'Розслаблений прямий'),
+        ('loose_straight', 'Вільний прямий'),
+        ('relaxed_arrow', 'Розслаблена стрілка'),
+        ('loose', 'Вільний'),
+        ('baggy', 'Мішковина'),
+        ('straight', 'Прямий'),
+        ('fitted', 'Приталений'),
+    ]
     name = models.CharField(max_length=255)
-    price = models.DecimalField(max_digits=8, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     brand = models.CharField(max_length=100, blank=True)
     color = models.ForeignKey(Color, on_delete=models.SET_NULL, null=True, blank=True)
@@ -37,16 +60,34 @@ class Product(models.Model):
     about_me = models.TextField(blank=True, help_text="Про мене")
     product_details = models.TextField(blank=True, help_text="Деталі продукту")
     gender = models.IntegerField(choices=GENDER_CHOICES, default=0)
-    discount = models.PositiveIntegerField(default=0, help_text="Знижка у відсотках")
+    discount = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     sizes = models.JSONField(default=list, blank=True, null=True)
     lengths = models.JSONField(default=list, blank=True, null=True)
     rating_sum = models.PositiveIntegerField(default=0)
     rating_count = models.PositiveIntegerField(default=0)
+    pattern = models.CharField(
+        max_length=20,
+        choices=PATTERN_CHOICES,
+        default='none',
+        verbose_name='Візерунок'
+    )
+    stretchiness = models.CharField(
+        max_length=20,
+        choices=STRETCH_CHOICES,
+        default='medium',
+        verbose_name="Розтяжність"
+    )
 
+    clothing_style = models.CharField(
+        max_length=50,
+        choices=CLOTHING_STYLE_CHOICES,
+        default='loose_straight',
+        verbose_name="Загальний вид одягу"
+    )
     
     def final_price(self):
-        if self.discount > 0:
-            return self.price * (1 - self.discount / 100)
+        if self.discount:
+            return self.price * (Decimal(1) - Decimal(self.discount) / Decimal(100))
         return self.price
     
     def save(self, *args, **kwargs):
