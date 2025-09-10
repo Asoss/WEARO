@@ -111,38 +111,48 @@
   display: block;
 }
 
-/* Hover gallery */
+/*Hover gallery*/
 .hover-gallery {
   display: flex;
-  gap: 20px;
   justify-content: center;
-  margin: 40px 0;
+  align-items: stretch;
+  gap: 20px;
 }
+
 .hover-item {
   position: relative;
-  width: 100%;
-  height: 100%;
   overflow: hidden;
+  transition: transform 0.3s ease;
+  flex: 1; 
 }
+
+.hover-gallery .hover-item:nth-child(2) {
+  flex: 2; 
+
 .hover-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: opacity 0.3s ease-in-out;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
+
 .hover-item img.hover {
   position: absolute;
   top: 0;
   left: 0;
   opacity: 0;
 }
+
 .hover-item:hover img.hover {
   opacity: 1;
 }
+
 .hover-item:hover img.default {
   opacity: 0;
 }
+
+
 
 /* Section title */
 .section-title {
@@ -173,11 +183,12 @@
   width: 100%;
   height: 360px;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: 2px;
 }
 .carousel-item .product-name {
   font-size: 14px;
   margin: 8px 0 4px;
+  color:#000;
 }
 .carousel-item .price {
   font-weight: bold;
@@ -197,6 +208,10 @@
   border-radius: 50%;
   transition: background 0.3s;
   z-index: 10;
+}
+
+.carousel a{
+  text-decoration: none;
 }
 
 .carousel-btn:hover {
