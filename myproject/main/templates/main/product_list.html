@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+{% csrf_token %}
 <link rel="stylesheet" href="{% static 'css/filters.css' %}">
 
 <!-- Пошук -->
@@ -218,62 +219,77 @@
     </div>
     <!-- КІНЕЦЬ ФІЛЬТРІВ -->
 
-    <!-- Товари -->
-    <div class="main-content">
-        <div class="products-grid">
-            {% for product in products %}
-            <div class="product-item" 
-                 data-price="{{ product.price }}"
-                 data-size="{{ product.size|default:'' }}"
-                 data-color="{{ product.color|default:'' }}"
-                 data-material="{{ product.material|default:'' }}">
-                
-                <div class="product-image-container">
-                    <!-- Wishlist heart -->
-                    {% if user.is_authenticated %}
-                        {% if product.id in wishlist_products %}
-                            <img src="{% static 'icons/heart_filled.png' %}" 
-                                 data-filled="{% static 'icons/heart_filled.png' %}" 
-                                 data-empty="{% static 'icons/heart.png' %}" 
-                                 class="wishlist-heart" 
-                                 data-product-id="{{ product.id }}" />
-                        {% else %}
-                            <img src="{% static 'icons/heart.png' %}" 
-                                 data-filled="{% static 'icons/heart_filled.png' %}" 
-                                 data-empty="{% static 'icons/heart.png' %}" 
-                                 class="wishlist-heart" 
-                                 data-product-id="{{ product.id }}" />
-                        {% endif %}
+<div class="main-content">
+    <div class="products-grid">
+        {% for product in products %}
+        <div class="product-item"
+             data-price="{{ product.price }}"
+             data-size="{{ product.size|default:'' }}"
+             data-color="{{ product.color|default:'' }}"
+             data-material="{{ product.material|default:'' }}">
+
+            <div class="product-image-container">
+                <!-- Wishlist heart -->
+                {% if user.is_authenticated %}
+                    {% if product.id in wishlist_products %}
+                        <img src="{% static 'icons/heart_filled.png' %}" 
+                             data-filled="{% static 'icons/heart_filled.png' %}" 
+                             data-empty="{% static 'icons/heart.png' %}" 
+                             class="wishlist-heart" 
+                             data-product-id="{{ product.id }}" />
                     {% else %}
-                        <a href="{% url 'login_email' %}">
-                            <img src="{% static 'icons/heart.png' %}" class="wishlist-heart-login" />
-                        </a>
+                        <img src="{% static 'icons/heart.png' %}" 
+                             data-filled="{% static 'icons/heart_filled.png' %}" 
+                             data-empty="{% static 'icons/heart.png' %}" 
+                             class="wishlist-heart" 
+                             data-product-id="{{ product.id }}" />
                     {% endif %}
+                {% else %}
+                    <a href="{% url 'login_email' %}">
+                        <img src="{% static 'icons/heart.png' %}" class="wishlist-heart-login" />
+                    </a>
+                {% endif %}
 
-                    <!-- Product image -->
-                    {% with first_image=product.images.first %}
-                        {% if first_image %}
-                            <img src="{{ first_image.image.url }}" alt="{{ product.name }}" class="product-image" />
-                        {% else %}
-                            <div class="no-image">Немає фото</div>
-                        {% endif %}
-                    {% endwith %}
-                </div>
+                <!-- Product image -->
+                {% with first_image=product.images.first %}
+                    {% if first_image %}
+                        <img src="{{ first_image.image.url }}" alt="{{ product.name }}" class="product-image" />
+                    {% else %}
+                        <div class="no-image">Немає фото</div>
+                    {% endif %}
+                {% endwith %}
+            </div>
 
-                <div class="product-info">
-                    <h3 class="product-name">{{ product.name }}</h3>
-                    <p class="product-price">{{ product.price }} грн</p>
-                    <a href="{% url 'product_detail' product.pk %}" class="product-link">Детальніше</a>
+    <div class="product-info">
+        <a href="{% url 'product_detail' product.id %}" class="product-link">
+            <h3 class="product-name">{{ product.name }}</h3>
+        </a>
+
+                <!-- Рейтинг і відгуки -->
+<div class="product-rating" 
+     data-product-id="{{ product.id }}"
+     data-average-rating="{{ product.average_rating|floatformat:1 }}"
+     data-rating-count="{{ product.rating_count }}">
+    <div class="stars-container"></div>
+    <span class="reviews">({{ product.rating_count }})</span>
+</div>
+                <!-- Ціна -->
+                <div class="product-prices">
+                    {% if product.old_price %}
+                        <span class="old-price">{{ product.old_price }} грн</span>
+                    {% endif %}
+                    <span class="new-price">{{ product.price }} грн</span>
                 </div>
             </div>
-            {% empty %}
-            <div class="no-products">
-                <p>Немає товарів</p>
-            </div>
-            {% endfor %}
         </div>
+        {% empty %}
+        <div class="no-products">
+            <p>Немає товарів</p>
+        </div>
+        {% endfor %}
     </div>
 </div>
+<script src="{% static 'js/rating.js' %}"></script>
 <script src="{% static 'js/search.js' %}"></script>
 <script src="{% static 'js/filters.js' %}"></script>
 <script src="{% static 'js/wishlist.js' %}"></script>

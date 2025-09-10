@@ -311,22 +311,58 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     document.querySelectorAll('.move-to-cart-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const productId = this.dataset.productId;
-            console.log('Переміщення в кошик:', productId);
-            alert(`Товар ${productId} переміщено в кошик!`);
+    btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const productId = this.dataset.productId;
+
+        fetch(`/cart/move-to-cart/${productId}/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken"),
+                "X-Requested-With": "XMLHttpRequest",
+            }
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.status === "ok") {
+                this.closest(".product-card").remove();
+                updateCounter();
+                updateButtons();
+
+                if (wishlistBadge && data.wishlist_count !== undefined) {
+                    wishlistBadge.textContent = data.wishlist_count;
+                }
+
+                alert("Товар додано в кошик 🛒");
+            }
         });
     });
+});
+
 
     moveToCartBtn.addEventListener('click', function() {
-        const selectedProducts = Array.from(document.querySelectorAll('.product-select:checked'))
-            .map(cb => cb.closest('.product-card').dataset.productId);
-        if (selectedProducts.length) {
-            console.log('Переміщення в кошик:', selectedProducts);
-            alert(`Переміщено ${selectedProducts.length} товарів у кошик`);
-        }
+    const selectedProducts = Array.from(document.querySelectorAll('.product-select:checked'))
+        .map(cb => cb.closest('.product-card').dataset.productId);
+
+    selectedProducts.forEach(productId => {
+        fetch(`/cart/move-to-cart/${productId}/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken"),
+                "X-Requested-With": "XMLHttpRequest",
+            }
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.status === "ok") {
+                const card = document.querySelector(`.product-card[data-product-id="${productId}"]`);
+                if (card) card.remove();
+                updateCounter();
+                updateButtons();
+            }
+        });
     });
+});
 
     deleteSelectedBtn.addEventListener('click', function() {
     const selectedCheckboxes = document.querySelectorAll('.product-select:checked');
