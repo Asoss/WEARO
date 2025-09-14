@@ -324,15 +324,12 @@ main {
 .dropdown>a {
     text-decoration: none;
     color: white;
-    padding: 12px 20px;
 }
 
 .dropdown:hover>a,
 .dropdown.mega-active>a {
     text-decoration: none;
     color: #000;
-
-    padding: 12px 20px;
 }
 
 /* Мега-меню */
@@ -347,7 +344,7 @@ main {
     display: none;
     grid-template-columns: 2fr 1fr;
     gap: 0;
-    padding-top: 15px;
+    padding: 9px 0;
     z-index: 999;
 }
 
@@ -360,13 +357,15 @@ main {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 0;
-    border-right: 1px solid #ddd;
+    height: 100%;
 }
 
 /* Кожна колонка */
 .mega-column {
-    padding: 0 15px;
-    border-right: 1px solid #ddd;
+    padding: 0px 15px 0px 15px;
+    border-right: 3px solid #ddd;
+    display: flex;
+    flex-direction: column;
 }
 
 .mega-column:last-child {
@@ -375,28 +374,26 @@ main {
 
 /* Роздільна лінія всередині колонки */
 .column-separator {
-    border-top: 1px solid #ddd;
-    margin: 15px 0;
+    border-top: 3px solid #ddd;
+    margin: 25px -15px;
 }
 
 .mega-column h4 {
-    margin: 0 0 15px 0;
+    margin: 0 0 18px 0;
     font-weight: bold;
     color: #000;
-    font-size: 14px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
+    font-size: 15px;
 }
 
 .mega-column a {
     display: block;
     color: #666;
-    font-size: 13px;
-    margin-bottom: 8px;
+    font-size: 14px;
+    margin-bottom: 10px;
     text-decoration: none;
     transition: color 0.2s;
     line-height: 1.4;
-    padding: 6px 12px;
+    padding: 5px 0px;
 }
 
 .mega-column a:hover {
@@ -408,10 +405,11 @@ main {
 .mega-image {
     position: relative;
     display: flex;
-    align-items: flex-end;
+    align-items: stretch;
     margin: 0;
     padding: 0;
     height: 100%;
+    min-height: 360px;
 }
 
 .mega-image img {
@@ -439,13 +437,150 @@ main {
     font-size: 14px;
     font-weight: 600;
     text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 4px;
     transition: all 0.3s;
 }
 
 .mega-btn:hover {
     color: #000 !important;
+}
+
+/* ===========================
+         МЕГА-МЕНЮ НОВИНКИ
+    =========================== */
+.mega-menu.mega-new {
+    grid-template-columns: 1fr 3fr;
+    /* Перевизначаємо пропорції */
+}
+
+/* Ліва колонка */
+.mega-articles {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 0 20px 0 20px;
+    border-right: 1px solid #ddd;
+    height: 100%;
+}
+
+.articles-block h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #000;
+    margin: 0 0 12px;
+}
+
+.articles-block a {
+    font-size: 14px;
+    color: #666;
+    text-decoration: none;
+    margin-bottom: 10px;
+    padding: 5px 0;
+    display: block;
+    transition: color 0.2s ease;
+}
+
+.articles-block a:hover {
+    color: #000;
+    font-weight: 500;
+}
+
+.mega-articles .column-separator {
+    border-top: 1px solid #ddd;
+    margin: 20px 0;
+}
+
+/* Галерея справа */
+.mega-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: stretch;
+    border-left: 1px solid #ddd;
+    height: 100%;
+}
+
+.gallery-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+    border-left: 3px solid #ddd;
+    height: 100%;
+}
+
+.gallery-item:first-child {
+    border-left: none;
+}
+
+.gallery-item img {
+    width: 100%;
+    flex: 1;
+    object-fit: cover;
+    display: block;
+}
+
+/* підпис на фото */
+.gallery-item .caption {
+    text-align: center;
+    font-weight: 600;
+    font-size: 15px;
+    color: #000;
+    padding: 10px 0;
+    background: rgba(255, 255, 255, 0.95);
+}
+
+/* ===========================
+         МЕГА-МЕНЮ ТРЕНДИ
+    =========================== */
+.mega-menu.mega-trends {
+    grid-template-columns: 1fr 3fr;
+    /* Перевизначаємо пропорції */
+}
+
+.mega-menu.mega-trends .mega-articles {
+    background: #fff;
+    padding: 0 20px 0 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-right: 1px solid #ddd;
+    height: 100%;
+}
+
+.mega-menu.mega-trends .mega-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-left: 1px solid #ddd;
+    height: 100%;
+}
+
+.mega-menu.mega-trends .gallery-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
+    border-left: 3px solid #ddd;
+    height: 100%;
+}
+
+.mega-menu.mega-trends .gallery-item:first-child {
+    border-left: none;
+}
+
+.mega-menu.mega-trends .gallery-item img {
+    width: 100%;
+    flex: 1;
+    object-fit: cover;
+}
+
+.mega-menu.mega-trends .caption {
+    background: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    font-weight: 600;
+    font-size: 15px;
+    color: #000;
+    padding: 10px 0;
 }
 
 /* ===========================
