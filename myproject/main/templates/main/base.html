@@ -72,23 +72,20 @@
           <!-- Розпродаж -->
           <div class="nav-item dropdown">
             <a href="#">Розпродаж</a>
-            <div class="mega-menu">
+            <div class="mega-menu mega-sale">
               <div class="mega-columns">
                 <div class="mega-column">
                   <h4>Нова колекція</h4>
                   <a href="#">Переглянути все</a>
                   <a href="#">Одяг</a>
                   <a href="#">Взуття</a>
-
                   <div class="column-separator"></div>
-
                   <h4>Інші колекції</h4>
                   <a href="#">Взуття</a>
                   <a href="#">Одяг</a>
                   <a href="#">Косметика</a>
                   <a href="#">Аксесуари</a>
                 </div>
-
                 <div class="mega-column">
                   <h4>Літня серія</h4>
                   <a href="#">Вулична колекція</a>
@@ -100,7 +97,6 @@
                   <a href="#">Прикраси</a>
                   <a href="#">Інше</a>
                 </div>
-
                 <div class="mega-column">
                   <h4>Осіння серія</h4>
                   <a href="#">Вся колекція</a>
@@ -113,7 +109,6 @@
                   <a href="#">Інше</a>
                 </div>
               </div>
-
               <div class="mega-image">
                 <img src="{% static 'nav/sale.png' %}" alt="Look" />
                 <div class="mega-overlay">
@@ -126,23 +121,20 @@
           <!-- Бренди -->
           <div class="nav-item dropdown">
             <a href="#">Бренди</a>
-            <div class="mega-menu">
+            <div class="mega-menu mega-brands">
               <div class="mega-columns">
                 <div class="mega-column">
                   <h4>Колаборація з WEARO</h4>
                   <a href="#">Переглянути все</a>
                   <a href="#">Одяг</a>
                   <a href="#">Взуття</a>
-
                   <div class="column-separator"></div>
-
-                  <h4>Колекції бренду партнерів</h4>
+                  <h4>Колекції партнерів</h4>
                   <a href="#">Взуття</a>
                   <a href="#">Одяг</a>
                   <a href="#">Косметика</a>
                   <a href="#">Аксесуари</a>
                 </div>
-
                 <div class="mega-column">
                   <h4>Бренди WEARO</h4>
                   <a href="#">Мікс селфрід</a>
@@ -154,7 +146,6 @@
                   <a href="#">Прикраси</a>
                   <a href="#">Інше</a>
                 </div>
-
                 <div class="mega-column">
                   <h4>Відкрий для себе також</h4>
                   <a href="#">Вся колекція</a>
@@ -167,7 +158,6 @@
                   <a href="#">Інше</a>
                 </div>
               </div>
-
               <div class="mega-image">
                 <img src="{% static 'nav/brand.png' %}" alt="Look" />
                 <div class="mega-overlay">
@@ -181,27 +171,22 @@
           <div class="nav-item dropdown">
             <a href="#">Новинки</a>
             <div class="mega-menu mega-new">
-              <!-- Ліва колонка -->
               <div class="mega-articles">
                 <div class="articles-block">
                   <h4>Найпопулярніші статті</h4>
                   <a href="#">Як підготуватись до сезону</a>
-                  <a href="#">Найкраще взуття для вулиці</a>
-                  <a href="#">Як підібрати колірну гаму</a>
+                  <a href="#">Найкраще взуття</a>
+                  <a href="#">Колірна гама</a>
                 </div>
-
                 <div class="column-separator"></div>
-
                 <div class="articles-block">
                   <h4>Інші статті</h4>
-                  <a href="#">Осіння колекція 2025р.</a>
+                  <a href="#">Осіння колекція</a>
                   <a href="#">Догляд за шкірою</a>
-                  <a href="#">Прикраси до сезону</a>
-                  <a href="#">Зміна погляду на старі речі</a>
+                  <a href="#">Прикраси</a>
+                  <a href="#">Зміна стилю</a>
                 </div>
               </div>
-
-              <!-- Блок фото -->
               <div class="mega-gallery">
                 <div class="gallery-item">
                   <img src="{% static 'nav/news.png' %}" alt="Класична колекція" />
@@ -212,8 +197,8 @@
                   <div class="caption">Новий сезон</div>
                 </div>
                 <div class="gallery-item">
-                  <img src="{% static 'nav/news3.png' %}" alt="Новий погляд на життя" />
-                  <div class="caption">Новий погляд на життя</div>
+                  <img src="{% static 'nav/news3.png' %}" alt="Новий стиль" />
+                  <div class="caption">Новий стиль</div>
                 </div>
               </div>
             </div>
@@ -223,22 +208,19 @@
           <div class="nav-item dropdown">
             <a href="#">Тренди</a>
             <div class="mega-menu mega-trends">
-              <!-- Ліва колонка -->
               <div class="mega-articles">
                 <div class="articles-block">
                   <h4>Найпоширеніші колекції</h4>
-                  <a href="#">Сезон теплого дощу</a>
+                  <a href="#">Сезон дощу</a>
                   <a href="#">Стиль світла</a>
                   <a href="#">Діловий одяг</a>
                   <a href="#">Вечірня краса</a>
                   <a href="#">Спокійний день</a>
-                  <a href="#">Колекція квітковий сад</a>
-                  <a href="#">Колекція зоряна ніч</a>
+                  <a href="#">Квітковий сад</a>
+                  <a href="#">Зоряна ніч</a>
                   <a href="#">Інше</a>
                 </div>
               </div>
-
-              <!-- Блок фото -->
               <div class="mega-gallery">
                 <div class="gallery-item">
                   <img src="{% static 'nav/trend.png' %}" alt="Зоряна ніч" />
@@ -249,13 +231,55 @@
                   <div class="caption">Спокійний день</div>
                 </div>
                 <div class="gallery-item">
-                  <img src="{% static 'nav/trend3.png' %}" alt="Обери власний стиль" />
-                  <div class="caption">Обери власний стиль</div>
+                  <img src="{% static 'nav/trend3.png' %}" alt="Обери стиль" />
+                  <div class="caption">Обери стиль</div>
                 </div>
               </div>
             </div>
           </div>
-          <a href="#" class="nav-item">Одяг</a>
+
+          <!-- Одяг -->
+          <div class="nav-item dropdown">
+            <a href="#">Одяг</a>
+            <div class="mega-menu mega-clothes">
+              <div class="mega-column">
+                <h4>Найвищий рейтинг</h4>
+                <a href="#">Переглянути все</a>
+                <a href="#">Одяг</a>
+                <a href="#">Взуття</a>
+                <div class="column-separator"></div>
+                <h4>Природні матеріали</h4>
+                <a href="#">Взуття</a>
+                <a href="#">Одяг</a>
+                <a href="#">Косметика</a>
+                <a href="#">Аксесуари</a>
+              </div>
+              <div class="gallery-item">
+                <img src="{% static 'nav/clothes.png' %}" alt="Вечірня серія" />
+                <div class="mega-overlay">
+                  <a href="#" class="mega-btn"><strong>Вечірня серія</strong></a>
+                </div>
+              </div>
+              <div class="mega-column">
+                <h4>Купуйте також</h4>
+                <a href="#">Для материнства</a>
+                <a href="#">Високим</a>
+                <a href="#">Маленьким</a>
+                <a href="#">Зайнятим</a>
+                <a href="#">Для відпочинку</a>
+                <a href="#">Для розкоші</a>
+                <a href="#">Прогулянок</a>
+                <a href="#">Інше</a>
+              </div>
+              <div class="gallery-item">
+                <img src="{% static 'nav/clothes2.png' %}" alt="Серія для відпочинку" />
+                <div class="mega-overlay">
+                  <a href="#" class="mega-btn"><strong>Серія для відпочинку</strong></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <a href="#" class="nav-item">Спортивний одяг</a>
           <a href="#" class="nav-item">Взуття</a>
           <a href="#" class="nav-item">Аксесуари</a>
