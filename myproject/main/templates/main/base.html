@@ -1,204 +1,633 @@
 <!DOCTYPE html>
 <html lang="uk">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Магазин одягу</title>
     {% load static %}
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <link rel="stylesheet" href="{% static 'css/main.css' %}">
-    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
-</head>
-<body>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}" />
+  </head>
+  <body>
     <!-- Верхня частина header -->
     <div class="top-header">
-        <div class="top-header-content">
-            <div class="top-left">
-                <a href="/help">Допомога та поширені запитання</a>
-            </div>
-           <div class="top-right">
-                <div class="custom-select" id="languageSelector">
-                    <div class="selected">
-                        <img src="{% static 'icons/ua.png' %}" alt="UA">
-                        <span>Українська</span>
-                    </div>
-                    <ul class="options">
-                        <li data-value="uk" data-flag="{% static 'icons/ua.png' %}">
-                            <img src="{% static 'icons/ua.png' %}" alt="UA">
-                            <span>Українська</span>
-                        </li>
-                        <li data-value="en" data-flag="{% static 'icons/gb.png' %}">
-                            <img src="{% static 'icons/gb.png' %}" alt="EN">
-                            <span>English</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+      <div class="top-header-content">
+        <div class="top-left">
+          <a href="/help">Допомога та поширені запитання</a>
         </div>
+        <div class="top-right">
+          <div class="custom-select" id="languageSelector">
+            <div class="selected">
+              <img src="{% static 'icons/ua.png' %}" alt="UA" />
+              <span>Українська</span>
+            </div>
+            <ul class="options">
+              <li data-value="uk" data-flag="{% static 'icons/ua.png' %}">
+                <img src="{% static 'icons/ua.png' %}" alt="UA" />
+                <span>Українська</span>
+              </li>
+              <li data-value="en" data-flag="{% static 'icons/gb.png' %}">
+                <img src="{% static 'icons/gb.png' %}" alt="EN" />
+                <span>English</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Основна частина header -->
     <header class="main-header">
-        <div class="main-header-content">
-            <div class="header-center">
-                <a href="{% url 'women' %}" class="gender-link {% if request.path == '/women/' %}active{% endif %}">
-                    Жіночий одяг
-                </a>
-                <a href="{% url 'home' %}" class="logo">
-                    <img src="{% static 'icons/wearo.jpg' %}" alt="WEARO">
-                </a>
-                <a href="{% url 'men' %}" class="gender-link {% if request.path == '/men/' %}active{% endif %}">
-                    Чоловічий одяг
-                </a>
-            </div>
-
-       <div class="header-right">
-    {% if user.is_authenticated %}
-        <span>Вітаємо, {{ user.username }}</span>
-        <span>|</span>
-        <a href="{% url 'wishlist' %}">
-            Вподобано <span class="badge">{{ wishlist_count }}</span>
-        </a>
-        <span>|</span>
-        <a href="{% url 'cart' %}">
-            Кошик <span class="badge">{{ cart_count }}</span>
-        </a>
-    {% else %}
-        <a href="{% url 'login_email' %}">Увійти</a>
-        <span>|</span>
-        <a href="{% url 'register' %}">Реєстрація</a>
-        <span>|</span>
-        <a href="{% url 'wishlist' %}">
-            Вподобано <span class="badge">{{ wishlist_count }}</span>
-        </a>
-        <span>|</span>
-        <a href="{% url 'cart' %}">
-            Кошик <span class="badge">{{ cart_count }}</span>
-        </a>
-    {% endif %}
-</div>
+      <div class="main-header-content">
+        <div class="header-center">
+          <a href="{% url 'women' %}" class="gender-link {% if request.path == '/women/' %}active{% endif %}">Жіночий одяг</a>
+          <a href="{% url 'home' %}" class="logo"><img src="{% static 'icons/wearo.jpg' %}" alt="WEARO" /></a>
+          <a href="{% url 'men' %}" class="gender-link {% if request.path == '/men/' %}active{% endif %}">Чоловічий одяг</a>
         </div>
+
+        <div class="header-right">
+          {% if user.is_authenticated %}
+            <span>Вітаємо, {{ user.username }}</span>
+            <span>|</span>
+            <a href="{% url 'wishlist' %}">Вподобано <span class="badge">{{ wishlist_count }}</span></a>
+            <span>|</span>
+            <a href="{% url 'cart' %}">Кошик <span class="badge">{{ cart_count }}</span></a>
+          {% else %}
+            <a href="{% url 'login_email' %}">Увійти</a>
+            <span>|</span>
+            <a href="{% url 'register' %}">Реєстрація</a>
+            <span>|</span>
+            <a href="{% url 'wishlist' %}">Вподобано <span class="badge">{{ wishlist_count }}</span></a>
+            <span>|</span>
+            <a href="{% url 'cart' %}">Кошик <span class="badge">{{ cart_count }}</span></a>
+          {% endif %}
+        </div>
+      </div>
     </header>
 
-    <!-- Навігаційне меню -->
     <nav class="navigation">
-        <div class="nav-content">
-            <div class="nav-menu">
-                <a href="#" class="nav-item">Розпродаж</a>
-                <a href="#" class="nav-item">Бренди</a>
-                <a href="#" class="nav-item">Новинки</a>
-                <a href="#" class="nav-item">Тренди</a>
-                <a href="#" class="nav-item">Одяг</a>
-                <a href="#" class="nav-item">Спортивний одяг</a>
-                <a href="#" class="nav-item">Взуття</a>
-                <a href="#" class="nav-item">Аксесуари</a>
-                <a href="#" class="nav-item">Косметика</a>
-                <a href="#" class="nav-item">Персональне</a>
+      <div class="nav-content">
+        <div class="nav-menu">
+          <!-- Розпродаж -->
+          <div class="nav-item dropdown">
+            <a href="#">Розпродаж</a>
+            <div class="mega-menu mega-sale">
+              <div class="mega-columns">
+                <div class="mega-column">
+                  <h4>Нова колекція</h4>
+                  <a href="#">Переглянути все</a>
+                  <a href="#">Одяг</a>
+                  <a href="#">Взуття</a>
+                  <div class="column-separator"></div>
+                  <h4>Інші колекції</h4>
+                  <a href="#">Взуття</a>
+                  <a href="#">Одяг</a>
+                  <a href="#">Косметика</a>
+                  <a href="#">Аксесуари</a>
+                </div>
+                <div class="mega-column">
+                  <h4>Літня серія</h4>
+                  <a href="#">Вулична колекція</a>
+                  <a href="#">Пляжна колекція</a>
+                  <a href="#">Домашня колекція</a>
+                  <a href="#">Спортивна колекція</a>
+                  <a href="#">Садова колекція</a>
+                  <a href="#">Домашні аксесуари</a>
+                  <a href="#">Прикраси</a>
+                  <a href="#">Інше</a>
+                </div>
+                <div class="mega-column">
+                  <h4>Осіння серія</h4>
+                  <a href="#">Вся колекція</a>
+                  <a href="#">Вулична колекція</a>
+                  <a href="#">Домашня колекція</a>
+                  <a href="#">Спортивна колекція</a>
+                  <a href="#">Садова колекція</a>
+                  <a href="#">Домашні аксесуари</a>
+                  <a href="#">Прикраси</a>
+                  <a href="#">Інше</a>
+                </div>
+              </div>
+              <div class="mega-image">
+                <img src="{% static 'nav/sale.png' %}" alt="Look" />
+                <div class="mega-overlay">
+                  <a href="#" class="mega-btn"><strong>Створи свій стиль</strong></a>
+                </div>
+              </div>
             </div>
+          </div>
+
+          <!-- Бренди -->
+          <div class="nav-item dropdown">
+            <a href="#">Бренди</a>
+            <div class="mega-menu mega-brands">
+              <div class="mega-columns">
+                <div class="mega-column">
+                  <h4>Колаборація з WEARO</h4>
+                  <a href="#">Переглянути все</a>
+                  <a href="#">Одяг</a>
+                  <a href="#">Взуття</a>
+                  <div class="column-separator"></div>
+                  <h4>Колекції партнерів</h4>
+                  <a href="#">Взуття</a>
+                  <a href="#">Одяг</a>
+                  <a href="#">Косметика</a>
+                  <a href="#">Аксесуари</a>
+                </div>
+                <div class="mega-column">
+                  <h4>Бренди WEARO</h4>
+                  <a href="#">Мікс селфрід</a>
+                  <a href="#">Конструктивність</a>
+                  <a href="#">WEARO лбкс</a>
+                  <a href="#">Вінтажна класика</a>
+                  <a href="#">Зимовий сет</a>
+                  <a href="#">ART Колаж</a>
+                  <a href="#">Прикраси</a>
+                  <a href="#">Інше</a>
+                </div>
+                <div class="mega-column">
+                  <h4>Відкрий для себе також</h4>
+                  <a href="#">Вся колекція</a>
+                  <a href="#">Вулична колекція</a>
+                  <a href="#">Домашня колекція</a>
+                  <a href="#">Спортивна колекція</a>
+                  <a href="#">Садова колекція</a>
+                  <a href="#">Домашні аксесуари</a>
+                  <a href="#">Косметика</a>
+                  <a href="#">Інше</a>
+                </div>
+              </div>
+              <div class="mega-image">
+                <img src="{% static 'nav/brand.png' %}" alt="Look" />
+                <div class="mega-overlay">
+                  <a href="#" class="mega-btn"><strong>Будь на стилі</strong></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Новинки -->
+          <div class="nav-item dropdown">
+            <a href="#">Новинки</a>
+            <div class="mega-menu mega-new">
+              <div class="mega-articles">
+                <div class="articles-block">
+                  <h4>Найпопулярніші статті</h4>
+                  <a href="#">Як підготуватись до сезону</a>
+                  <a href="#">Найкраще взуття</a>
+                  <a href="#">Колірна гама</a>
+                </div>
+                <div class="column-separator"></div>
+                <div class="articles-block">
+                  <h4>Інші статті</h4>
+                  <a href="#">Осіння колекція</a>
+                  <a href="#">Догляд за шкірою</a>
+                  <a href="#">Прикраси</a>
+                  <a href="#">Зміна стилю</a>
+                </div>
+              </div>
+              <div class="mega-gallery">
+                <div class="gallery-item">
+                  <img src="{% static 'nav/news.png' %}" alt="Класична колекція" />
+                  <div class="caption">Класична колекція</div>
+                </div>
+                <div class="gallery-item">
+                  <img src="{% static 'nav/new2.png' %}" alt="Новий сезон" />
+                  <div class="caption">Новий сезон</div>
+                </div>
+                <div class="gallery-item">
+                  <img src="{% static 'nav/news3.png' %}" alt="Новий стиль" />
+                  <div class="caption">Новий стиль</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Тренди -->
+          <div class="nav-item dropdown">
+            <a href="#">Тренди</a>
+            <div class="mega-menu mega-trends">
+              <div class="mega-articles">
+                <div class="articles-block">
+                  <h4>Найпоширеніші колекції</h4>
+                  <a href="#">Сезон дощу</a>
+                  <a href="#">Стиль світла</a>
+                  <a href="#">Діловий одяг</a>
+                  <a href="#">Вечірня краса</a>
+                  <a href="#">Спокійний день</a>
+                  <a href="#">Квітковий сад</a>
+                  <a href="#">Зоряна ніч</a>
+                  <a href="#">Інше</a>
+                </div>
+              </div>
+              <div class="mega-gallery">
+                <div class="gallery-item">
+                  <img src="{% static 'nav/trend.png' %}" alt="Зоряна ніч" />
+                  <div class="caption">Зоряна ніч</div>
+                </div>
+                <div class="gallery-item">
+                  <img src="{% static 'nav/trend2.png' %}" alt="Спокійний день" />
+                  <div class="caption">Спокійний день</div>
+                </div>
+                <div class="gallery-item">
+                  <img src="{% static 'nav/trend3.png' %}" alt="Обери стиль" />
+                  <div class="caption">Обери стиль</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Одяг -->
+          <div class="nav-item dropdown">
+            <a href="#">Одяг</a>
+            <div class="mega-menu mega-clothes">
+              <div class="mega-column">
+                <h4>Найвищий рейтинг</h4>
+                <a href="#">Переглянути все</a>
+                <a href="#">Одяг</a>
+                <a href="#">Взуття</a>
+                <div class="column-separator"></div>
+                <h4>Природні матеріали</h4>
+                <a href="#">Взуття</a>
+                <a href="#">Одяг</a>
+                <a href="#">Косметика</a>
+                <a href="#">Аксесуари</a>
+              </div>
+              <div class="gallery-item">
+                <img src="{% static 'nav/clothes.png' %}" alt="Вечірня серія" />
+                <div class="mega-overlay">
+                  <a href="#" class="mega-btn"><strong>Вечірня серія</strong></a>
+                </div>
+              </div>
+              <div class="mega-column">
+                <h4>Купуйте також</h4>
+                <a href="#">Для материнства</a>
+                <a href="#">Високим</a>
+                <a href="#">Маленьким</a>
+                <a href="#">Зайнятим</a>
+                <a href="#">Для відпочинку</a>
+                <a href="#">Для розкоші</a>
+                <a href="#">Прогулянок</a>
+                <a href="#">Інше</a>
+              </div>
+              <div class="gallery-item">
+                <img src="{% static 'nav/clothes2.png' %}" alt="Серія для відпочинку" />
+                <div class="mega-overlay">
+                  <a href="#" class="mega-btn"><strong>Серія для відпочинку</strong></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Спортивний одяг -->
+          <div class="nav-item dropdown">
+            <a href="#">Спортивний одяг</a>
+            <div class="mega-menu mega-sport">
+              <div class="mega-column">
+                <h4>Нова колекція</h4>
+                <a href="#">Переглянути все</a>
+                <a href="#">Одяг</a>
+                <a href="#">Взуття</a>
+                <div class="column-separator"></div>
+                <h4>Інші колекції</h4>
+                <a href="#">Куртки</a>
+                <a href="#">Шорти</a>
+                <a href="#">Косметика</a>
+                <a href="#">Аксесуари</a>
+              </div>
+
+              <div class="mega-column">
+                <h4>За видом діяльності</h4>
+                <a href="#">Вуличний біг</a>
+                <a href="#">Спортзал</a>
+                <a href="#">Басейн</a>
+                <a href="#">Фітнес</a>
+                <a href="#">Йога</a>
+                <a href="#">Для екстриму</a>
+                <a href="#">Аксесуари</a>
+                <a href="#">Інше</a>
+              </div>
+
+              <div class="gallery-item">
+                <img src="{% static 'nav/sport.png' %}" alt="Товари партнерів" />
+                <div class="caption">Товари партнерів</div>
+              </div>
+
+              <div class="gallery-item">
+                <img src="{% static 'nav/sport2.png' %}" alt="Спеціалізований" />
+                <div class="caption">Спеціалізований</div>
+              </div>
+            </div>
+          </div>
+          <!-- Взуття -->
+          <div class="nav-item dropdown">
+            <a href="#">Взуття</a>
+            <div class="mega-menu mega-shoes">
+              <!-- Перше фото зліва -->
+              <div class="gallery-item">
+                <img src="{% static 'nav/shoes.png' %}" alt="Adidas" />
+                <div class="caption">Adidas</div>
+              </div>
+
+              <!-- Перша текстова колонка -->
+              <div class="mega-column">
+                <h4>Нова колекція</h4>
+                <a href="#">Переглянути все</a>
+                <a href="#">Нове в сезоні</a>
+                <a href="#">Для тренування</a>
+                <a href="#">Кросівки</a>
+                <a href="#">Кеди</a>
+                <a href="#">Босоніжки</a>
+                <a href="#">Черевики</a>
+                <a href="#">Більше</a>
+              </div>
+
+              <!-- Друга текстова колонка -->
+              <div class="mega-column">
+                <h4>Товари за торговою маркою</h4>
+                <a href="#">Adidas</a>
+                <a href="#">ASICS</a>
+                <a href="#">New Balance</a>
+                <a href="#">Puma</a>
+                <a href="#">Under Armour</a>
+                <a href="#">Reebok</a>
+                <a href="#">Jordan</a>
+                <a href="#">Інше</a>
+              </div>
+
+              <!-- Друге фото справа -->
+              <div class="gallery-item">
+                <img src="{% static 'nav/shoes2.png' %}" alt="Власний стиль" />
+                <div class="caption">Власний стиль</div>
+              </div>
+            </div>
+          </div>
+          <!-- Аксесуари -->
+          <div class="nav-item dropdown">
+            <a href="#">Аксесуари</a>
+            <div class="mega-menu mega-accessories">
+              <div class="mega-column">
+                <h4>Купуйте рекомендоване</h4>
+                <a href="#">Переглянути все</a>
+                <a href="#">Нове в сезоні</a>
+                <a href="#">Окуляри</a>
+                <a href="#">Браслети</a>
+                <a href="#">Годинники</a>
+                <a href="#">Ремені</a>
+                <a href="#">Шапочки</a>
+                <a href="#">Подарункові набори</a>
+              </div>
+
+              <div class="mega-column">
+                <h4>Магазин ювелірних виробів</h4>
+                <a href="#">Подивитись все</a>
+                <a href="#">Годинники</a>
+                <a href="#">Намистники</a>
+                <a href="#">Кільця</a>
+                <a href="#">Браслети</a>
+                <a href="#">Сережки</a>
+                <a href="#">Мережива сталь</a>
+                <a href="#">Інше</a>
+              </div>
+
+              <div class="gallery-item">
+                <img src="{% static 'nav/aks.png' %}" alt="Сумки" />
+                <div class="caption">Сумки</div>
+              </div>
+
+              <div class="gallery-item">
+                <img src="{% static 'nav/aks2.png' %}" alt="Літні аксесуари" />
+                <div class="caption">Літні аксесуари</div>
+              </div>
+            </div>
+          </div>
+          <!-- Косметика -->
+          <div class="nav-item dropdown">
+            <a href="#">Косметика</a>
+            <div class="mega-menu mega-cosmetics">
+              <!-- Перше фото -->
+              <div class="gallery-item">
+                <img src="{% static 'nav/cos.png' %}" alt="Відкрий для себе щось нове" />
+                <div class="caption">Відкрий для себе щось нове</div>
+              </div>
+
+              <!-- Друге фото -->
+              <div class="gallery-item">
+                <img src="{% static 'nav/cos2.png' %}" alt="Обличчя + Тіло" />
+                <div class="caption">Обличчя + Тіло</div>
+              </div>
+
+              <!-- Перша текстова колонка -->
+              <div class="mega-column">
+                <h4>Категорії</h4>
+                <a href="#">Доглядова</a>
+                <a href="#">Декоративна</a>
+                <a href="#">Гігієнічна</a>
+                <a href="#">Очищаюча</a>
+                <a href="#">Зволожуюча</a>
+                <a href="#">Живильна</a>
+                <a href="#">Антивікова</a>
+                <a href="#">Інше</a>
+              </div>
+
+              <!-- Друга текстова колонка -->
+              <div class="mega-column">
+                <h4>Товари за торговою маркою</h4>
+                <a href="#">Maybelline</a>
+                <a href="#">Fenty Beauty</a>
+                <a href="#">Clinique</a>
+                <a href="#">La Roche-Posay</a>
+                <a href="#">The Ordinary</a>
+                <a href="#">L'Oréal</a>
+                <a href="#">Estée Lauder</a>
+                <a href="#">Інше</a>
+              </div>
+            </div>
+          </div>
+          <!-- Персональне -->
+          <div class="nav-item dropdown">
+            <a href="#">Персональне</a>
+            <div class="mega-menu mega-personal">
+              <div class="mega-column">
+                <h4>Нова колекція</h4>
+                <a href="#">Переглянути все</a>
+                <a href="#">Одяг</a>
+                <a href="#">Взуття</a>
+                <div class="column-separator"></div>
+                <h4>Інші колекції</h4>
+                <a href="#">Куртки</a>
+                <a href="#">Шапки</a>
+                <a href="#">Косметика</a>
+                <a href="#">Аксесуари</a>
+              </div>
+
+              <div class="mega-column">
+                <h4>Рекомендоване</h4>
+                <a href="#">Колекція 20-25</a>
+                <a href="#">Колекція "Природа"</a>
+                <a href="#">Монохром</a>
+                <a href="#">Вечірні сукні</a>
+                <a href="#">Легка прогулянка</a>
+                <a href="#">Найпопулярніше</a>
+                <a href="#">Стиль "Темний-шоколад"</a>
+                <a href="#">Інше</a>
+              </div>
+
+              <div class="gallery-item">
+                <img src="{% static 'nav/pers.png' %}" alt="Ексклюзив" />
+                <div class="caption">Ексклюзив</div>
+              </div>
+
+              <div class="gallery-item">
+                <img src="{% static 'nav/pers2.png' %}" alt="Відкрий для себе щось нове" />
+                <div class="caption">Відкрий для себе щось нове</div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </nav>
 
+    <div class="nav-overlay"></div>
+
     <main style="padding: 20px;">
-        {% block content %}
-        {% endblock %}
+      {% block content %}
+
+      {% endblock %}
     </main>
 
-<footer class="site-footer">
-    <div class="footer-blue-line"></div>
-    <div class="footer-gray-line"></div>
-    
-    <div class="footer-top">
+    <footer class="site-footer">
+      <div class="footer-blue-line"></div>
+      <div class="footer-gray-line"></div>
+
+      <div class="footer-top">
         <div class="newsletter">
-            <p>Приєднуйтесь до WEARO та будьте в курсі новин!</p>
-            <div class="social-icons">
-                <a href="#"><img src="{% static 'icons/fb.jfif' %}" alt="Facebook"></a>
-                <a href="#"><img src="{% static 'icons/inst.jpg' %}" alt="Instagram"></a>
-                <a href="#"><img src="{% static 'icons/pint.jpg' %}" alt="Pinterest"></a>
-            </div>
+          <p>Приєднуйтесь до WEARO та будьте в курсі новин!</p>
+          <div class="social-icons">
+            <a href="#"><img src="{% static 'icons/fb.jfif' %}" alt="Facebook" /></a>
+            <a href="#"><img src="{% static 'icons/inst.jpg' %}" alt="Instagram" /></a>
+            <a href="#"><img src="{% static 'icons/pint.jpg' %}" alt="Pinterest" /></a>
+          </div>
         </div>
 
-    <div class="support">
-        <p>Якщо у вас виникли якісь труднощі зверніться в службу підтримки</p>
-        <form class="form-inline">
-            <input type="text" placeholder="Задати запитання">
-        <button type="submit">Надіслати</button>
-            </form>
+        <div class="support">
+          <p>Якщо у вас виникли якісь труднощі зверніться в службу підтримки</p>
+          <form class="form-inline">
+            <input type="text" placeholder="Задати запитання" />
+            <button type="submit">Надіслати</button>
+          </form>
         </div>
 
         <div class="payments">
-            <p>Платіжні системи:</p>
-            <div class="payment-icons">
-                <img src="{% static 'icons/mast-card.jpg' %}" alt="Mastercard">
-                <img src="{% static 'icons/visa-card.jpg' %}" alt="Visa">
-                <img src="{% static 'icons/pp-card.jpg' %}" alt="PayPal">
-                <img src="{% static 'icons/mono-card.jpg' %}" alt="Mono">
-            </div>
+          <p>Платіжні системи:</p>
+          <div class="payment-icons">
+            <img src="{% static 'icons/mast-card.jpg' %}" alt="Mastercard" />
+            <img src="{% static 'icons/visa-card.jpg' %}" alt="Visa" />
+            <img src="{% static 'icons/pp-card.jpg' %}" alt="PayPal" />
+            <img src="{% static 'icons/mono-card.jpg' %}" alt="Mono" />
+          </div>
         </div>
-    </div>
+      </div>
 
-    <div class="footer-bottom">
+      <div class="footer-bottom">
         <div class="footer-columns">
-            <div class="footer-column">
-                <h4>ДОПОМОГА ТА ІНФОРМАЦІЯ</h4>
-                <ul>
-                    <li><a href="#">Допомога</a></li>
-                    <li><a href="#">Відстежити замовлення</a></li>
-                    <li><a href="#">Доставка і повернення</a></li>
-                    <li><a href="#">Мапа сайту</a></li>
-                </ul>
-            </div>
+          <div class="footer-column">
+            <h4>ДОПОМОГА ТА ІНФОРМАЦІЯ</h4>
+            <ul>
+              <li>
+                <a href="#">Допомога</a>
+              </li>
+              <li>
+                <a href="#">Відстежити замовлення</a>
+              </li>
+              <li>
+                <a href="#">Доставка і повернення</a>
+              </li>
+              <li>
+                <a href="#">Мапа сайту</a>
+              </li>
+            </ul>
+          </div>
 
-            <div class="footer-column">
-                <h4>ПРО КОМПАНІЮ WEARO</h4>
-                <ul>
-                    <li><a href="#">Про нас</a></li>
-                    <li><a href="#">Доставка в WEARO</a></li>
-                    <li><a href="#">Корпоративна відповідальність</a></li>
-                    <li><a href="#">Сайт для інвесторів</a></li>
-                </ul>
-            </div>
+          <div class="footer-column">
+            <h4>ПРО КОМПАНІЮ WEARO</h4>
+            <ul>
+              <li>
+                <a href="#">Про нас</a>
+              </li>
+              <li>
+                <a href="#">Доставка в WEARO</a>
+              </li>
+              <li>
+                <a href="#">Корпоративна відповідальність</a>
+              </li>
+              <li>
+                <a href="#">Сайт для інвесторів</a>
+              </li>
+            </ul>
+          </div>
 
-            <div class="footer-column">
-                <h4>БІЛЬШЕ ВІД WEARO</h4>
-                <ul>
-                    <li><a href="#">Мобільні додатки</a></li>
-                    <li><a href="#">Подарункові сертифікати</a></li>
-                    <li><a href="#">Чорна п'ятниця</a></li>
-                    <li><a href="#">ASOS x Thrift+</a></li>
-                </ul>
-            </div>
+          <div class="footer-column">
+            <h4>БІЛЬШЕ ВІД WEARO</h4>
+            <ul>
+              <li>
+                <a href="#">Мобільні додатки</a>
+              </li>
+              <li>
+                <a href="#">Подарункові сертифікати</a>
+              </li>
+              <li>
+                <a href="#">Чорна п'ятниця</a>
+              </li>
+              <li>
+                <a href="#">ASOS x Thrift+</a>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div class="footer-countries">
-            <h4>КУПУЙТЕ ТАКОЖ У:</h4>
-            <div class="country-flag-highlighted">
-                <img src="{% static 'icons/plus.jpg' %}" alt="Швейцарія">
-                <a href="#" style="color: white">CH</a>
-            </div>
+          <h4>КУПУЙТЕ ТАКОЖ У:</h4>
+          <div class="country-flag-highlighted">
+            <img src="{% static 'icons/plus.jpg' %}" alt="Швейцарія" />
+            <a href="#" style="color: white">CH</a>
+          </div>
 
-            <p class="international-sites">Наші міжнародні сайти:</p>
-            <ul class="flags">
-                <li><img src="{% static 'icons/ch.jpg' %}" alt="Швейцарія"></li>
-                <li><img src="{% static 'icons/md.jpg' %}" alt="Молдова"></li>
-                <li><img src="{% static 'icons/cn.jpg' %}" alt="Китай"></li>
-                <li><img src="{% static 'icons/ua2.jpg' %}" alt="Україна"></li>
-                <li><img src="{% static 'icons/co.jpg' %}" alt="Колумбія"></li>
-            </ul>
+          <p class="international-sites">Наші міжнародні сайти:</p>
+          <ul class="flags">
+            <li>
+              <img src="{% static 'icons/ch.jpg' %}" alt="Швейцарія" />
+            </li>
+            <li>
+              <img src="{% static 'icons/md.jpg' %}" alt="Молдова" />
+            </li>
+            <li>
+              <img src="{% static 'icons/cn.jpg' %}" alt="Китай" />
+            </li>
+            <li>
+              <img src="{% static 'icons/ua2.jpg' %}" alt="Україна" />
+            </li>
+            <li>
+              <img src="{% static 'icons/co.jpg' %}" alt="Колумбія" />
+            </li>
+          </ul>
         </div>
-    </div>
+      </div>
 
-    <div class="footer-copy">
+      <div class="footer-copy">
         <div class="footer-copy-left">
-            <p>© WEARO 2025 року</p>
+          <p>© WEARO 2025 року</p>
         </div>
         <div class="footer-copy-right">
-            <div class="footer-links">
-                <a href="#">Конфіденційність</a> | <a href="#">Файли cookie</a> | <a href="#">Умови</a> | <a href="#">Спеціальні можливості</a>
-            </div>
+          <div class="footer-links">
+            <a href="#">Конфіденційність</a> | <a href="#">Файли cookie</a> | <a href="#">Умови</a> | <a href="#">Спеціальні можливості</a>
+          </div>
         </div>
-    </div>
-</footer>
+      </div>
+    </footer>
 
+    <script src="{% static 'js/overlayCreate.js' %}"></script>
     <script src="{% static 'js/lang.js' %}"></script>
-</body>
+  </body>
 </html>
