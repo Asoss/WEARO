@@ -14,14 +14,11 @@ main {
 .top-header {
     position: relative;
     background: #000;
-
     height: 40px;
-    /* або скільки треба */
     font-size: 12px;
     text-align: center;
     display: flex;
     align-items: center;
-    /* вирівняти текст по центру */
 }
 
 .top-header a {
@@ -196,7 +193,7 @@ main {
     font-weight: 600;
     text-decoration: none;
     color: #333;
-    padding: 10px 20px;
+    padding: 1px 20px;
     border: 1px solid transparent;
     display: flex;
     align-items: center;
@@ -250,7 +247,7 @@ main {
 }
 
 /* ===========================
-   AUTH LINKS (тепер справа)
+   AUTH LINKS
 =========================== */
 .badge {
     background: #3f51b5;
@@ -283,12 +280,42 @@ main {
 }
 
 /* ===========================
+   ОВЕРЛЕЙ ДЛЯ НАВІГАЦІЇ
+=========================== */
+.page-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    pointer-events: none;
+}
+
+.page-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+@supports selector(:has(*)) {
+    body:has(.dropdown:hover) .page-overlay {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+/* ===========================
                НАВІГАЦІЯ
 =========================== */
 .navigation {
     background: #000000;
     padding: 0;
     position: relative;
+    z-index: 1000;
 }
 
 .nav-content {
@@ -469,7 +496,6 @@ main {
     transform: translateX(-150px);
 }
 
-/* Ліва колонка */
 .mega-articles {
     display: flex;
     flex-direction: column;
@@ -506,7 +532,6 @@ main {
     margin: 20px 0;
 }
 
-/* Галерея справа */
 .mega-gallery {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -538,7 +563,6 @@ main {
     display: block;
 }
 
-/* підпис на фото */
 .gallery-item .caption {
     position: absolute;
     bottom: 0;
@@ -638,14 +662,13 @@ main {
     height: 392px;
     top: 100%;
     left: 0;
-    transform: translateX(-340px);
+    transform: translateX(-327px);
 }
 
 .mega-menu.mega-clothes:hover {
     display: grid;
 }
 
-/* Колонки з текстом */
 .mega-clothes .mega-column {
     padding: 0px 15px 0px 15px;
     border-right: 3px solid #ddd;
@@ -657,7 +680,6 @@ main {
     border-right: none;
 }
 
-/* Елементи галереї */
 .mega-clothes .gallery-item {
     position: relative;
     display: flex;
@@ -677,7 +699,6 @@ main {
     display: block;
 }
 
-/* Оверлей для категорії "Одяг" */
 .mega-clothes .gallery-item .caption,
 .mega-clothes .mega-overlay {
     position: absolute;
@@ -702,6 +723,507 @@ main {
 .mega-clothes .mega-overlay:hover {
     background: rgba(255, 255, 255, 0.95);
 }
+
+/* ===========================
+   МЕГА-МЕНЮ: СПОРТИВНИЙ ОДЯГ
+=========================== */
+.mega-menu.mega-sport {
+    display: none;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 0;
+    padding: 9px 0;
+    height: 392px;
+    top: 100%;
+    left: 0;
+    transform: translateX(-405px);
+}
+
+.mega-menu.mega-sport:hover {
+    display: grid;
+}
+
+.mega-sport .mega-column {
+    padding: 0px 15px 0px 15px;
+    border-right: 3px solid #ddd;
+    display: flex;
+    flex-direction: column;
+}
+
+.mega-sport .mega-column:last-child {
+    border-right: none;
+}
+
+.mega-sport .mega-column h4 {
+    margin: 0 0 18px 0;
+    font-weight: bold;
+    color: #000;
+    font-size: 15px;
+}
+
+.mega-sport .mega-column a {
+    display: block;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-decoration: none;
+    transition: color 0.2s;
+    line-height: 1.4;
+    padding: 5px 0px;
+}
+
+.mega-sport .mega-column a:hover {
+    color: #000;
+    font-weight: 500;
+}
+
+.mega-sport .column-separator {
+    border-top: 3px solid #ddd;
+    margin: 25px -15px;
+}
+
+.mega-sport .gallery-item {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+    border-right: 3px solid #ddd;
+}
+
+.mega-sport .gallery-item:last-child {
+    border-right: none;
+}
+
+.mega-sport .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.mega-sport .caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    color: #000;
+    text-decoration: none;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.mega-sport .caption:hover {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.mega-sport .caption:hover,
+.mega-sport .mega-overlay:hover {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+/* ===========================
+   МЕГА-МЕНЮ: АКСЕСУАРИ
+=========================== */
+.mega-menu.mega-accessories {
+    display: none;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 0;
+    padding: 9px 0;
+    height: 392px;
+    top: 100%;
+    left: 0;
+    transform: translateX(-640px);
+}
+
+.mega-menu.mega-accessories:hover {
+    display: grid;
+}
+
+.mega-accessories .mega-column {
+    padding: 0px 15px 0px 15px;
+    border-right: 3px solid #ddd;
+    display: flex;
+    flex-direction: column;
+}
+
+.mega-accessories .mega-column:last-child {
+    border-right: none;
+}
+
+.mega-accessories .mega-column h4 {
+    margin: 0 0 18px 0;
+    font-weight: bold;
+    color: #000;
+    font-size: 15px;
+}
+
+.mega-accessories .mega-column a {
+    display: block;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-decoration: none;
+    transition: color 0.2s;
+    line-height: 1.4;
+    padding: 5px 0px;
+}
+
+.mega-accessories .mega-column a:hover {
+    color: #000;
+    font-weight: 500;
+}
+
+.mega-accessories .column-separator {
+    border-top: 3px solid #ddd;
+    margin: 25px -15px;
+}
+
+.mega-accessories .gallery-item {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+    border-right: 3px solid #ddd;
+}
+
+.mega-accessories .gallery-item:last-child {
+    border-right: none;
+}
+
+.mega-accessories .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.mega-accessories .caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    color: #000;
+    text-decoration: none;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.mega-accessories .caption:hover {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+/* ===========================
+   МЕГА-МЕНЮ: ПЕРСОНАЛЬНЕ
+=========================== */
+.mega-menu.mega-personal {
+    display: none;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 0;
+    padding: 9px 0;
+    height: 392px;
+    top: 100%;
+    left: 0;
+    transform: translateX(-857px);
+}
+
+.mega-menu.mega-personal:hover {
+    display: grid;
+}
+
+.mega-personal .mega-column {
+    padding: 0px 15px 0px 15px;
+    border-right: 3px solid #ddd;
+    display: flex;
+    flex-direction: column;
+}
+
+.mega-personal .mega-column:last-child {
+    border-right: none;
+}
+
+.mega-personal .mega-column h4 {
+    margin: 0 0 18px 0;
+    font-weight: bold;
+    color: #000;
+    font-size: 15px;
+}
+
+.mega-personal .mega-column a {
+    display: block;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-decoration: none;
+    transition: color 0.2s;
+    line-height: 1.4;
+    padding: 5px 0px;
+}
+
+.mega-personal .mega-column a:hover {
+    color: #000;
+    font-weight: 500;
+}
+
+.mega-personal .column-separator {
+    border-top: 3px solid #ddd;
+    margin: 25px -15px;
+}
+
+.mega-personal .gallery-item {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+    border-right: 3px solid #ddd;
+}
+
+.mega-personal .gallery-item:last-child {
+    border-right: none;
+}
+
+.mega-personal .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.mega-personal .caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    color: #000;
+    text-decoration: none;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.mega-personal .caption:hover {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+/* ===========================
+   МЕГА-МЕНЮ: КОСМЕТИКА
+=========================== */
+.mega-menu.mega-cosmetics {
+    display: none;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 0;
+    padding: 9px 0;
+    height: 392px;
+    top: 100%;
+    left: 0;
+    transform: translateX(-746px);
+}
+
+.mega-menu.mega-cosmetics:hover {
+    display: grid;
+}
+
+.mega-cosmetics .gallery-item {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+    border-right: 3px solid #ddd;
+}
+
+.mega-cosmetics .gallery-item:last-of-type {
+    border-right: 3px solid #ddd;
+}
+
+.mega-cosmetics .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.mega-cosmetics .caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    color: #000;
+    text-decoration: none;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.mega-cosmetics .caption:hover {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.mega-cosmetics .mega-column {
+    padding: 0px 15px 0px 15px;
+    border-right: 3px solid #ddd;
+    display: flex;
+    flex-direction: column;
+}
+
+.mega-cosmetics .mega-column:last-child {
+    border-right: none;
+}
+
+.mega-cosmetics .mega-column h4 {
+    margin: 0 0 18px 0;
+    font-weight: bold;
+    color: #000;
+    font-size: 15px;
+}
+
+.mega-cosmetics .mega-column a {
+    display: block;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-decoration: none;
+    transition: color 0.2s;
+    line-height: 1.4;
+    padding: 5px 0px;
+}
+
+.mega-cosmetics .mega-column a:hover {
+    color: #000;
+    font-weight: 500;
+}
+
+.mega-cosmetics .column-separator {
+    border-top: 3px solid #ddd;
+    margin: 25px -15px;
+}
+
+/* ===========================
+   МЕГА-МЕНЮ: ВЗУТТЯ
+=========================== */
+.mega-menu.mega-shoes {
+    display: none;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 0;
+    padding: 9px 0;
+    height: 392px;
+    top: 100%;
+    left: 0;
+    transform: translateX(-551px);
+}
+
+.mega-menu.mega-shoes:hover {
+    display: grid;
+}
+
+.mega-shoes .gallery-item {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+    border-right: 3px solid #ddd;
+}
+
+.mega-shoes .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.mega-shoes .caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    color: #000;
+    text-decoration: none;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.mega-shoes .caption:hover {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.mega-shoes .mega-column {
+    padding: 0px 15px 0px 15px;
+    border-right: 3px solid #ddd;
+    display: flex;
+    flex-direction: column;
+}
+
+.mega-shoes .mega-column:nth-child(3) {
+    border-right: 3px solid #ddd;
+}
+
+.mega-shoes .mega-column h4 {
+    margin: 0 0 18px 0;
+    font-weight: bold;
+    color: #000;
+    font-size: 15px;
+}
+
+.mega-shoes .mega-column a {
+    display: block;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-decoration: none;
+    transition: color 0.2s;
+    line-height: 1.4;
+    padding: 5px 0px;
+}
+
+.mega-shoes .mega-column a:hover {
+    color: #000;
+    font-weight: 500;
+}
+
+.mega-shoes .column-separator {
+    border-top: 3px solid #ddd;
+    margin: 25px -15px;
+}
+
+.mega-shoes .gallery-item:last-child {
+    border-right: none;
+}
+
 
 /* ===========================
    RESPONSIVE

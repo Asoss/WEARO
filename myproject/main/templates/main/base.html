@@ -280,14 +280,216 @@
             </div>
           </div>
 
-          <a href="#" class="nav-item">Спортивний одяг</a>
-          <a href="#" class="nav-item">Взуття</a>
-          <a href="#" class="nav-item">Аксесуари</a>
-          <a href="#" class="nav-item">Косметика</a>
-          <a href="#" class="nav-item">Персональне</a>
+          <!-- Спортивний одяг -->
+          <div class="nav-item dropdown">
+            <a href="#">Спортивний одяг</a>
+            <div class="mega-menu mega-sport">
+              <div class="mega-column">
+                <h4>Нова колекція</h4>
+                <a href="#">Переглянути все</a>
+                <a href="#">Одяг</a>
+                <a href="#">Взуття</a>
+                <div class="column-separator"></div>
+                <h4>Інші колекції</h4>
+                <a href="#">Куртки</a>
+                <a href="#">Шорти</a>
+                <a href="#">Косметика</a>
+                <a href="#">Аксесуари</a>
+              </div>
+
+              <div class="mega-column">
+                <h4>За видом діяльності</h4>
+                <a href="#">Вуличний біг</a>
+                <a href="#">Спортзал</a>
+                <a href="#">Басейн</a>
+                <a href="#">Фітнес</a>
+                <a href="#">Йога</a>
+                <a href="#">Для екстриму</a>
+                <a href="#">Аксесуари</a>
+                <a href="#">Інше</a>
+              </div>
+
+              <div class="gallery-item">
+                <img src="{% static 'nav/sport.png' %}" alt="Товари партнерів" />
+                <div class="caption">Товари партнерів</div>
+              </div>
+
+              <div class="gallery-item">
+                <img src="{% static 'nav/sport2.png' %}" alt="Спеціалізований" />
+                <div class="caption">Спеціалізований</div>
+              </div>
+            </div>
+          </div>
+          <!-- Взуття -->
+          <div class="nav-item dropdown">
+            <a href="#">Взуття</a>
+            <div class="mega-menu mega-shoes">
+              <!-- Перше фото зліва -->
+              <div class="gallery-item">
+                <img src="{% static 'nav/shoes.png' %}" alt="Adidas" />
+                <div class="caption">Adidas</div>
+              </div>
+
+              <!-- Перша текстова колонка -->
+              <div class="mega-column">
+                <h4>Нова колекція</h4>
+                <a href="#">Переглянути все</a>
+                <a href="#">Нове в сезоні</a>
+                <a href="#">Для тренування</a>
+                <a href="#">Кросівки</a>
+                <a href="#">Кеди</a>
+                <a href="#">Босоніжки</a>
+                <a href="#">Черевики</a>
+                <a href="#">Більше</a>
+              </div>
+
+              <!-- Друга текстова колонка -->
+              <div class="mega-column">
+                <h4>Товари за торговою маркою</h4>
+                <a href="#">Adidas</a>
+                <a href="#">ASICS</a>
+                <a href="#">New Balance</a>
+                <a href="#">Puma</a>
+                <a href="#">Under Armour</a>
+                <a href="#">Reebok</a>
+                <a href="#">Jordan</a>
+                <a href="#">Інше</a>
+              </div>
+
+              <!-- Друге фото справа -->
+              <div class="gallery-item">
+                <img src="{% static 'nav/shoes2.png' %}" alt="Власний стиль" />
+                <div class="caption">Власний стиль</div>
+              </div>
+            </div>
+          </div>
+          <!-- Аксесуари -->
+          <div class="nav-item dropdown">
+            <a href="#">Аксесуари</a>
+            <div class="mega-menu mega-accessories">
+              <div class="mega-column">
+                <h4>Купуйте рекомендоване</h4>
+                <a href="#">Переглянути все</a>
+                <a href="#">Нове в сезоні</a>
+                <a href="#">Окуляри</a>
+                <a href="#">Браслети</a>
+                <a href="#">Годинники</a>
+                <a href="#">Ремені</a>
+                <a href="#">Шапочки</a>
+                <a href="#">Подарункові набори</a>
+              </div>
+
+              <div class="mega-column">
+                <h4>Магазин ювелірних виробів</h4>
+                <a href="#">Подивитись все</a>
+                <a href="#">Годинники</a>
+                <a href="#">Намистники</a>
+                <a href="#">Кільця</a>
+                <a href="#">Браслети</a>
+                <a href="#">Сережки</a>
+                <a href="#">Мережива сталь</a>
+                <a href="#">Інше</a>
+              </div>
+
+              <div class="gallery-item">
+                <img src="{% static 'nav/aks.png' %}" alt="Сумки" />
+                <div class="caption">Сумки</div>
+              </div>
+
+              <div class="gallery-item">
+                <img src="{% static 'nav/aks2.png' %}" alt="Літні аксесуари" />
+                <div class="caption">Літні аксесуари</div>
+              </div>
+            </div>
+          </div>
+          <!-- Косметика -->
+          <div class="nav-item dropdown">
+            <a href="#">Косметика</a>
+            <div class="mega-menu mega-cosmetics">
+              <!-- Перше фото -->
+              <div class="gallery-item">
+                <img src="{% static 'nav/cos.png' %}" alt="Відкрий для себе щось нове" />
+                <div class="caption">Відкрий для себе щось нове</div>
+              </div>
+
+              <!-- Друге фото -->
+              <div class="gallery-item">
+                <img src="{% static 'nav/cos2.png' %}" alt="Обличчя + Тіло" />
+                <div class="caption">Обличчя + Тіло</div>
+              </div>
+
+              <!-- Перша текстова колонка -->
+              <div class="mega-column">
+                <h4>Категорії</h4>
+                <a href="#">Доглядова</a>
+                <a href="#">Декоративна</a>
+                <a href="#">Гігієнічна</a>
+                <a href="#">Очищаюча</a>
+                <a href="#">Зволожуюча</a>
+                <a href="#">Живильна</a>
+                <a href="#">Антивікова</a>
+                <a href="#">Інше</a>
+              </div>
+
+              <!-- Друга текстова колонка -->
+              <div class="mega-column">
+                <h4>Товари за торговою маркою</h4>
+                <a href="#">Maybelline</a>
+                <a href="#">Fenty Beauty</a>
+                <a href="#">Clinique</a>
+                <a href="#">La Roche-Posay</a>
+                <a href="#">The Ordinary</a>
+                <a href="#">L'Oréal</a>
+                <a href="#">Estée Lauder</a>
+                <a href="#">Інше</a>
+              </div>
+            </div>
+          </div>
+          <!-- Персональне -->
+          <div class="nav-item dropdown">
+            <a href="#">Персональне</a>
+            <div class="mega-menu mega-personal">
+              <div class="mega-column">
+                <h4>Нова колекція</h4>
+                <a href="#">Переглянути все</a>
+                <a href="#">Одяг</a>
+                <a href="#">Взуття</a>
+                <div class="column-separator"></div>
+                <h4>Інші колекції</h4>
+                <a href="#">Куртки</a>
+                <a href="#">Шапки</a>
+                <a href="#">Косметика</a>
+                <a href="#">Аксесуари</a>
+              </div>
+
+              <div class="mega-column">
+                <h4>Рекомендоване</h4>
+                <a href="#">Колекція 20-25</a>
+                <a href="#">Колекція "Природа"</a>
+                <a href="#">Монохром</a>
+                <a href="#">Вечірні сукні</a>
+                <a href="#">Легка прогулянка</a>
+                <a href="#">Найпопулярніше</a>
+                <a href="#">Стиль "Темний-шоколад"</a>
+                <a href="#">Інше</a>
+              </div>
+
+              <div class="gallery-item">
+                <img src="{% static 'nav/pers.png' %}" alt="Ексклюзив" />
+                <div class="caption">Ексклюзив</div>
+              </div>
+
+              <div class="gallery-item">
+                <img src="{% static 'nav/pers2.png' %}" alt="Відкрий для себе щось нове" />
+                <div class="caption">Відкрий для себе щось нове</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </nav>
+
+    <div class="nav-overlay"></div>
 
     <main style="padding: 20px;">
       {% block content %}
@@ -425,6 +627,7 @@
       </div>
     </footer>
 
+    <script src="{% static 'js/overlayCreate.js' %}"></script>
     <script src="{% static 'js/lang.js' %}"></script>
   </body>
 </html>
