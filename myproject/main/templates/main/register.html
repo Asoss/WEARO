@@ -1,81 +1,81 @@
-{% extends 'main/base.html' %}
+{% extends "main/base.html" %}
 {% load static %}
 
 {% block content %}
-  <div class="auth-container">
+<div class="auth-container">
     <h2>Ми любимо нові обличчя :)</h2>
 
     <form class="auth" method="post">
-      {% csrf_token %}
+        {% csrf_token %}
 
-      <div class="input-wrapper">
-        {{ form.email }}
-        <label for="id_email">ЕЛЕКТРОННА ПОШТА:*</label>
-      </div>
-      {% if form.email.errors %}
+        <div class="input-wrapper">
+            <input type="email" name="email" id="id_email" required>
+            <label for="id_email">ЕЛЕКТРОННА ПОШТА:*</label>
+        </div>
+
+        {% if form.email.errors %}
         <div class="error-text">{{ form.email.errors.0 }}</div>
-      {% endif %}
+        {% endif %}
 
-      <div class="input-wrapper">
-        {{ form.username }}
-        <label for="id_username">ІМ’Я:*</label>
-      </div>
-      {% if form.username.errors %}
+        <div class="input-wrapper">
+            {{ form.username }}
+            <label for="id_username">ІМ’Я:*</label>
+        </div>
+        {% if form.username.errors %}
         <div class="error-text">{{ form.username.errors.0 }}</div>
-      {% endif %}
+        {% endif %}
 
-      <div class="input-wrapper">
-        {{ user_form.last_name }}
-        <label for="id_last_name">ПРІЗВИЩЕ:*</label>
-      </div>
-      {% if user_form.last_name.errors %}
-        <div class="error-text">{{ user_form.last_name.errors.0 }}</div>
-      {% endif %}
+        <div class="input-wrapper">
+            {{ user_form.last_name }}
+            <label for="id_last_name">ПРІЗВИЩЕ:*</label>
+        </div>
 
-      <div class="input-wrapper">
-        {{ form.password }}
-        <label for="id_password">ПАРОЛЬ:*</label>
-        <button type="button" class="eye-btn" onclick="togglePassword('id_password')"><img src="{% static 'icons/close_eye.png' %}" alt="Показати" class="eye-img" /></button>
-      </div>
-      {% if form.password.errors %}
+        <div class="input-wrapper">
+            <input type="password" name="password" id="id_password" required>
+            <label for="id_password">ПАРОЛЬ:*</label>
+            <button type="button" class="eye-btn" onclick="togglePassword('id_password')">
+                <img src="{% static 'icons/close_eye.png' %}" alt="Показати" class="eye-img">
+            </button>
+        </div>
+        {% if form.password.errors %}
         <div class="error-text">{{ form.password.errors.0 }}</div>
-      {% endif %}
+        {% endif %}
 
-      <div class="input-wrapper">
-        {{ form.password2 }}
-        <label for="id_password2">ПІДТВЕРДИТИ ПАРОЛЬ:*</label>
-        <button type="button" class="eye-btn" onclick="togglePassword('id_password2')"><img src="{% static 'icons/close_eye.png' %}" alt="Показати" class="eye-img" /></button>
-      </div>
-      {% if form.password2.errors %}
+        <div class="input-wrapper">
+            {{ form.password2 }}
+            <label for="id_password2">ПІДТВЕРДИТИ ПАРОЛЬ:*</label>
+            <button type="button" class="eye-btn" onclick="togglePassword('id_password2')">
+                <img src="{% static 'icons/close_eye.png' %}" alt="Показати" class="eye-img">
+            </button>
+        </div>
+        {% if form.password2.errors %}
         <div class="error-text">{{ form.password2.errors.0 }}</div>
-      {% endif %}
+        {% endif %}
 
-      {% if form.non_field_errors %}
+        {% if form.non_field_errors %}
         <div class="error-text">{{ form.non_field_errors.0 }}</div>
-      {% endif %}
+        {% endif %}
 
-      <button type="submit" class="submit-btn">ПРОДОВЖИТИ</button>
+        <button type="submit" class="submit-btn">ПРОДОВЖИТИ</button>
     </form>
 
-    <p class="switch-text">
-      Уже зареєстровані?
-      <a href="{% url 'login_email' %}" class="plain-link">Перейти до входу</a>
+    <p class="switch-text">Уже зареєстровані? <a href="{% url 'login_email' %}" class="plain-link">Перейти до входу</a>
     </p>
-  </div>
+</div>
 
-  <div class="auth-logo">
-    <img src="{% static 'icons/auth_logo.png' %}" alt="WEARO Logo" />
-  </div>
+<div class="auth-logo">
+    <img src="{% static 'icons/auth_logo.png' %}" alt="WEARO Logo">
+</div>
 
-  <script>
+<script>
     function togglePassword(fieldId) {
-      const input = document.getElementById(fieldId)
-      const btn = input.parentElement.querySelector('.eye-btn img')
-      const isHidden = input.type === 'password'
-    
-      input.type = isHidden ? 'text' : 'password'
-      btn.src = isHidden ? "{% static 'icons/open_eye.png' %}" : "{% static 'icons/close_eye.png' %}"
-      btn.alt = isHidden ? 'Приховати' : 'Показати'
+        const input = document.getElementById(fieldId);
+        const btn = input.parentElement.querySelector(".eye-btn img");
+        const isHidden = input.type === "password";
+
+        input.type = isHidden ? "text" : "password";
+        btn.src = isHidden ? "{% static 'icons/open_eye.png' %}" : "{% static 'icons/close_eye.png' %}";
+        btn.alt = isHidden ? "Приховати" : "Показати";
     }
-  </script>
+</script>
 {% endblock %}

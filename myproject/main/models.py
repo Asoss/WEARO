@@ -101,7 +101,7 @@ class Product(models.Model):
     
     def final_price(self):
         if self.discount:
-            return round(self.price * (100 - self.discount) / 100, 2)
+            return self.price * (Decimal(1) - Decimal(self.discount) / Decimal(100))
         return self.price
     
     def save(self, *args, **kwargs):
@@ -192,8 +192,8 @@ class Wishlist(models.Model):
 
 class ProductRating(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="ratings")
-    rating = models.PositiveSmallIntegerField()  # від 1 до 5
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField(default=0)
 
     class Meta:
         unique_together = ("product", "user")

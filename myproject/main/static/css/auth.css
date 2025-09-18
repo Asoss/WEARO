@@ -278,7 +278,9 @@ form .auth {
     border-radius: 20px;
 }
 
+
 /*reset_passowrd*/
+
 .reset-password-box {
     border: 2px solid black;
     max-width: 460px;
@@ -333,6 +335,7 @@ form .auth {
 }
 
 /*wearo*/
+
 .auth-logo {
     display: flex;
     justify-content: center;

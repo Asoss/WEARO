@@ -27,9 +27,14 @@ function showAchievement() {
     const achievement = document.getElementById('achievement');
     const sound = document.getElementById('achievementSound');
 
+    // пробуємо зіграти звук
     sound.muted = false;
     sound.play().catch(e => console.log('Audio play failed:', e));
+
+    // показуємо ачивку
     achievement.classList.add('show');
+
+    // ховаємо через 5 сек
     setTimeout(() => {
         achievement.classList.remove('show');
     }, 5200);
@@ -38,6 +43,7 @@ function showAchievement() {
 document.addEventListener('DOMContentLoaded', () => {
     createMatrixRain();
 
+    // чекаємо першої дії користувача
     const trigger = () => {
         showAchievement();
         document.removeEventListener('click', trigger);
@@ -48,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', trigger);
 });
 
+// Konami code easter egg
 let konamiCode = [];
 const konami = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
 
@@ -63,6 +70,7 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+// Random glitch effect
 setInterval(() => {
     const cards = document.querySelectorAll('.developer-card');
     cards.forEach(card => {
@@ -76,11 +84,15 @@ setInterval(() => {
 }, 3000);
 
 
+
+// Start effects
 document.addEventListener('DOMContentLoaded', () => {
     createMatrixRain();
 });
 
+// Double click confetti effect
 document.addEventListener('dblclick', () => {
+    // Create confetti
     for (let i = 0; i < 50; i++) {
         const confetti = document.createElement('div');
         confetti.style.position = 'fixed';
