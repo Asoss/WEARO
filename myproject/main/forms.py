@@ -1,12 +1,14 @@
 from django import forms
 from django.contrib.auth.models import User
 from .models import UserDetails, Product
-import re #регулярні вирази
+import re  # регулярні вирази
+
 
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
+
 
 class UserDetailsForm(forms.ModelForm):
     class Meta:
@@ -14,8 +16,9 @@ class UserDetailsForm(forms.ModelForm):
         fields = ['birth_date', 'gender']
         widgets = {
             'birth_date': forms.SelectDateWidget(years=range(1900, 2026)),
-            'gender': forms.RadioSelect  
+            'gender': forms.RadioSelect
         }
+
 
 class ProductForm(forms.ModelForm):
     sizes = forms.CharField(required=False, help_text="Введення розміру через кому, напр. 36,37,38")
@@ -37,14 +40,6 @@ class ProductForm(forms.ModelForm):
             return [int(x.strip()) for x in data.split(',') if x.strip().isdigit()]
         return []
 
-class UserDetailsForm(forms.ModelForm):
-    class Meta:
-        model = UserDetails
-        fields = ['birth_date', 'gender']
-        widgets = {
-            'birth_date': forms.SelectDateWidget(years=range(1900, 2026)),
-            'gender': forms.RadioSelect  
-        }
 
 class LoginForm(forms.Form):
     username = forms.CharField(
@@ -55,6 +50,7 @@ class LoginForm(forms.Form):
         label="Пароль",
         widget=forms.PasswordInput(attrs={"class": "form-control"})
     )
+
 
 class RegisterForm(forms.Form):
     username = forms.CharField(
