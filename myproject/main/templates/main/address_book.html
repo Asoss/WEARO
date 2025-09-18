@@ -22,15 +22,15 @@
     .page { display: flex; width: 100%; max-width: 1000px; margin: 40px auto; gap: var(--gap); padding: 0 var(--gap); align-items: flex-start; }
 
     .sidebar { width: var(--sidebar-width); display: flex; flex-direction: column; gap: 12px; }
-
     .profile { display: flex; align-items: center; gap: 10px; background: #fff; padding: 12px; border: 2px solid var(--dark); border-radius: 6px; }
     .avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--dark); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
     .name { line-height: 1; }
     .name .greet { font-size: 12px; color: var(--muted); display:block; }
     .name .user { font-weight: 700; font-size: 13px; display:block; }
 
-    .menu { display: flex; flex-direction: column; gap: 6px; }
-    .menu a { display: block; padding: 10px 12px; text-decoration: none; color: #fff; background: var(--dark); font-size: 14px; border: 1px solid #222; border-radius: 4px; }
+    /* Меню як у попередніх сторінках */
+    .menu { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
+    .menu a { display: block; padding: 12px 16px; text-decoration: none; color: #fff; background: var(--dark); font-size: 15px; border: 1px solid #222; border-radius: 0; }
     .menu a:hover { background: #222; }
 
     .content { flex: 1; max-width: calc(100% - var(--sidebar-width) - var(--gap)); display: flex; flex-direction: column; gap: 12px; }
@@ -50,8 +50,6 @@
     .back-link { display: inline-block; margin-top: 10px; font-size: 14px; color: #111; text-decoration: none; }
     .field-errors { color: red; font-size: 13px; margin-top: 4px; }
 
-    footer { background: #eee; color: #333; font-size: 12px; padding: 10px; text-align: center; margin-top: 40px; }
-
     @media (max-width: 880px){
       .page{ flex-direction: column; padding: 20px; gap: 16px; }
       .sidebar{ width: 100%; flex-direction: row; gap: 12px; align-items: center; }
@@ -65,16 +63,17 @@
 <body>
   <div class="page">
     <!-- БІЧНЕ МЕНЮ -->
-    <aside class="sidebar" aria-label="sidebar">
+    <aside class="sidebar">
       <div class="profile">
-        <div class="avatar">EM</div>
+        <div class="avatar">{{ user.username|slice:":1" }}{{ user.last_name|slice:":1" }}</div>
         <div class="name">
           <span class="greet">Привіт</span>
           <span class="user">{{ user.username }}</span>
         </div>
       </div>
 
-      <nav class="menu" aria-label="menu">
+      <!-- Меню -->
+      <nav class="menu">
         <a href="{% url 'my_orders' %}">Мої замовлення</a>
         <a href="{% url 'my_returns' %}">Повернення</a>
         <a href="{% url 'need_help' %}">Потрібна допомога</a>
@@ -88,11 +87,11 @@
     </aside>
 
     <!-- ГОЛОВНИЙ КОНТЕНТ -->
-    <main class="content" role="main">
+    <main class="content">
       <div class="content-header">Особистий кабінет</div>
 
       <div class="content-subheader">
-        <img src="{% static 'icons/details.png' %}" alt="details" class="icon">
+        <img src="{% static 'account/address.png' %}" alt="address" class="icon">
         <span>Add New Address</span>
       </div>
 
@@ -139,8 +138,6 @@
       </div>
     </main>
   </div>
-
- 
 </body>
 </html>
 {% endif %}

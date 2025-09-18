@@ -1,4 +1,5 @@
 {% if user.is_authenticated %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -7,7 +8,7 @@
   <title>Особистий кабінет – My Details</title>
   <style>
     :root{
-      --sidebar-width: 280px; /* меню залишаємо широким */
+      --sidebar-width: 280px;
       --gap: 24px;
       --black: #000;
       --dark: #111;
@@ -15,166 +16,37 @@
     }
 
     *{box-sizing: border-box;}
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #fff;
-      color: #111;
-      min-height: 100vh;
-    }
+    body { margin: 0; font-family: Arial, sans-serif; background: #fff; color: #111; min-height: 100vh; }
 
-    /* головна обгортка */
-    .page {
-      display: flex;
-      width: 100%;
-      max-width: 1000px; /* трохи зменшили максимальну ширину */
-      margin: 40px auto;
-      gap: var(--gap);
-      padding: 0 var(--gap);
-      align-items: flex-start;
-    }
+    .page { display: flex; width: 100%; max-width: 1000px; margin: 40px auto; gap: var(--gap); padding: 0 var(--gap); align-items: flex-start; }
 
-    /* сайдбар */
-    .sidebar {
-      width: var(--sidebar-width);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .profile {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: #fff;
-      padding: 12px;
-      border: 2px solid var(--dark);
-    }
-    .avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: var(--dark);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 14px;
-    }
+    .sidebar { width: var(--sidebar-width); display: flex; flex-direction: column; gap: 12px; }
+    .profile { display: flex; align-items: center; gap: 10px; background: #fff; padding: 12px; border: 2px solid var(--dark); }
+    .avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--dark); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
     .name { line-height: 1; }
     .name .greet { font-size: 12px; color: var(--muted); display:block; }
     .name .user { font-weight: 700; font-size: 13px; display:block; }
 
-    .menu {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .menu a {
-      display: block;
-      padding: 10px 12px;
-      text-decoration: none;
-      color: #fff;
-      background: var(--dark);
-      font-size: 14px;
-      border: 1px solid #222;
-    }
+    /* Меню таке ж саме, як на попередніх сторінках */
+    .menu { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
+    .menu a { display: block; padding: 12px 16px; text-decoration: none; color: #fff; background: var(--dark); font-size: 15px; border: 1px solid #222; border-radius: 0; }
     .menu a:hover { background: #222; }
 
-    /* контент */
-    .content {
-      flex: 1;
-      max-width: calc(100% - var(--sidebar-width) - var(--gap));
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .content-header {
-      display: inline-block;
-      background: var(--black);
-      color: #fff;
-      padding: 6px 12px;
-      font-size: 14px;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
-    .content-subheader {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: var(--black);
-      color: #fff;
-      padding: 16px 18px; /* трохи зменшили padding */
-      font-size: 18px;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
+    .content { flex: 1; max-width: calc(100% - var(--sidebar-width) - var(--gap)); display: flex; flex-direction: column; gap: 12px; }
+    .content-header { display: inline-block; background: var(--black); color: #fff; padding: 6px 12px; font-size: 14px; font-weight: 700; text-transform: uppercase; }
+    .content-subheader { display: flex; align-items: center; gap: 12px; background: var(--black); color: #fff; padding: 16px 18px; font-size: 18px; font-weight: 700; text-transform: uppercase; }
     .content-subheader .icon { width: 24px; height: 24px; }
+    .content-body { background: #fff; padding: 16px; border: 1px solid #e6e6e6; display: flex; justify-content: center; max-width: 100%; }
 
-    .content-body {
-      background: #fff;
-      padding: 16px; /* зменшили padding */
-      border: 1px solid #e6e6e6;
-      display: flex;
-      justify-content: center;
-      max-width: 100%;
-    }
-
-    /* форма */
-    .details-form {
-      width: 100%;
-      max-width: 400px; /* ще компактніше */
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      font-size: 14px;
-    }
-    .form-desc {
-      margin: 0 0 8px 0;
-      color: #333;
-      font-size: 14px;
-    }
+    .details-form { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 14px; font-size: 14px; }
+    .form-desc { margin: 0 0 8px 0; color: #333; font-size: 14px; }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-group label { font-weight: 600; font-size: 13px; color: #111; }
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      padding: 8px; /* трохи менше */
-      font-size: 14px;
-      border: 1px solid #ccc;
-      background: #fff;
-    }
-    .form-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-top: 6px;
-    }
-    .btn {
-      background: var(--dark);
-      color: #fff;
-      border: none;
-      padding: 8px 16px;
-      font-weight: 700;
-      cursor: pointer;
-    }
+    .form-group input, .form-group select, .form-group textarea { padding: 8px; font-size: 14px; border: 1px solid #ccc; background: #fff; }
+    .form-actions { display: flex; align-items: center; gap: 12px; margin-top: 6px; }
+    .btn { background: var(--dark); color: #fff; border: none; padding: 8px 16px; font-weight: 700; cursor: pointer; }
     .btn:hover { background: #222; }
-    .back-link {
-      color: #111;
-      text-decoration: none;
-      font-size: 14px;
-    }
-
-    footer {
-      background: #eee;
-      color: #333;
-      font-size: 12px;
-      padding: 10px;
-      text-align: center;
-    }
+    .back-link { color: #111; text-decoration: none; font-size: 14px; }
 
     @media (max-width: 880px){
       .page{ flex-direction: column; padding: 20px; gap: 16px; }
@@ -189,16 +61,17 @@
 <body>
   <div class="page">
     <!-- БІЧНЕ МЕНЮ -->
-    <aside class="sidebar" aria-label="sidebar">
+    <aside class="sidebar">
       <div class="profile">
-        <div class="avatar">EM</div>
+        <div class="avatar">{{ user.username|slice:":1" }}{{ user.last_name|slice:":1" }}</div>
         <div class="name">
           <span class="greet">Привіт</span>
           <span class="user">{{ user.username }}</span>
         </div>
       </div>
 
-      <nav class="menu" aria-label="menu">
+      <!-- Меню -->
+      <nav class="menu">
         <a href="{% url 'my_orders' %}">Мої замовлення</a>
         <a href="{% url 'my_returns' %}">Повернення</a>
         <a href="{% url 'need_help' %}">Потрібна допомога</a>
@@ -212,46 +85,37 @@
     </aside>
 
     <!-- ГОЛОВНИЙ КОНТЕНТ -->
-    <main class="content" role="main">
+    <main class="content">
       <div class="content-header">Особистий кабінет</div>
 
       <div class="content-subheader">
-        <img src="/static/icons/details.png" alt="details" class="icon">
+        <img src="/static/account/details.png" alt="details" class="icon">
         <span>My Details</span>
       </div>
 
       <div class="content-body">
-        <form method="POST" class="details-form" style="font-family: inherit;">
+        <form method="POST" class="details-form">
           {% csrf_token %}
           <p class="form-desc">
             Feel free to edit any of your details below so your account is totally up to date.
           </p>
 
-          <!-- Username -->
           <div class="form-group">
             <label>Username</label>
             <input type="text" value="{{ user.username }}" readonly>
           </div>
-
-          <!-- Last name -->
           <div class="form-group">
             {{ user_form.last_name.label_tag }}
             {{ user_form.last_name }}
           </div>
-
-          <!-- Email -->
           <div class="form-group">
             {{ user_form.email.label_tag }}
             {{ user_form.email }}
           </div>
-
-          <!-- Birth date -->
           <div class="form-group">
             {{ details_form.birth_date.label_tag }}
             {{ details_form.birth_date }}
           </div>
-
-          <!-- Gender -->
           <div class="form-group">
             {{ details_form.gender.label_tag }}
             {{ details_form.gender }}
@@ -265,8 +129,6 @@
       </div>
     </main>
   </div>
-
-
 </body>
 </html>
 {% endif %}

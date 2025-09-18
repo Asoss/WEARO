@@ -17,23 +17,27 @@
 
     * { box-sizing: border-box; }
     body { margin: 0; font-family: Arial, sans-serif; background: #f9f9f9; color: #111; min-height: 100vh; }
+
     .page { display: flex; width: 100%; max-width: 1000px; margin: 40px auto; gap: var(--gap); padding: 0 var(--gap); }
     .sidebar { width: var(--sidebar-width); display: flex; flex-direction: column; gap: 12px; }
+
     .profile { display: flex; align-items: center; gap: 10px; background: #fff; padding: 12px; border: 2px solid var(--dark); border-radius: 6px; }
     .avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--dark); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
     .name { line-height: 1; }
     .name .greet { font-size: 12px; color: var(--muted); display:block; }
     .name .user { font-weight: 700; font-size: 13px; display:block; }
-    .menu { display: flex; flex-direction: column; gap: 6px; }
-    .menu a { display: block; padding: 10px 12px; text-decoration: none; color: #fff; background: var(--dark); font-size: 14px; border: 1px solid #222; border-radius: 4px; }
+
+    /* Меню як на інших сторінках */
+    .menu { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
+    .menu a { display: block; padding: 12px 16px; text-decoration: none; color: #fff; background: var(--dark); font-size: 15px; border: 1px solid #222; border-radius: 0; }
     .menu a:hover { background: #222; }
 
     .content { flex: 1; display: flex; flex-direction: column; gap: 12px; }
     .content-header { display: inline-block; background: var(--black); color: #fff; padding: 6px 12px; font-size: 14px; font-weight: 700; text-transform: uppercase; border-radius: 4px; }
     .content-subheader { display: flex; align-items: center; gap: 12px; background: var(--black); color: #fff; padding: 16px 18px; font-size: 18px; font-weight: 700; text-transform: uppercase; border-radius: 4px; }
     .content-subheader .icon { width: 24px; height: 24px; }
-    .content-body { background: #fff; padding: 36px; border: 1px solid #e6e6e6; display: flex; flex-direction: column; gap: 18px; max-width: 640px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
 
+    .content-body { background: #fff; padding: 36px; border: 1px solid #e6e6e6; display: flex; flex-direction: column; gap: 18px; max-width: 640px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
     .billing-note { font-weight: bold; font-size: 16px; }
     .billing-info { margin-top: 6px; color: #444; font-size: 14px; }
     .btn { background: var(--dark); color: #fff; border: none; padding: 10px 18px; font-weight: 700; cursor: pointer; border-radius: 4px; text-align: center; width: fit-content; }
@@ -54,7 +58,7 @@
   <div class="page">
     <aside class="sidebar">
       <div class="profile">
-        <div class="avatar">EM</div>
+        <div class="avatar">{{ user.username|slice:":1" }}{{ user.last_name|slice:":1" }}</div>
         <div class="name">
           <span class="greet">Привіт</span>
           <span class="user">{{ user.username }}</span>
@@ -77,7 +81,7 @@
     <main class="content">
       <div class="content-header">Особистий кабінет</div>
       <div class="content-subheader">
-        <img src="{% static 'icons/address.png' %}" alt="address" class="icon">
+        <img src="{% static 'account/payment.png' %}" alt="address" class="icon">
         <span>Адресна книга</span>
       </div>
 
@@ -88,7 +92,6 @@
         </div>
 
         <a href="{% url 'my_details' %}" class="btn">Додати нову адресу</a>
-
         <a href="{% url 'my_account' %}" class="back-link">← Back to account</a>
       </div>
     </main>
