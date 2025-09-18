@@ -25,8 +25,9 @@
     .name .greet { font-size: 14px; color: var(--muted); display:block; }
     .name .user { font-weight: 700; font-size: 16px; display:block; }
 
-    .menu { display: flex; flex-direction: column; gap: 6px; }
-    .menu a { display: block; padding: 12px 14px; text-decoration: none; color: #fff; background: var(--dark); font-size: 14px; border: 1px solid #222; border-radius: 4px; }
+    /* Меню */
+    .menu { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
+    .menu a { display: block; padding: 12px 16px; text-decoration: none; color: #fff; background: var(--dark); font-size: 15px; border: 1px solid #222; border-radius: 0; }
     .menu a:hover { background: #222; }
 
     .content { flex: 1; display: flex; flex-direction: column; gap: 16px; }
@@ -56,13 +57,14 @@
   <div class="page">
     <aside class="sidebar">
       <div class="profile">
-        <div class="avatar">EM</div>
+        <div class="avatar">{{ user.username|slice:":1" }}{{ user.last_name|slice:":1" }}</div>
         <div class="name">
           <span class="greet">Привіт</span>
           <span class="user">{{ user.username }}</span>
         </div>
       </div>
 
+      <!-- Меню -->
       <nav class="menu">
         <a href="{% url 'my_orders' %}">Мої замовлення</a>
         <a href="{% url 'my_returns' %}">Повернення</a>
@@ -79,20 +81,19 @@
     <main class="content">
       <div class="content-header">Особистий кабінет</div>
       <div class="content-subheader">
-        <img src="{% static 'icons/return.png' %}" alt="return" class="icon">
+        <img src="{% static 'account/return.png' %}" alt="return" class="icon">
         <span>Повернення</span>
       </div>
 
       <div class="content-body">
-        <img src="{% static 'icons/scissors.png' %}" alt="scissors" width="40">
+        <img src="{% static 'account/scissors.png' %}" alt="scissors" width="40">
         <h2>ВИ ЩЕ НЕ ЗДІЙСНИЛИ ЖОДНОЇ ПОКУПКИ</h2>
         <p>Ви можете повернути покупку за кілька простих кроків.  
         Зверніть увагу, що для деяких варіантів повернення може знадобитися фото чека.</p>
-<button class="btn" onclick="window.location.href='{% url 'home' %}'">ДО ПОКУПОК</button>
+        <button class="btn" onclick="window.location.href='{% url 'home' %}'">ДО ПОКУПОК</button>
       </div>
     </main>
   </div>
-
 </body>
 </html>
 {% endif %}

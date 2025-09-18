@@ -28,24 +28,21 @@
     .name .greet { font-size: 12px; color: var(--muted); display:block; }
     .name .user { font-weight: 700; font-size: 13px; display:block; }
 
-    .menu { display: flex; flex-direction: column; gap: 6px; }
-    .menu a { display: block; padding: 10px 12px; text-decoration: none; color: #fff; background: var(--dark); font-size: 14px; border: 1px solid #222; border-radius: 4px; }
+    /* Уніфіковане меню */
+    .menu { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
+    .menu a { display: block; padding: 12px 16px; text-decoration: none; color: #fff; background: var(--dark); font-size: 15px; border: 1px solid #222; border-radius: 0; }
     .menu a:hover { background: #222; }
 
-    .content { flex: 1; max-width: calc(100% - var(--sidebar-width) - var(--gap)); display: flex; flex-direction: column; gap: 12px; }
-
+    .content { flex: 1; display: flex; flex-direction: column; gap: 12px; }
     .content-header { display: inline-block; background: var(--black); color: #fff; padding: 6px 12px; font-size: 14px; font-weight: 700; text-transform: uppercase; border-radius: 4px; }
-
     .content-subheader { display: flex; align-items: center; gap: 12px; background: var(--black); color: #fff; padding: 16px 18px; font-size: 18px; font-weight: 700; text-transform: uppercase; border-radius: 4px; }
     .content-subheader .icon { width: 24px; height: 24px; }
 
-    .content-body { background: #fff; padding: 16px; border: 1px solid #e6e6e6; display: flex; flex-direction: column; gap: 14px; max-width: 100%; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
-
+    .content-body { background: #fff; padding: 36px; border: 1px solid #e6e6e6; display: flex; flex-direction: column; gap: 18px; max-width: 640px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
     .account-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; font-size: 14px; }
     .account-item.disabled { opacity: 0.5; color: #666; }
     .btn { padding: 8px 16px; border: 1px solid #ccc; font-weight: bold; cursor: pointer; background: #fff; border-radius: 4px; }
     .btn:hover { background: #f4f4f4; }
-
     .back-link { display: inline-block; margin-top: 16px; font-size: 14px; color: #111; text-decoration: none; }
 
     @media (max-width: 880px){
@@ -54,7 +51,7 @@
       .menu{ flex-direction: row; }
       .menu a{ white-space:nowrap; font-size:13px; padding:8px 10px; }
       .content-subheader{ padding:14px; font-size:16px; }
-      .content-body{ padding:14px; }
+      .content-body{ padding:20px; max-width: 100%; }
     }
   </style>
 </head>
@@ -62,7 +59,7 @@
   <div class="page">
     <aside class="sidebar">
       <div class="profile">
-        <div class="avatar">EM</div>
+        <div class="avatar">{{ user.username|slice:":1" }}{{ user.last_name|slice:":1" }}</div>
         <div class="name">
           <span class="greet">Привіт</span>
           <span class="user">{{ user.username }}</span>
@@ -85,14 +82,14 @@
     <main class="content">
       <div class="content-header">Особистий кабінет</div>
       <div class="content-subheader">
-        <img src="{% static 'icons/social.png' %}" alt="social" class="icon">
+        <img src="{% static 'account/social.png' %}" alt="social" class="icon">
         <span>Соцмережі</span>
       </div>
 
       <div class="content-body">
-        <div class="account-item">
+        <div class="account-item disabled">
           <span><strong>Google</strong></span>
-          <button class="btn">DISCONNECT</button>
+          <span>Not connected</span>
         </div>
         <div class="account-item disabled">
           <span>Apple</span>
