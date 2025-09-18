@@ -1,75 +1,85 @@
-<div style="padding: 30px; background-color: #f2f2f2; font-family: sans-serif;">
-  <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 20px;">FAQ TOPICS</h2>
+{% extends "main/base.html" %}
+{% load static %}
 
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+{% block content %}
+<div style="padding: 30px; font-family: sans-serif;">
 
-    <div style="background: white; border: 1px solid #ddd; padding: 20px;">
-      <h3 style="display: flex; align-items: center; font-size: 18px; font-weight: bold;">
-        <a href="{% url 'delivery_info' %}">Delivery</a>
-      </h3>
+  <h2 style="text-align: center; font-size: 22px; font-weight: bold; margin-bottom: 25px; text-transform: uppercase; border-bottom: 1px solid #000; padding-bottom: 10px;">
+    Популярні теми
+  </h2>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+
+    <!-- Доставка -->
+    <div style="background: #f9f9f9; padding: 25px; text-align: center; border-radius: 5px;">
+      <div style="font-size: 30px; margin-bottom: 10px;">🚚</div>
+      <h3 style="font-size: 16px; font-weight: bold; margin-bottom: 10px;">Доставка</h3>
+      <ul style="list-style: none; padding: 0; margin: 0; font-size: 14px; color: #333;">
+        <li><a href=" url 'delivery_info'" style="color: inherit; text-decoration: none;">Доставка партнерів брендів WEARO</a></li>
+        <li><a href="#" style="color: inherit; text-decoration: none;">Варіанти доставки</a></li>
+        <li><a href="#" style="color: inherit; text-decoration: none;">Де моє замовлення?</a></li>
+      </ul>
     </div>
 
-    <div style="background: white; border: 1px solid #ddd; padding: 20px;">
-      <h3 style="font-size: 18px; font-weight: bold;">
-        <a href="#" style="color: inherit; text-decoration: none;">Returns & Refunds</a>
-      </h3>
-      <ul style="padding-left: 20px; margin-top: 10px;">
-        <li><a href="#">Our Returns Policy</a></li>
-        <li><a href="#">How to return from the US</a></li>
-        <li><a href="#">Returns with WEARO Brand Partners</a></li>
+    <!-- Повернення -->
+    <div style="background: #f9f9f9; padding: 25px; text-align: center; border-radius: 5px;">
+      <div style="font-size: 30px; margin-bottom: 10px;">📦</div>
+      <h3 style="font-size: 16px; font-weight: bold; margin-bottom: 10px;">Повернення та відшкодування</h3>
+      <ul style="list-style: none; padding: 0; margin: 0; font-size: 14px; color: #333;">
+        <li><a href="#" style="color: inherit; text-decoration: none;">Політика повернення WEARO</a></li>
+        <li><a href="#" style="color: inherit; text-decoration: none;">Як повернути?</a></li>
+        <li><a href="#" style="color: inherit; text-decoration: none;">Повернення партнерів бренду WEARO</a></li>
       </ul>
-      <a href="#" style="font-weight: bold;">View All</a>
     </div>
 
-    <div style="background: white; border: 1px solid #ddd; padding: 20px;">
-      <h3 style="font-size: 18px; font-weight: bold;">
-        <a href="#" style="color: inherit; text-decoration: none;">Order Issues</a>
-      </h3>
-      <ul style="padding-left: 20px; margin-top: 10px;">
-        <li><a href="#">Amend or cancel order</a></li>
-        <li><a href="#">Something's wrong with my item</a></li>
-        <li><a href="#">Missing item</a></li>
+    <!-- Питання щодо замовлення -->
+    <div style="background: #f9f9f9; padding: 25px; text-align: center; border-radius: 5px;">
+      <div style="font-size: 30px; margin-bottom: 10px;">📦</div>
+      <h3 style="font-size: 16px; font-weight: bold; margin-bottom: 10px;">Питання щодо замовлення</h3>
+      <ul style="list-style: none; padding: 0; margin: 0; font-size: 14px; color: #333;">
+        <li><a href="#" style="color: inherit; text-decoration: none;">Як змінити або скасувати замовлення</a></li>
+        <li><a href="#" style="color: inherit; text-decoration: none;">Щось не так з моїм замовленням</a></li>
+        <li><a href="#" style="color: inherit; text-decoration: none;">Це не те, що я замовив</a></li>
       </ul>
-      <a href="#" style="font-weight: bold;">View All</a>
     </div>
 
-    <div style="background: white; border: 1px solid #ddd; padding: 20px;">
-      <h3 style="font-size: 18px; font-weight: bold;">
-        <a href="#" style="color: inherit; text-decoration: none;">Product & Stock</a>
-      </h3>
-      <ul style="padding-left: 20px; margin-top: 10px;">
-        <li><a href="#">Help with sizing</a></li>
-        <li><a href="#">Save for later</a></li>
-        <li><a href="#">Sale terms</a></li>
+    <!-- Підбір товару -->
+    <div style="background: #f9f9f9; padding: 25px; text-align: center; border-radius: 5px;">
+      <div style="font-size: 30px; margin-bottom: 10px;">👕</div>
+      <h3 style="font-size: 16px; font-weight: bold; margin-bottom: 10px;">Підбір товару</h3>
+      <ul style="list-style: none; padding: 0; margin: 0; font-size: 14px; color: #333;">
+        <li><a href="#" style="color: inherit; text-decoration: none;">Допомога з підбором розміру</a></li>
+        <li><a href="#" style="color: inherit; text-decoration: none;">Умови купівлі</a></li>
+        <li><a href="#" style="color: inherit; text-decoration: none;">Як відкласти товар?</a></li>
       </ul>
-      <a href="#" style="font-weight: bold;">View All</a>
     </div>
 
-    <div style="background: white; border: 1px solid #ddd; padding: 20px;">
-      <h3 style="font-size: 18px; font-weight: bold;">
-        <a href="#" style="color: inherit; text-decoration: none;">Payments, Promos & E-Gift Cards</a>
-      </h3>
-      <ul style="padding-left: 20px; margin-top: 10px;">
-        <li><a href="#">Payment options</a></li>
-        <li><a href="#">Promo codes</a></li>
-        <li><a href="#">E-Gift Cards</a></li>
+    <!-- Оплата -->
+    <div style="background: #f9f9f9; padding: 25px; text-align: center; border-radius: 5px;">
+      <div style="font-size: 30px; margin-bottom: 10px;">💳</div>
+      <h3 style="font-size: 16px; font-weight: bold; margin-bottom: 10px;">Оплата та акції</h3>
+      <ul style="list-style: none; padding: 0; margin: 0; font-size: 14px; color: #333;">
+        <li><a href="#" style="color: inherit; text-decoration: none;">Види платежів</a></li>
+        <li><a href="#" style="color: inherit; text-decoration: none;">Якщо в мене є промокод?</a></li>
+        <li><a href="#" style="color: inherit; text-decoration: none;">Подарунковий сертифікат</a></li>
       </ul>
-      <a href="#" style="font-weight: bold;">View All</a>
     </div>
 
-    <div style="background: white; border: 1px solid #ddd; padding: 20px;">
-      <h3 style="font-size: 18px; font-weight: bold;">
-        <a href="#" style="color: inherit; text-decoration: none;">Technical</a>
-      </h3>
-      <ul style="padding-left: 20px; margin-top: 10px;">
-        <li><a href="#">WEARO Account</a></li>
-        <li><a href="#">WEARO App</a></li>
-        <li><a href="#">WEARO Notifications</a></li>
+    <!-- Технічні проблеми -->
+    <div style="background: #f9f9f9; padding: 25px; text-align: center; border-radius: 5px;">
+      <div style="font-size: 30px; margin-bottom: 10px;">⚙️</div>
+      <h3 style="font-size: 16px; font-weight: bold; margin-bottom: 10px;">Технічні несправності?</h3>
+      <ul style="list-style: none; padding: 0; margin: 0; font-size: 14px; color: #333;">
+        <li><a href="#" style="color: inherit; text-decoration: none;">Як змінити або скасувати замовлення</a></li>
+        <li><a href="#" style="color: inherit; text-decoration: none;">Щось не так з моїм замовленням</a></li>
+        <li><a href="#" style="color: inherit; text-decoration: none;">Це не те, що я замовив</a></li>
       </ul>
-      <a href="#" style="font-weight: bold;">View All</a>
     </div>
 
   </div>
-        <a href="{% url 'my_account' %}">← Back to account</a>
 
+  <div style="margin-top: 30px; text-align: center;">
+    <a href="{% url 'my_account' %}" style="color: black; text-decoration: none; font-weight: bold;">← Назад до акаунту</a>
+  </div>
 </div>
+{% endblock %}
