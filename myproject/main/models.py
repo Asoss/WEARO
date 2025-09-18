@@ -6,7 +6,17 @@ from decimal import Decimal
 
 
 product = models.ForeignKey("main.Product", on_delete=models.CASCADE)
+class UserDetails(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    birth_date = models.DateField(null=True, blank=True)
+    gender = models.CharField(
+        max_length=10,
+        choices=[("male", "Menswear"), ("female", "Womenswear")],
+        blank=True
+    )
 
+    def __str__(self):
+        return f"{self.user.username} details"
 class Color(models.Model):
     name = models.CharField(max_length=50, unique=True)
     hex_code = models.CharField(max_length=7, help_text='HTML-код кольору, напр. #000000')

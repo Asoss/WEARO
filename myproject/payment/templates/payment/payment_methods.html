@@ -1,60 +1,98 @@
-<form method="POST" enctype="multipart/form-data" style="max-width: 500px; font-family: sans-serif;">
-  {% csrf_token %}
+{% if user.is_authenticated %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Address Book – My Account</title>
+  <style>
+    :root {
+      --sidebar-width: 280px;
+      --gap: 24px;
+      --black: #000;
+      --dark: #111;
+      --muted: #666;
+    }
 
-  <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 10px;">PAYMENT METHODS</h2>
-  <p style="margin-bottom: 25px; color: #444;">
-    Choose your preferred way to pay. You can update or manage your payment methods anytime.
-  </p>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, sans-serif; background: #f9f9f9; color: #111; min-height: 100vh; }
+    .page { display: flex; width: 100%; max-width: 1000px; margin: 40px auto; gap: var(--gap); padding: 0 var(--gap); }
+    .sidebar { width: var(--sidebar-width); display: flex; flex-direction: column; gap: 12px; }
+    .profile { display: flex; align-items: center; gap: 10px; background: #fff; padding: 12px; border: 2px solid var(--dark); border-radius: 6px; }
+    .avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--dark); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
+    .name { line-height: 1; }
+    .name .greet { font-size: 12px; color: var(--muted); display:block; }
+    .name .user { font-weight: 700; font-size: 13px; display:block; }
+    .menu { display: flex; flex-direction: column; gap: 6px; }
+    .menu a { display: block; padding: 10px 12px; text-decoration: none; color: #fff; background: var(--dark); font-size: 14px; border: 1px solid #222; border-radius: 4px; }
+    .menu a:hover { background: #222; }
 
-  <div style="margin-bottom: 20px;">
-    <label for="name" style="font-weight: 600;">Payment method name:</label>
-    <input
-      type="text"
-      id="name"
-      name="name"
-      value="{{ form.name.value|default_if_none:'' }}"
-      required
-      style="width: 100%; padding: 8px;"
-    >
+    .content { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+    .content-header { display: inline-block; background: var(--black); color: #fff; padding: 6px 12px; font-size: 14px; font-weight: 700; text-transform: uppercase; border-radius: 4px; }
+    .content-subheader { display: flex; align-items: center; gap: 12px; background: var(--black); color: #fff; padding: 16px 18px; font-size: 18px; font-weight: 700; text-transform: uppercase; border-radius: 4px; }
+    .content-subheader .icon { width: 24px; height: 24px; }
+    .content-body { background: #fff; padding: 36px; border: 1px solid #e6e6e6; display: flex; flex-direction: column; gap: 18px; max-width: 640px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+
+    .billing-note { font-weight: bold; font-size: 16px; }
+    .billing-info { margin-top: 6px; color: #444; font-size: 14px; }
+    .btn { background: var(--dark); color: #fff; border: none; padding: 10px 18px; font-weight: 700; cursor: pointer; border-radius: 4px; text-align: center; width: fit-content; }
+    .btn:hover { background: #222; }
+    .back-link { color: #111; text-decoration: none; font-size: 14px; margin-top: 16px; display: inline-block; }
+
+    @media (max-width: 880px){
+      .page { flex-direction: column; padding: 20px; gap: 16px; }
+      .sidebar { width: 100%; flex-direction: row; gap: 12px; align-items: center; overflow-x:auto; }
+      .menu { flex-direction: row; }
+      .menu a { white-space:nowrap; font-size:13px; padding:8px 10px; }
+      .content-subheader { padding:14px; font-size:16px; }
+      .content-body { padding:20px; max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <div class="profile">
+        <div class="avatar">EM</div>
+        <div class="name">
+          <span class="greet">Привіт</span>
+          <span class="user">{{ user.username }}</span>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <a href="{% url 'my_orders' %}">Мої замовлення</a>
+        <a href="{% url 'my_returns' %}">Повернення</a>
+        <a href="{% url 'need_help' %}">Потрібна допомога</a>
+        <a href="{% url 'my_details' %}">Мої дані</a>
+        <a href="{% url 'password_reset' %}">Змінити пароль</a>
+        <a href="{% url 'address_book' %}">Адресна книга</a>
+        <a href="{% url 'payment_methods' %}">Спосіб оплати</a>
+        <a href="{% url 'social_accounts' %}">Соцмережі</a>
+        <a href="{% url 'sign_out' %}">Вихід</a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="content-header">Особистий кабінет</div>
+      <div class="content-subheader">
+        <img src="{% static 'icons/address.png' %}" alt="address" class="icon">
+        <span>Адресна книга</span>
+      </div>
+
+      <div class="content-body">
+        <div class="billing-note">НАМ потрібна адреса для виставлення рахунків</div>
+        <div class="billing-info">
+          Наразі у вас немає збереженої адреси. Без неї ви не зможете додати новий спосіб оплати.
+        </div>
+
+        <a href="{% url 'my_details' %}" class="btn">Додати нову адресу</a>
+
+        <a href="{% url 'my_account' %}" class="back-link">← Back to account</a>
+      </div>
+    </main>
   </div>
-
-  <div style="margin-bottom: 20px;">
-    <label for="description" style="font-weight: 600;">Short description:</label>
-    <textarea
-      id="description"
-      name="description"
-      rows="3"
-      style="width: 100%; padding: 8px;"
-    >{{ form.description.value|default_if_none:'' }}</textarea>
-  </div>
-
-  <div style="margin-bottom: 20px;">
-    <label for="logo" style="font-weight: 600;">Upload logo:</label><br>
-    <input type="file" id="logo" name="logo">
-  </div>
-
-  <div style="margin-bottom: 20px;">
-    <input type="checkbox" id="active" name="active" {% if form.active.value %}checked{% endif %}>
-    <label for="active">Show this method as active</label>
-  </div>
-
-  <button
-    type="submit"
-    style="
-      background-color: #222;
-      color: white;
-      padding: 12px 25px;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-    "
-  >SAVE METHOD</button>
-</form>
-
-<a href="{% url 'my_account' %}">← Back to account</a>
-
-{% for field in form %}
-  {% if field.errors %}
-    <div style="color: red;">{{ field.errors }}</div>
-  {% endif %}
-{% endfor %}
+</body>
+</html>
+{% endif %}

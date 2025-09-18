@@ -1,3 +1,98 @@
-<h1>My returns</h1>
-<p>Here are your returns...</p>
-      <a href="{% url 'my_account' %}">← Back to account</a>
+{% if user.is_authenticated %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Повернення – Особистий кабінет</title>
+  <style>
+    :root {
+      --sidebar-width: 280px;
+      --gap: 24px;
+      --black: #000;
+      --dark: #111;
+      --muted: #666;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, sans-serif; background: #f9f9f9; color: #111; min-height: 100vh; }
+    .page { display: flex; width: 100%; max-width: 1200px; margin: 40px auto; gap: var(--gap); padding: 0 var(--gap); }
+    .sidebar { width: var(--sidebar-width); display: flex; flex-direction: column; gap: 12px; }
+    .profile { display: flex; align-items: center; gap: 10px; background: #fff; padding: 16px; border: 2px solid var(--dark); border-radius: 6px; }
+    .avatar { width: 60px; height: 60px; border-radius: 50%; background: var(--dark); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; }
+    .name { line-height: 1; }
+    .name .greet { font-size: 14px; color: var(--muted); display:block; }
+    .name .user { font-weight: 700; font-size: 16px; display:block; }
+
+    .menu { display: flex; flex-direction: column; gap: 6px; }
+    .menu a { display: block; padding: 12px 14px; text-decoration: none; color: #fff; background: var(--dark); font-size: 14px; border: 1px solid #222; border-radius: 4px; }
+    .menu a:hover { background: #222; }
+
+    .content { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+    .content-header { display: inline-block; background: var(--black); color: #fff; padding: 8px 16px; font-size: 18px; font-weight: 700; text-transform: uppercase; border-radius: 4px; }
+    .content-subheader { display: flex; align-items: center; gap: 12px; background: var(--black); color: #fff; padding: 20px; font-size: 22px; font-weight: 700; text-transform: uppercase; border-radius: 4px; }
+    .content-subheader .icon { width: 30px; height: 30px; }
+    .content-body { background: #fff; padding: 40px; border: 1px solid #e6e6e6; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+    .content-body img { margin-bottom: 16px; }
+    .content-body h2 { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+    .content-body p { font-size: 14px; color: #444; margin-bottom: 20px; max-width: 500px; }
+    .content-body .btn { background: var(--dark); color: #fff; border: none; padding: 10px 20px; cursor: pointer; font-weight: 700; border-radius: 4px; }
+    .content-body .btn:hover { background: #222; }
+
+    footer { background: #eee; color: #333; font-size: 12px; padding: 10px; text-align: center; margin-top: 40px; }
+
+    @media (max-width: 880px){
+      .page { flex-direction: column; padding: 20px; gap: 16px; }
+      .sidebar { width: 100%; flex-direction: row; gap: 12px; align-items: center; overflow-x:auto; }
+      .menu { flex-direction: row; }
+      .menu a { white-space:nowrap; font-size:13px; padding:8px 10px; }
+      .content-subheader { padding:14px; font-size:18px; }
+      .content-body { padding:20px; max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <div class="profile">
+        <div class="avatar">EM</div>
+        <div class="name">
+          <span class="greet">Привіт</span>
+          <span class="user">{{ user.username }}</span>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <a href="{% url 'my_orders' %}">Мої замовлення</a>
+        <a href="{% url 'my_returns' %}">Повернення</a>
+        <a href="{% url 'need_help' %}">Потрібна допомога</a>
+        <a href="{% url 'my_details' %}">Мої дані</a>
+        <a href="{% url 'password_reset' %}">Змінити пароль</a>
+        <a href="{% url 'address_book' %}">Адресна книга</a>
+        <a href="{% url 'payment_methods' %}">Спосіб оплати</a>
+        <a href="{% url 'social_accounts' %}">Соцмережі</a>
+        <a href="{% url 'sign_out' %}">Вихід</a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="content-header">Особистий кабінет</div>
+      <div class="content-subheader">
+        <img src="{% static 'icons/return.png' %}" alt="return" class="icon">
+        <span>Повернення</span>
+      </div>
+
+      <div class="content-body">
+        <img src="{% static 'icons/scissors.png' %}" alt="scissors" width="40">
+        <h2>ВИ ЩЕ НЕ ЗДІЙСНИЛИ ЖОДНОЇ ПОКУПКИ</h2>
+        <p>Ви можете повернути покупку за кілька простих кроків.  
+        Зверніть увагу, що для деяких варіантів повернення може знадобитися фото чека.</p>
+<button class="btn" onclick="window.location.href='{% url 'home' %}'">ДО ПОКУПОК</button>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>
+{% endif %}
