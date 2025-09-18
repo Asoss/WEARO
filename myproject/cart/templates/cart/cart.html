@@ -1,46 +1,426 @@
-{% extends "main/base.html" %}
+{% extends 'main/base.html' %}
 {% load static %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/cart.css' %}">
+  <link rel="stylesheet" href="{% static 'css/cart.css' %}" />
 
-<h1 class="text-center my-4">🛒 Ваш кошик</h1>
+  <div class="search-bar">
+    <form id="filter-form" method="get" action="{% url 'product_search' %}">
+      <input type="text" id="searchInput" name="q" placeholder="Пошук" value="{{ request.GET.q|default:'' }}" />
+      <button type="submit" class="search-icon"><img src="{% static 'icons/search.jpg' %}" alt="Пошук" /></button>
+    </form>
+  </div>
 
-<div class="cart-container">
-  {% if items %}
-  {% for item in items %}
-  <div class="cart-item">
-    <div class="cart-image">
-      {% if item.product.images.all %}
-      <img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.name }}">
-      {% else %}
-      <img src="{% static 'img/no-image.png' %}" alt="Немає фото">
-      {% endif %}
+  <h1 class="text-center my-4" style="padding-left: 3%;">Ваш кошик</h1>
+
+  <div style="padding-left: 3%; margin-bottom: 20px;">
+    <a href="{% url 'home' %}" style="text-decoration: none; background: #000; color: #fff; padding: 10px 20px; border-radius: 5px;">⬅ Продовжити покупки</a>
+  </div>
+
+  <span class="cart-info" style="padding-left: 3%; color: gray; font-size: 15px;">продукт</span>
+  <span class="cart-info" style="padding-left: 52.4%; color: gray; font-size: 15px;">кількість</span>
+  <span class="cart-info" style="padding-left: 15.5%; color: gray; font-size: 15px;">вартість</span>
+
+  <div>
+    {% if items %}
+      {% for item in items %}
+        <div class="cart-item" data-product-id="{{ item.product.id }}" data-price="{{ item.product.price }}" style="align-items: start;">
+          <div class="cart-image">
+            {% if item.product.images.all %}
+              <a href="{% url 'product_detail' item.product.id %}"><img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.name }}" /></a>
+            {% else %}
+              <img src="{% static 'img/no-image.png' %}" alt="Немає фото" />
+            {% endif %}
+          </div>
+          <hr />
+          <div class="cart-info" style="width: 40%; max-width: 698px; word-wrap: break-word; overflow-wrap: break-word;">
+            <h3 style="margin-bottom: 5px;">{{ item.product.name }}</h3>
+            <p>₴{{ item.product.price }}</p>
+            <p>
+              <strong>Колір:</strong> {{ item.product.color }}
+            </p>
+          </div>
+
+          <div class="cart-info">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <button class="decrease-btn" style="border: none; background: none; font-size: 24px; font-style: bold;">-</button>
+              <span class="item-qty" style="border: 1px gray solid; padding: 15px 15px;">{{ item.quantity }}</span>
+              <button class="increase-btn" style="border: none; background: none; font-size: 24px; font-style: bold;">+</button>
+              <!-- кнопка видалення -->
+              <form method="post" action="{% url 'remove_from_cart' item.product.id %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="remove-btn" style="display:flex; align-items:center; background: none; border: none; cursor: pointer; position: relative; top: 1px;"><img style="height: 30px; opacity: 70%;" src="{% static 'icons/delete.png' %}" alt="Видалити" /></button>
+              </form>
+            </div>
+          </div>
+
+          <div class="cart-info">
+            <p>
+              ₴<span class="item-subtotal">{{ item.subtotal }}</span>
+            </p>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="text-center text-muted">Ваш кошик порожній</p>
+    {% endif %}
+  </div>
+
+  <hr style="border: 0.5px rgb(218, 218, 218) solid; width: 102%;margin-left: -1%; margin-top: 5%;" />
+  <div style="width: 500px;justify-self: end;justify-items: center;line-height: 0px;">
+    <h6 style="color: rgb(48, 48, 48);">Гарантоване безпечне та надійне оформлення замовлення</h6>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 30px; margin-bottom: 10px;">
+      <img style="width: 45px;" src="{% static 'icons/mast-card.jpg' %}" alt="мастеркард" /> |
+      <img style="width: 45px;" src="{% static 'icons/visa-card.jpg' %}" alt="віза" /> |
+      <img style="width: 35px;" src="{% static 'icons/pp-card.jpg' %}" alt="пейпел" /> |
+      <img style="width: 65px;" src="{% static 'icons/mono-card.jpg' %}" alt="моно" />
     </div>
+    <br />
+    <h6 style="color: rgb(48, 48, 48);">Доставка: БЕЗКОШТОВНА</h6>
+    <div class="cart-total text-center mt-4">
+      <h5><b>Орієнтовна загальна сума:</b> ₴ <span id="total-price" style="font-size: 30px;">{{ total_price }}</span></h5>
+    </div>
+    <button id="continue-btn" style="width: 100%;background-color: rgb(57, 70, 189);height: 40px; border: none;color: white;font-size: 16px;"><b>Продовжити</b></button>
+    <button style="width: 100%; border: none; height: 40px;font-size: 16px;"><b>Код на знижку</b></button>
+    <div style="display: flex; width: 100%; margin-top: 10px;">
+      <input type="text" placeholder="XXX-XXX-XXX" style="flex: 1; padding: 10px; border: 2px solid #000000; border-right: none; border-radius: 0; font-size: 16px;" />
+      <button style="background: #000; color: #fff; border: none; padding: 0 20px; font-size: 16px;">Застосувати</button>
+    </div>
+  </div>
 
-    <div class="cart-info">
-      <h3>{{ item.product.name }}</h3>
-      <p><strong>Ціна:</strong> {{ item.product.price }} грн</p>
-      <p><strong>Кількість:</strong> {{ item.quantity }}</p>
-      <p><strong>Разом:</strong> {{ item.subtotal }} грн</p>
+  <hr style="border: 0.5px rgb(218, 218, 218) solid; width: 102%;margin-left: -1%; margin-top: 2%;" />
 
-      <a href="{% url 'product_detail' item.product.id %}" class="details-btn">Детальніше</a>
-      <form method="post" action="{% url 'remove_from_cart' item.product.id %}" class="remove-form">
-        {% csrf_token %}
-        <button type="submit" class="remove-btn">✖</button>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      function updateTotals() {
+        let total = 0
+        document.querySelectorAll('.cart-item').forEach(function (item) {
+          const price = parseFloat(item.dataset.price)
+          const qty = parseInt(item.querySelector('.item-qty').textContent)
+          const subtotal = price * qty
+          item.querySelector('.item-subtotal').textContent = subtotal.toFixed(2)
+          total += subtotal
+        })
+        const totalPriceElements = [document.getElementById('total-price'), document.getElementById('modal-total'), document.getElementById('modal-total2'), document.getElementById('modal-total3')]
+        totalPriceElements.forEach(function (element) {
+          if (element) element.textContent = total.toFixed(2)
+        })
+      }
+    
+      function sendQuantityUpdate(productId, quantity) {
+        fetch("{% url 'update_cart_quantity' %}", {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ product_id: productId, quantity: quantity })
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (!data.success) console.error('Не вдалося оновити кількість')
+          })
+          .catch((error) => console.error('Помилка запиту:', error))
+      }
+    
+      document.querySelectorAll('.increase-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const cartItem = btn.closest('.cart-item')
+          const qtyElem = cartItem.querySelector('.item-qty')
+          let newQty = parseInt(qtyElem.textContent) + 1
+          qtyElem.textContent = newQty
+          updateTotals()
+          const productId = cartItem.dataset.productId
+          sendQuantityUpdate(productId, newQty)
+        })
+      })
+    
+      document.querySelectorAll('.decrease-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const cartItem = btn.closest('.cart-item')
+          const qtyElem = cartItem.querySelector('.item-qty')
+          let currentQty = parseInt(qtyElem.textContent)
+          if (currentQty > 1) {
+            let newQty = currentQty - 1
+            qtyElem.textContent = newQty
+            updateTotals()
+            const productId = cartItem.dataset.productId
+            sendQuantityUpdate(productId, newQty)
+          }
+        })
+      })
+    
+      updateTotals()
+    })
+  </script>
+
+  <style>
+    .search-bar {
+      text-align: center;
+      margin: 30px 0;
+    }
+    
+    .search-bar form {
+      display: inline-flex;
+      border: 2px solid #000;
+      border-radius: 4px;
+      overflow: hidden;
+      align-items: center;
+      background: #fff;
+    }
+    
+    .search-bar input {
+      border: none;
+      padding: 7px 9px;
+      outline: none;
+      width: 650px;
+      font-size: 16px;
+      height: 23px;
+    }
+    
+    .search-bar button {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 20px;
+      width: 20px;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .search-bar button img {
+      width: 24px;
+      height: 24px;
+      margin-right: 10px;
+    }
+    
+    input {
+      border: 1px solid #dddddd;
+      border-radius: 3px;
+      height: 40px;
+      width: 200px;
+    }
+    
+    body.modal-open {
+      overflow: hidden;
+    }
+  </style>
+
+  <div id="checkout-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100vh; z-index:1000;">
+    <div id="checkout-blur" style="position:absolute; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.3); backdrop-filter: blur(5px);"></div>
+    <div style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: #fff; 
+padding: 30px 20px; min-width: 50%; z-index: 1001; border: #000 2px solid; overflow-y: auto; overflow-x: hidden;">
+      <button onclick="document.getElementById('checkout-modal').style.display='none';document.body.classList.remove('modal-open');" style="position:absolute; top:10px; right:10px; border:none; background:none; font-size:26px; cursor:pointer;">&times;</button>
+      <!-- Хрестик -->
+      <button class="modal-close" data-target="checkout-modal" style="position:absolute; top:10px; right:10px; border:none; background:#fff; color:#000; font-size:24px; cursor:pointer;">&times;</button>
+      <h3 style="margin-top:0; background-color: #000; color: white; width: 98%; padding: 30px;margin-left: -20px;margin-top: -30px;">1/3 КОНТАКТНІ ДАНІ</h3>
+      <form id="contact-form" style="width: 60%;">
+        <div style="margin-bottom: 10px;">
+          <label>Ім'я<br /><input type="text" style="width:100%;" required /></label>
+        </div>
+        <div style="margin-bottom: 10px;">
+          <label>Прізвище<br /><input type="text" style="width:100%;" required /></label>
+        </div>
+        <div style="margin-bottom: 10px;">
+          <label>Мобільний телефон<br /><input type="tel" style="width:100%;" required /></label>
+        </div>
+        <div style="margin-bottom: 10px;">
+          <label>Електронна пошта<br /><input type="email" style="width:100%;" required /></label>
+        </div>
+        <button type="submit" style="width:100%; background:#3a53b7; color:#fff; border:none; padding:10px; font-size:16px; margin-top:10px;">Вибрати доставку</button>
       </form>
+      <div style="margin-top:20px; position: absolute; margin-left: 61%; margin-top: -38%; border: 2px black solid; padding: 20px;">
+        <b>Ваше замовлення:</b>
+        <div style="margin-top:10px;">
+          {% for item in items %}
+            <div style="display:flex; align-items:center; margin-bottom:10px;">
+              <img src="{% if item.product.images.all %}
+                  {{ item.product.images.first.image.url }}
+                {% else %}
+                  {% static 'img/no-image.png' %}
+                {% endif %}"
+                style="width:50px; height:65px; object-fit:cover; margin-right:10px;" />
+              <div>
+                <div style="font-size:14px;">{{ item.product.name }}</div>
+                <div style="font-size:13px; color:gray;">Кількість: {{ item.quantity }}</div>
+              </div>
+            </div>
+            <hr style="border: 1px rgb(216, 216, 216) solid;" />
+          {% endfor %}
+        </div>
+        <div style="margin-top:10px; font-size:16px;">
+          <b>Загальна сума: ₴<span id="modal-total">{{ total_price }}</span></b>
+        </div>
+      </div>
     </div>
   </div>
-  {% endfor %}
-  <div class="cart-total text-center mt-4">
-    <h3>Всього: {{ total_price }} грн</h3>
-  </div>
-  {% else %}
-  <p class="text-center text-muted">Ваш кошик порожній 🛍</p>
-  {% endif %}
-</div>
 
-<div class="text-center mt-4">
-  <a href="{% url 'home' %}" class="home-btn">На головну</a>
-</div>
+  <div id="delivery-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100vh; z-index:1001;">
+    <div style="position:absolute; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.3); backdrop-filter: blur(5px);"></div>
+    <div style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: #fff; 
+padding: 30px 20px; min-width: 50%;z-index: 1002; border: #000 2px solid; overflow-y: auto; overflow-x: hidden;">
+      <button onclick="document.getElementById('delivery-modal').style.display='none';document.body.classList.remove('modal-open');" style="position:absolute; top:10px; right:10px; border:none; background:none; font-size:24px; cursor:pointer;">&times;</button>
+      <h3 style="margin-top:0; background-color: #000; color: white; width: 98%; padding: 30px;margin-left: -20px;margin-top: -30px;">2/3 ДОСТАВКА</h3>
+      <form id="delivery-form" style="width: 60%;">
+        <div style="margin-bottom: 10px;">
+          <label>Країна<br /><input type="text" style="width:100%;" required /></label>
+        </div>
+        <div style="margin-bottom: 10px;">
+          <label>Місто<br /><input type="text" style="width:100%;" required /></label>
+        </div>
+        <div style="margin-bottom: 10px;">
+          <label>Вулиця<br /><input type="text" style="width:100%;" required /></label>
+        </div>
+        <div style="margin-bottom: 10px;">
+          <label>Поштовий індекс<br /><input type="text" style="width:100%;" required /></label>
+        </div>
+        <button type="submit" style="width:100%; background:#3a53b7; color:#fff; border:none; padding:10px; font-size:16px; margin-top:10px;">Оплата</button>
+      </form>
+      <div style="margin-top:20px; position: absolute; margin-left: 61%; margin-top: -38%; border: 2px black solid; padding: 20px;">
+        <b>Ваше замовлення:</b>
+        <div style="margin-top:10px;">
+          {% for item in items %}
+            <div style="display:flex; align-items:center; margin-bottom:10px;">
+              <img src="{% if item.product.images.all %}
+                  {{ item.product.images.first.image.url }}
+                {% else %}
+                  {% static 'img/no-image.png' %}
+                {% endif %}"
+                style="width:50px; height:65px; object-fit:cover; margin-right:10px;" />
+              <div>
+                <div style="font-size:14px;">{{ item.product.name }}</div>
+                <div style="font-size:13px; color:gray;">Кількість: {{ item.quantity }}</div>
+              </div>
+            </div>
+            <hr style="border: 1px rgb(216, 216, 216) solid;" />
+          {% endfor %}
+        </div>
+        <div style="margin-top:10px; font-size:16px;">
+          <b>Загальна сума: ₴<span id="modal-total2">{{ total_price }}</span></b>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="payment-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100vh; z-index:1002;">
+    <div style="position:absolute; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.3); backdrop-filter: blur(5px);"></div>
+    <div style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: #fff; 
+padding: 30px 20px; min-width: 50%;z-index: 1003; border: #000 2px solid; overflow-y: auto; overflow-x: hidden;">
+      <button onclick="document.getElementById('payment-modal').style.display='none';document.body.classList.remove('modal-open');" style="position:absolute; top:10px; right:10px; border:none; background:none; font-size:24px; cursor:pointer;">&times;</button>
+      <h3 style="margin-top:0; background-color: #000; color: white; width: 98%; padding: 30px;margin-left: -20px;margin-top: -30px;">3/3 ОПЛАТА</h3>
+      <form id="payment-form" style="width: 60%; margin-bottom: 20px;">
+        <div style="font-weight: bold; font-size: 18px; margin-bottom: 10px;">Виберіть спосіб оплати</div>
+        <div style="border-radius: 6px; border: 1px solid #eee; margin-bottom: 10px;">
+          <label style="display: flex; align-items: center; padding: 10px 0;cursor: pointer;">
+            <input type="radio" name="pay" value="visa" checked style="height: 20px; width: 20px;" />
+            <img src="{% static 'icons/visa-card.jpg' %}" alt="visa" style="height: 24px; margin-right: 8px;margin-left: 10px;" />
+            <span style="font-size: 16px; margin-left: 50px;">Оплата онлайн картою Visa</span>
+          </label>
+          <hr style="border: rgb(216, 216, 216) 1px solid;" />
+          <label style="display: flex; align-items: center; padding: 10px 0;cursor: pointer;">
+            <input type="radio" name="pay" value="paypal" style="height: 20px; width: 20px;" />
+            <img src="{% static 'icons/pp-card.jpg' %}" alt="paypal" style="height: 24px; margin-right: 8px;margin-left: 10px;" />
+            <span style="font-size: 16px; margin-left: 50px;">Оплата онлайн картою PayPal</span>
+          </label>
+          <hr style="border: rgb(216, 216, 216) 1px solid;" />
+          <label style="display: flex; align-items: center; padding: 10px 0; cursor: pointer;">
+            <input type="radio" name="pay" value="mono" style="height: 20px; width: 20px;" />
+            <img src="{% static 'icons/mono-card.jpg' %}" alt="mono" style="width: 30px; margin-right: 8px;margin-left: 10px;" />
+            <span style="font-size: 16px; margin-left: 45px;">Оплата онлайн картою Monobank</span>
+          </label>
+          <hr style="border: rgb(216, 216, 216) 1px solid;" />
+          <label style="display: flex; align-items: center; padding: 10px 0; cursor: pointer;">
+            <input type="radio" name="pay" value="mastercard" style="height: 20px; width: 20px;" />
+            <img src="{% static 'icons/mast-card.jpg' %}" alt="mastercard" style="height: 24px; margin-right: 8px;margin-left: 10px;" />
+            <span style="font-size: 16px; margin-left: 50px;">Оплата онлайн картою MasterCard</span>
+          </label>
+        </div>
+        <button type="submit" style="width:100%; background:#3a53b7; color:#fff; border:none; padding:12px; font-size:18px; font-weight: bold; margin-top:10px;">Підтвердити замовлення</button>
+      </form>
+      <div style="margin-top:20px; position: absolute; margin-left: 61%; margin-top: -38%; border: 2px black solid; padding: 20px;">
+        <b>Ваше замовлення:</b>
+        <div style="margin-top:10px;">
+          {% for item in items %}
+            <div style="display:flex; align-items:center; margin-bottom:10px;">
+              <img src="{% if item.product.images.all %}
+                  {{ item.product.images.first.image.url }}
+                {% else %}
+                  {% static 'img/no-image.png' %}
+                {% endif %}"
+                style="width:50px; height:65px; object-fit:cover; margin-right:10px;" />
+              <div>
+                <div style="font-size:14px;">{{ item.product.name }}</div>
+                <div style="font-size:13px; color:gray;">Кількість: {{ item.quantity }}</div>
+              </div>
+            </div>
+            <hr style="border: 1px rgb(216, 216, 216) solid;" />
+          {% endfor %}
+        </div>
+        <div style="margin-top:10px; font-size:16px;">
+          <b>Загальна сума: ₴<span id="modal-total3">{{ total_price }}</span></b>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.modal-close').forEach((btn) => {
+      btn.addEventListener('click', function () {
+        let target = this.getAttribute('data-target')
+        document.getElementById(target).style.display = 'none'
+        document.body.classList.remove('modal-open')
+      })
+    })
+    
+    document.getElementById('continue-btn').addEventListener('click', function (e) {
+      e.preventDefault()
+      document.getElementById('checkout-modal').style.display = 'block'
+      document.body.classList.add('modal-open')
+    })
+    
+    document.getElementById('contact-form').addEventListener('submit', function (e) {
+      e.preventDefault()
+      document.getElementById('checkout-modal').style.display = 'none'
+      document.getElementById('delivery-modal').style.display = 'block'
+    })
+    
+    document.getElementById('delivery-form').addEventListener('submit', function (e) {
+      e.preventDefault()
+      document.getElementById('delivery-modal').style.display = 'none'
+      document.getElementById('payment-modal').style.display = 'block'
+    })
+    
+    document.getElementById('payment-form').addEventListener('submit', function (e) {
+      e.preventDefault()
+      document.getElementById('payment-modal').style.display = 'none'
+      document.body.classList.remove('modal-open')
+    
+      setTimeout(function () {
+        alert('Purchased')
+        fetch("{% url 'clear_cart' %}", {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            Accept: 'application/json'
+          }
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              document.querySelectorAll('.cart-item').forEach(function (item) {
+                item.remove()
+              })
+              var totalPrice = document.getElementById('total-price')
+              if (totalPrice) totalPrice.textContent = '0.00'
+            }
+          })
+          .catch((error) => {
+            console.error('Error:', error)
+          })
+      }, 100)
+    })
+  </script>
 {% endblock %}
