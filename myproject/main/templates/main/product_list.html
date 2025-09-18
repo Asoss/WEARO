@@ -221,74 +221,126 @@
 
 <div class="main-content">
     <div class="products-grid">
-        {% for product in products %}
-        <div class="product-item"
-             data-price="{{ product.price }}"
-             data-size="{{ product.size|default:'' }}"
-             data-color="{{ product.color|default:'' }}"
-             data-material="{{ product.material|default:'' }}">
+  {% for product in products %}
+  <div class="product-item"
+       data-price="{{ product.price }}"
+       data-size="{{ product.size|default:'' }}"
+       data-color="{{ product.color|default:'' }}"
+       data-material="{{ product.material|default:'' }}">
 
-            <div class="product-image-container">
-                <!-- Wishlist heart -->
-                {% if user.is_authenticated %}
-                    {% if product.id in wishlist_products %}
-                        <img src="{% static 'icons/heart_filled.png' %}" 
-                             data-filled="{% static 'icons/heart_filled.png' %}" 
-                             data-empty="{% static 'icons/heart.png' %}" 
-                             class="wishlist-heart" 
-                             data-product-id="{{ product.id }}" />
-                    {% else %}
-                        <img src="{% static 'icons/heart.png' %}" 
-                             data-filled="{% static 'icons/heart_filled.png' %}" 
-                             data-empty="{% static 'icons/heart.png' %}" 
-                             class="wishlist-heart" 
-                             data-product-id="{{ product.id }}" />
-                    {% endif %}
-                {% else %}
-                    <a href="{% url 'login_email' %}">
-                        <img src="{% static 'icons/heart.png' %}" class="wishlist-heart-login" />
-                    </a>
-                {% endif %}
+      <div class="product-image-container">
+          <!-- Wishlist heart -->
+          {% if user.is_authenticated %}
+              {% if product.id in wishlist_products %}
+                  <img src="{% static 'icons/heart_filled.png' %}" 
+                       data-filled="{% static 'icons/heart_filled.png' %}" 
+                       data-empty="{% static 'icons/heart.png' %}" 
+                       class="wishlist-heart" 
+                       data-product-id="{{ product.id }}" />
+              {% else %}
+                  <img src="{% static 'icons/heart.png' %}" 
+                       data-filled="{% static 'icons/heart_filled.png' %}" 
+                       data-empty="{% static 'icons/heart.png' %}" 
+                       class="wishlist-heart" 
+                       data-product-id="{{ product.id }}" />
+              {% endif %}
+          {% else %}
+              <a href="{% url 'login_email' %}">
+                  <img src="{% static 'icons/heart.png' %}" class="wishlist-heart-login" />
+              </a>
+          {% endif %}
 
-                <!-- Product image -->
-                {% with first_image=product.images.first %}
-                    {% if first_image %}
-                        <img src="{{ first_image.image.url }}" alt="{{ product.name }}" class="product-image" />
-                    {% else %}
-                        <div class="no-image">Немає фото</div>
-                    {% endif %}
-                {% endwith %}
-            </div>
+          <!-- Product images (hover effect) -->
+          {% with first_image=product.images.first second_image=product.images.all|slice:"1:2"|first %}
+              {% if first_image %}
+                  <img src="{{ first_image.image.url }}" alt="{{ product.name }}" class="product-image img-front" />
+              {% endif %}
+              {% if second_image %}
+                  <img src="{{ second_image.image.url }}" alt="{{ product.name }}" class="product-image img-back" />
+              {% endif %}
+          {% endwith %}
 
-    <div class="product-info">
-        <a href="{% url 'product_detail' product.id %}" class="product-link">
-            <h3 class="product-name">{{ product.name }}</h3>
-        </a>
+          <!-- Add to cart button -->
+          <button type="submit" class="add-to-cart-btn">Додати в кошик</button>
+      </div>
 
-                <!-- Рейтинг і відгуки -->
-<div class="product-rating" 
-     data-product-id="{{ product.id }}"
-     data-average-rating="{{ product.average_rating|floatformat:1 }}"
-     data-rating-count="{{ product.rating_count }}">
-    <div class="stars-container"></div>
-    <span class="reviews">({{ product.rating_count }})</span>
+      <div class="product-info">
+          <a href="{% url 'product_detail' product.id %}" class="product-link">
+              <h3 class="product-name">{{ product.name }}</h3>
+          </a>
+
+          <!-- Рейтинг і відгуки -->
+          <div class="product-rating" 
+              data-product-id="{{ product.id }}"
+              data-average-rating="{{ product.average_rating|floatformat:1 }}"
+              data-rating-count="{{ product.rating_count }}">
+              <div class="stars-container"></div>
+              <span class="reviews">({{ product.rating_count }})</span>
+          </div>
+          <!-- Ціна -->
+          <div class="product-prices">
+              {% if product.old_price %}
+                  <span class="old-price">{{ product.old_price }} грн</span>
+              {% endif %}
+              <span class="new-price">{{ product.price }} грн</span>
+          </div>
+      </div>
+  </div>
+  {% empty %}
+  <div class="no-products">
+      <p>Немає товарів</p>
+  </div>
+  {% endfor %}
 </div>
-                <!-- Ціна -->
-                <div class="product-prices">
-                    {% if product.old_price %}
-                        <span class="old-price">{{ product.old_price }} грн</span>
-                    {% endif %}
-                    <span class="new-price">{{ product.price }} грн</span>
-                </div>
-            </div>
-        </div>
-        {% empty %}
-        <div class="no-products">
-            <p>Немає товарів</p>
-        </div>
-        {% endfor %}
-    </div>
 </div>
+
+<style>
+.product-image-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.product-image {
+  width: 100%;
+  display: block;
+  transition: opacity 0.9s ease;
+}
+
+.img-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.product-image-container:hover .img-front {
+  opacity: 0;
+}
+
+.product-image-container:hover .img-back {
+  opacity: 1;
+}
+
+.add-to-cart-btn {
+  position: absolute;
+  bottom: -50px;
+  left: 0;
+  width: 100%;
+  padding: 12px;
+  background: #3f51b5;
+  color: #fff;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: bottom 0.4s ease;
+}
+
+.product-image-container:hover .add-to-cart-btn {
+  bottom: 0;
+}
+
+</style>
+
 <script src="{% static 'js/rating.js' %}"></script>
 <script src="{% static 'js/search.js' %}"></script>
 <script src="{% static 'js/filters.js' %}"></script>

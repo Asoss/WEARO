@@ -23,6 +23,9 @@ from django.db.models import Q
 
 from main import models
 
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.views.decorators.csrf import csrf_exempt
+
 
 def home(request):
     products = Product.objects.filter(stock__gt=0)
@@ -83,7 +86,6 @@ def product_detail(request, pk):
         viewed.remove(pk)
     viewed.insert(0, pk)
 
-    viewed = viewed[:5]
     request.session['viewed_products'] = viewed
 
     recently_viewed = Product.objects.filter(pk__in=viewed).exclude(pk=pk)

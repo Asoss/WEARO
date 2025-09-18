@@ -89,10 +89,12 @@ class Product(models.Model):
         verbose_name="Загальний вид одягу"
     )
     
+   
     def final_price(self):
         if self.discount:
-            return self.price * (Decimal(1) - Decimal(self.discount) / Decimal(100))
+            return round(self.price * (100 - self.discount) / 100, 2)
         return self.price
+
     
     def save(self, *args, **kwargs):
         if not self.sizes:
@@ -181,9 +183,9 @@ class Wishlist(models.Model):
         return f"{self.user.username} → {self.product.name}"
 
 class ProductRating(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="ratings")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    rating = models.PositiveIntegerField(default=0)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="ratings")
+    rating = models.PositiveSmallIntegerField()  # від 1 до 5
 
     class Meta:
-        unique_together = ("product", "user")
+        unique_together = ("user", "product")
