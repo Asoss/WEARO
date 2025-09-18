@@ -101,8 +101,10 @@ class Product(models.Model):
     
     def final_price(self):
         if self.discount:
-            return self.price * (Decimal(1) - Decimal(self.discount) / Decimal(100))
-        return self.price
+            price = self.price * (100 - self.discount) / 100
+        else:
+            price = self.price
+        return round(price, 2)
     
     def save(self, *args, **kwargs):
         if not self.sizes:

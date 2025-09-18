@@ -42,6 +42,8 @@
     margin-right: 10px;
 
 }
+.price-row { margin: 12px 0 18px; display: flex; flex-direction: column; gap: 4px; }
+.price-old { text-decoration: line-through; color: #888; font-size: 16px; }
 
 /* Breadcrumb */
 .breadcrumb {
