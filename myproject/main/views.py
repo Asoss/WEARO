@@ -15,7 +15,7 @@ from django.contrib.auth.decorators import login_required
 
 from cart.models import Cart, CartItem
 from .models import Product, ProductRating, UserDetails, Wishlist
-from .forms import RegisterForm, UserForm
+from .forms import RegisterForm, UserForm,UserDetailsForm
 import random
 from .models import Product, Category
 from django.core.paginator import Paginator
@@ -128,9 +128,27 @@ def my_returns(request):
 
 def need_help(request):
     return render(request, 'main/need_help.html')
-
+@login_required
 def my_details(request):
-    return render(request, 'main/my_details.html')
+    user = request.user
+    details, created = UserDetails.objects.get_or_create(user=user)
+
+    if request.method == "POST":
+        user_form = UserForm(request.POST, instance=user)
+        details_form = UserDetailsForm(request.POST, instance=details)
+
+        if user_form.is_valid() and details_form.is_valid():
+            user_form.save()
+            details_form.save()
+            return redirect("my_details")  # після збереження перезавантажуємо
+    else:
+        user_form = UserForm(instance=user)
+        details_form = UserDetailsForm(instance=details)
+
+    return render(request, "main/my_details.html", {
+        "user_form": user_form,
+        "details_form": details_form,
+    })
 
 def address_book(request):
     return render(request, 'main/address_book.html')

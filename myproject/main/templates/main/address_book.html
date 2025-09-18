@@ -1,52 +1,146 @@
-<form method="POST" style="max-width: 500px; font-family: sans-serif;">
-  {% csrf_token %}
+{% load static %}
 
-  <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 10px;">ADD NEW ADDRESS</h2>
-  <p style="margin-bottom: 25px; color: #444;">
-    <span style="font-size: 18px;"></span>
-    You currently have no saved addresses. Get started by adding one.
-  </p>
+{% if user.is_authenticated %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Особистий кабінет – Add New Address</title>
+  <style>
+    :root{
+      --sidebar-width: 280px;
+      --gap: 24px;
+      --black: #000;
+      --dark: #111;
+      --muted: #666;
+    }
 
-  <div style="margin-bottom: 20px;">
-    <label for="first_name" style="font-weight: 600;">First name:</label>
-    <input type="text" id="first_name" name="first_name" value="{{ form.first_name.value|default_if_none:'' }}" required>
+    *{box-sizing: border-box;}
+    body { margin: 0; font-family: Arial, sans-serif; background: #f9f9f9; color: #111; min-height: 100vh; }
+
+    .page { display: flex; width: 100%; max-width: 1000px; margin: 40px auto; gap: var(--gap); padding: 0 var(--gap); align-items: flex-start; }
+
+    .sidebar { width: var(--sidebar-width); display: flex; flex-direction: column; gap: 12px; }
+
+    .profile { display: flex; align-items: center; gap: 10px; background: #fff; padding: 12px; border: 2px solid var(--dark); border-radius: 6px; }
+    .avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--dark); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
+    .name { line-height: 1; }
+    .name .greet { font-size: 12px; color: var(--muted); display:block; }
+    .name .user { font-weight: 700; font-size: 13px; display:block; }
+
+    .menu { display: flex; flex-direction: column; gap: 6px; }
+    .menu a { display: block; padding: 10px 12px; text-decoration: none; color: #fff; background: var(--dark); font-size: 14px; border: 1px solid #222; border-radius: 4px; }
+    .menu a:hover { background: #222; }
+
+    .content { flex: 1; max-width: calc(100% - var(--sidebar-width) - var(--gap)); display: flex; flex-direction: column; gap: 12px; }
+
+    .content-header { display: inline-block; background: var(--black); color: #fff; padding: 6px 12px; font-size: 14px; font-weight: 700; text-transform: uppercase; border-radius: 4px; }
+
+    .content-subheader { display: flex; align-items: center; gap: 12px; background: var(--black); color: #fff; padding: 16px 18px; font-size: 18px; font-weight: 700; text-transform: uppercase; border-radius: 4px; }
+    .content-subheader .icon { width: 24px; height: 24px; }
+
+    .content-body { background: #fff; padding: 16px; border: 1px solid #e6e6e6; display: flex; justify-content: center; max-width: 100%; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+
+    .address-form { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 14px; font-size: 14px; }
+    .address-form label { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+    .address-form input, .address-form select { padding: 10px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; }
+    .address-form button { background-color: #222; color: white; padding: 10px 20px; border: none; font-weight: bold; cursor: pointer; border-radius: 4px; width: 100%; font-size: 14px; }
+    .address-form button:hover { background-color: #444; }
+    .back-link { display: inline-block; margin-top: 10px; font-size: 14px; color: #111; text-decoration: none; }
+    .field-errors { color: red; font-size: 13px; margin-top: 4px; }
+
+    footer { background: #eee; color: #333; font-size: 12px; padding: 10px; text-align: center; margin-top: 40px; }
+
+    @media (max-width: 880px){
+      .page{ flex-direction: column; padding: 20px; gap: 16px; }
+      .sidebar{ width: 100%; flex-direction: row; gap: 12px; align-items: center; }
+      .menu{ flex-direction: row; overflow-x:auto; }
+      .menu a{ white-space:nowrap; font-size:13px; padding:8px 10px; }
+      .content-subheader{ padding:14px; font-size:16px; }
+      .content-body{ padding:14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- БІЧНЕ МЕНЮ -->
+    <aside class="sidebar" aria-label="sidebar">
+      <div class="profile">
+        <div class="avatar">EM</div>
+        <div class="name">
+          <span class="greet">Привіт</span>
+          <span class="user">{{ user.username }}</span>
+        </div>
+      </div>
+
+      <nav class="menu" aria-label="menu">
+        <a href="{% url 'my_orders' %}">Мої замовлення</a>
+        <a href="{% url 'my_returns' %}">Повернення</a>
+        <a href="{% url 'need_help' %}">Потрібна допомога</a>
+        <a href="{% url 'my_details' %}">Мої дані</a>
+        <a href="{% url 'password_reset' %}">Змінити пароль</a>
+        <a href="{% url 'address_book' %}">Адресна книга</a>
+        <a href="{% url 'payment_methods' %}">Спосіб оплати</a>
+        <a href="{% url 'social_accounts' %}">Соцмережі</a>
+        <a href="{% url 'sign_out' %}">Вихід</a>
+      </nav>
+    </aside>
+
+    <!-- ГОЛОВНИЙ КОНТЕНТ -->
+    <main class="content" role="main">
+      <div class="content-header">Особистий кабінет</div>
+
+      <div class="content-subheader">
+        <img src="{% static 'icons/details.png' %}" alt="details" class="icon">
+        <span>Add New Address</span>
+      </div>
+
+      <div class="content-body">
+        <form method="POST" class="address-form">
+          {% csrf_token %}
+          <p style="margin-bottom: 10px; color: #444; font-size: 14px;">
+            You currently have no saved addresses. Get started by adding one.
+          </p>
+
+          <label for="first_name">First name:</label>
+          <input type="text" id="first_name" name="first_name" value="{{ form.first_name.value|default_if_none:'' }}" required>
+          {% if form.first_name.errors %}
+            <div class="field-errors">{{ form.first_name.errors }}</div>
+          {% endif %}
+
+          <label for="last_name">Last name:</label>
+          <input type="text" id="last_name" name="last_name" value="{{ form.last_name.value|default_if_none:'' }}" required>
+          {% if form.last_name.errors %}
+            <div class="field-errors">{{ form.last_name.errors }}</div>
+          {% endif %}
+
+          <label for="mobile">Mobile:</label>
+          <input type="text" id="mobile" name="mobile" value="{{ form.mobile.value|default_if_none:'' }}" required>
+          {% if form.mobile.errors %}
+            <div class="field-errors">{{ form.mobile.errors }}</div>
+          {% endif %}
+
+          <label for="country">Country:</label>
+          <select id="country" name="country" required>
+            <option value="">Please select</option>
+            <option value="UA" {% if form.country.value == "UA" %}selected{% endif %}>Ukraine</option>
+            <option value="PL" {% if form.country.value == "PL" %}selected{% endif %}>Poland</option>
+            <option value="US" {% if form.country.value == "US" %}selected{% endif %}>United States</option>
+            <option value="GB" {% if form.country.value == "GB" %}selected{% endif %}>United Kingdom</option>
+          </select>
+          {% if form.country.errors %}
+            <div class="field-errors">{{ form.country.errors }}</div>
+          {% endif %}
+
+          <button type="submit">SAVE ADDRESS</button>
+          <a href="{% url 'my_account' %}" class="back-link">← Back to account</a>
+        </form>
+      </div>
+    </main>
   </div>
 
-  <div style="margin-bottom: 20px;">
-    <label for="last_name" style="font-weight: 600;">Last name:</label>
-    <input type="text" id="last_name" name="last_name" value="{{ form.last_name.value|default_if_none:'' }}" required>
-  </div>
-
-  <div style="margin-bottom: 20px;">
-    <label for="mobile" style="font-weight: 600;">Mobile:</label>
-    <input type="text" id="mobile" name="mobile" value="{{ form.mobile.value|default_if_none:'' }}" required>
-  </div>
-
-  <div style="margin-bottom: 20px;">
-    <label for="country" style="font-weight: 600;">Country:</label>
-    <select id="country" name="country" required>
-      <option value="">Please select</option>
-      <option value="UA" {% if form.country.value == "UA" %}selected{% endif %}>Ukraine</option>
-      <option value="PL" {% if form.country.value == "PL" %}selected{% endif %}>Poland</option>
-      <option value="US" {% if form.country.value == "US" %}selected{% endif %}>United States</option>
-      <option value="GB" {% if form.country.value == "GB" %}selected{% endif %}>United Kingdom</option>
-    </select>
-  </div>
-
-  <button type="submit" style="
-    background-color: #222;
-    color: white;
-    padding: 12px 25px;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-  ">SAVE ADDRESS</button>
-  
-</form>
-      <a href="{% url 'my_account' %}">← Back to account</a>
-
-{% for field in form %}
-  {% if field.errors %}
-    <div style="color: red;">{{ field.errors }}</div>
-  {% endif %}
-{% endfor %}
+ 
+</body>
+</html>
+{% endif %}

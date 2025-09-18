@@ -5,99 +5,106 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Особистий кабінет</title>
   <style>
+    :root {
+      --sidebar-width: 220px;
+      --dark: #111;
+      --muted: #666;
+    }
+
+    * { box-sizing: border-box; margin:0; padding:0; }
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
-      background: #fff;
+      background: #f9f9f9;
       display: flex;
       justify-content: center;
-      align-items: center;
       min-height: 100vh;
     }
+
     .wrapper {
       display: flex;
-      background: #fff;
-      padding: 40px;
-      box-sizing: border-box;
+      max-width: 1000px;
+      width: 100%;
+      gap: 24px;
+      padding: 40px 20px;
     }
+
+    /* Меню */
     .sidebar {
-      width: 260px;
-      background: #111;
+      width: var(--sidebar-width);
       display: flex;
       flex-direction: column;
+      gap: 12px;
     }
     .profile {
       display: flex;
       align-items: center;
-      padding: 20px;
+      gap: 10px;
       background: #fff;
-      border: 2px solid #111;
-      margin: 20px;
-      margin-bottom: 0;
+      padding: 12px;
+      border: 2px solid var(--dark);
+      border-radius: 6px;
     }
     .avatar {
-      width: 60px;
-      height: 60px;
-      background: #111;
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
+      background: var(--dark);
+      color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: bold;
-      font-size: 18px;
-      color: #fff;
-      margin-right: 15px;
-    }
-    .name span {
-      display: block;
       font-size: 14px;
-      color: #111;
     }
-    .name strong {
-      font-size: 16px;
-      color: #111;
-    }
+    .name { line-height: 1; }
+    .name .greet { font-size: 12px; color: var(--muted); display:block; }
+    .name .user { font-weight: 700; font-size: 13px; display:block; }
+
     .menu {
-      margin: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
       margin-top: 10px;
     }
     .menu a {
       display: block;
-      padding: 12px 15px;
+      padding: 10px 12px;
       text-decoration: none;
       color: #fff;
-      border-bottom: 1px solid #333;
+      background: var(--dark);
       font-size: 14px;
-      background: #111;
+      border: 1px solid #222;
+      border-radius: 4px;
     }
-    .menu a:hover {
-      background: #222;
-    }
+    .menu a:hover { background: #222; }
+
+    /* Контент */
     .content {
       flex-grow: 1;
       background: #1f1f1f;
-      margin-left: 40px;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
       align-items: flex-start;
       padding: 20px;
-      border: 2px solid #111;
+      border: 2px solid var(--dark);
+      border-radius: 6px;
+      gap: 20px;
     }
+
     .welcome-block {
-      margin-bottom: 20px;
-    }
-    .welcome {
-      display: inline-block;
       background: #fff;
-      color: #000;
+      padding: 20px;
+      border-radius: 6px;
+    }
+    .welcome-block .welcome {
       font-size: 22px;
       font-weight: bold;
       text-transform: uppercase;
-      padding: 6px 12px;
-      margin-bottom: 6px;
-      padding-right: 100px;
+      margin-bottom: 10px;
+      display:block;
     }
+
     .box {
       border: 3px solid #fff;
       background: #1f1f1f;
@@ -105,35 +112,19 @@
       width: 100%;
       height: 400px;
     }
-    footer {
-      background: #ddd;
-      color: #333;
-      font-size: 12px;
-      padding: 10px;
-      text-align: center;
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      left: 0;
-    }
-    footer a {
-      color: #333;
-      text-decoration: none;
-      margin: 0 5px;
-    }
   </style>
 </head>
 <body>
   <div class="wrapper">
-    <div class="sidebar">
+    <aside class="sidebar">
       <div class="profile">
         <div class="avatar">EM</div>
         <div class="name">
-          <span>Привіт</span>
-          <strong>{{ user.username }}</strong>
+          <span class="greet">Привіт</span>
+          <span class="user">{{ user.username }}</span>
         </div>
       </div>
-      <div class="menu">
+      <nav class="menu">
         <a href="{% url 'my_orders' %}">Мої замовлення</a>
         <a href="{% url 'my_returns' %}">Повернення</a>
         <a href="{% url 'need_help' %}">Потрібна допомога</a>
@@ -141,22 +132,18 @@
         <a href="{% url 'password_reset' %}">Змінити пароль</a>
         <a href="{% url 'address_book' %}">Адресна книга</a>
         <a href="{% url 'payment_methods' %}">Спосіб оплати</a>
-        <a href="{% url 'social_accounts' %}">Шукайте нас в соцмережах</a>
+        <a href="{% url 'social_accounts' %}">Соцмережі</a>
         <a href="{% url 'sign_out' %}">Вихід</a>
-      </div>
-    </div>
+      </nav>
+    </aside>
 
-    <div class="content">
+    <main class="content">
       <div class="welcome-block">
         <div class="welcome">ЛАСКАВО ПРОСИМО ДО</div>
-        <br>
         <div class="welcome">ВАШОГО ОБЛІКОВОГО ЗАПИСУ</div>
       </div>
       <div class="box"></div>
-    </div>
+    </main>
   </div>
-  <footer>
-    © WEARO 2025 року | <a href="#">Конфіденційність, файли cookie</a> | <a href="#">Умови</a> | <a href="#">Спеціальні можливості</a>
-  </footer>
 </body>
 </html>

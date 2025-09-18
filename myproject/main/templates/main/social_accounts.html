@@ -1,32 +1,112 @@
-<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+{% if user.is_authenticated %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Social Accounts – My Account</title>
+  <style>
+    :root{
+      --sidebar-width: 280px;
+      --gap: 24px;
+      --black: #000;
+      --dark: #111;
+      --muted: #666;
+    }
 
-  <h2 style="display: flex; align-items: center; font-size: 24px; border: 2px solid #000; padding: 10px;">
- &nbsp; <strong>SOCIAL ACCOUNTS</strong>
-  </h2>
-  <p style="margin-top: 10px; color: #555;">
-    Use your social media accounts to make it even easier to log in.
-  </p>
+    *{box-sizing: border-box;}
+    body { margin: 0; font-family: Arial, sans-serif; background: #f9f9f9; color: #111; min-height: 100vh; }
 
-  <hr style="margin: 20px 0; border: none; height: 1px; background: #eee;">
+    .page { display: flex; width: 100%; max-width: 1000px; margin: 40px auto; gap: var(--gap); padding: 0 var(--gap); align-items: flex-start; }
 
-  <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0;">
-    <span><strong>Google</strong></span>
-    <button style="padding: 8px 16px; border: 1px solid #ccc; font-weight: bold; cursor: pointer;">
-      DISCONNECT
-    </button>
+    .sidebar { width: var(--sidebar-width); display: flex; flex-direction: column; gap: 12px; }
+
+    .profile { display: flex; align-items: center; gap: 10px; background: #fff; padding: 12px; border: 2px solid var(--dark); border-radius: 6px; }
+    .avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--dark); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
+    .name { line-height: 1; }
+    .name .greet { font-size: 12px; color: var(--muted); display:block; }
+    .name .user { font-weight: 700; font-size: 13px; display:block; }
+
+    .menu { display: flex; flex-direction: column; gap: 6px; }
+    .menu a { display: block; padding: 10px 12px; text-decoration: none; color: #fff; background: var(--dark); font-size: 14px; border: 1px solid #222; border-radius: 4px; }
+    .menu a:hover { background: #222; }
+
+    .content { flex: 1; max-width: calc(100% - var(--sidebar-width) - var(--gap)); display: flex; flex-direction: column; gap: 12px; }
+
+    .content-header { display: inline-block; background: var(--black); color: #fff; padding: 6px 12px; font-size: 14px; font-weight: 700; text-transform: uppercase; border-radius: 4px; }
+
+    .content-subheader { display: flex; align-items: center; gap: 12px; background: var(--black); color: #fff; padding: 16px 18px; font-size: 18px; font-weight: 700; text-transform: uppercase; border-radius: 4px; }
+    .content-subheader .icon { width: 24px; height: 24px; }
+
+    .content-body { background: #fff; padding: 16px; border: 1px solid #e6e6e6; display: flex; flex-direction: column; gap: 14px; max-width: 100%; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+
+    .account-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; font-size: 14px; }
+    .account-item.disabled { opacity: 0.5; color: #666; }
+    .btn { padding: 8px 16px; border: 1px solid #ccc; font-weight: bold; cursor: pointer; background: #fff; border-radius: 4px; }
+    .btn:hover { background: #f4f4f4; }
+
+    .back-link { display: inline-block; margin-top: 16px; font-size: 14px; color: #111; text-decoration: none; }
+
+    @media (max-width: 880px){
+      .page{ flex-direction: column; padding: 20px; gap: 16px; }
+      .sidebar{ width: 100%; flex-direction: row; gap: 12px; align-items: center; overflow-x:auto; }
+      .menu{ flex-direction: row; }
+      .menu a{ white-space:nowrap; font-size:13px; padding:8px 10px; }
+      .content-subheader{ padding:14px; font-size:16px; }
+      .content-body{ padding:14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <div class="profile">
+        <div class="avatar">EM</div>
+        <div class="name">
+          <span class="greet">Привіт</span>
+          <span class="user">{{ user.username }}</span>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <a href="{% url 'my_orders' %}">Мої замовлення</a>
+        <a href="{% url 'my_returns' %}">Повернення</a>
+        <a href="{% url 'need_help' %}">Потрібна допомога</a>
+        <a href="{% url 'my_details' %}">Мої дані</a>
+        <a href="{% url 'password_reset' %}">Змінити пароль</a>
+        <a href="{% url 'address_book' %}">Адресна книга</a>
+        <a href="{% url 'payment_methods' %}">Спосіб оплати</a>
+        <a href="{% url 'social_accounts' %}">Соцмережі</a>
+        <a href="{% url 'sign_out' %}">Вихід</a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="content-header">Особистий кабінет</div>
+      <div class="content-subheader">
+        <img src="{% static 'icons/social.png' %}" alt="social" class="icon">
+        <span>Соцмережі</span>
+      </div>
+
+      <div class="content-body">
+        <div class="account-item">
+          <span><strong>Google</strong></span>
+          <button class="btn">DISCONNECT</button>
+        </div>
+        <div class="account-item disabled">
+          <span>Apple</span>
+          <span>Not connected</span>
+        </div>
+        <div class="account-item disabled">
+          <span>Facebook</span>
+          <span>Not connected</span>
+        </div>
+
+        <a href="{% url 'my_account' %}" class="back-link">← Back to account</a>
+      </div>
+    </main>
   </div>
-  <hr style="border: none; height: 1px; background: #eee;">
-
-  <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0; opacity: 0.5;">
-    <span>Apple</span>
-    <span style="color: #666;">Not connected</span>
-  </div>
-  <hr style="border: none; height: 1px; background: #eee;">
-
-  <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0; opacity: 0.5;">
-    <span>Facebook</span>
-    <span style="color: #666;">Not connected</span>
-  </div>
-      <a href="{% url 'my_account' %}">← Back to account</a>
-
-</div>
+</body>
+</html>
+{% endif %}

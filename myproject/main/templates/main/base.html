@@ -48,7 +48,7 @@
 
         <div class="header-right">
           {% if user.is_authenticated %}
-            <span>Вітаємо, {{ user.username }}</span>
+            <a href="{% url 'my_account' %}">Вітаємо, {{ user.username }}</a>
             <span>|</span>
             <a href="{% url 'wishlist' %}">Вподобано <span class="badge">{{ wishlist_count }}</span></a>
             <span>|</span>

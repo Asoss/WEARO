@@ -8,6 +8,15 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ['first_name', 'last_name', 'email']
 
+class UserDetailsForm(forms.ModelForm):
+    class Meta:
+        model = UserDetails
+        fields = ['birth_date', 'gender']
+        widgets = {
+            'birth_date': forms.SelectDateWidget(years=range(1900, 2026)),
+            'gender': forms.RadioSelect  
+        }
+
 class ProductForm(forms.ModelForm):
     sizes = forms.CharField(required=False, help_text="Введення розміру через кому, напр. 36,37,38")
     lengths = forms.CharField(required=False, help_text="Введення довжини через кому, напр. 30,32,34")
