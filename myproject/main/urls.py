@@ -48,6 +48,6 @@ urlpatterns = [
     path('secret/developers/', views.developers_page, name='developers_page'),
     path("rate-product/", views.rate_product, name="rate_product"),
     path('rate-product/<int:product_id>/', views.rate_product, name='rate_product'),
-
+    path('api/products/', views.products_api, name='products_api'),
 ]
 
