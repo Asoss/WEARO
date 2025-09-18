@@ -117,7 +117,8 @@ main {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease;
-    z-index: 1000;
+    z-index: 1001;
+    padding: 0px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 

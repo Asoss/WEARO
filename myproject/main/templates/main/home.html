@@ -1,362 +1,347 @@
-{% extends "main/base.html" %}
+{% extends 'main/base.html' %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/main.css' %}">
+<link rel="stylesheet" href="{% static 'css/main.css' %}" />
 
 {% block content %}
-
-<!-- Пошук -->
-<div class="search-bar">
+  <!-- Пошук -->
+  <div class="search-bar">
     <form id="filter-form" method="get" action="{% url 'product_search' %}">
-        <input type="text" id="searchInput" name="q" placeholder="Пошук"
-               value="{{ request.GET.q|default:'' }}">
-        <button type="submit" class="search-icon">
-            <img src="{% static 'icons/search.jpg' %}" alt="Пошук">
-        </button>
+      <input type="text" id="searchInput" name="q" placeholder="Пошук" value="{{ request.GET.q|default:'' }}" />
+      <button type="submit" class="search-icon"><img src="{% static 'icons/search.jpg' %}" alt="Пошук" /></button>
     </form>
-</div>
-
-
-
-<!-- Hero секція -->
-<div class="hero">
-  <img src="{% static 'home_page/main.jpg' %}" alt="Hero Image" class="hero-img">
-</div>
-
-<!-- Три фото з ховером -->
-<div class="hover-gallery">
-  <div class="hover-item">
-    <img src="{% static 'home_page/pants0.png' %}" alt="Photo 1" class="default">
-    <img src="{% static 'home_page/pants.jpg' %}" alt="Photo 1 Hover" class="hover">
   </div>
-  <div class="hover-item">
-    <img src="{% static 'home_page/styles0.jpg' %}" alt="Photo 2" class="default">
-    <img src="{% static 'home_page/styles.jpg' %}" alt="Photo 2 Hover" class="hover">
-  </div>
-  <div class="hover-item">
-    <img src="{% static 'home_page/closes0.jpg' %}" alt="Photo 3" class="default">
-    <img src="{% static 'home_page/closes.jpg' %}" alt="Photo 3 Hover" class="hover">
-  </div>
-</div>
 
-<!-- Унікальні колекції -->
-<h2 class="section-title">УНІКАЛЬНІ КОЛЕКЦІЇ</h2>
-<div class="carousel">
-  <button class="carousel-btn left" onclick="moveCarousel(-1, 'carouselTrack')">&#10094;</button>
-  <div class="carousel-track" id="carouselTrack">
-    {% for product in products|slice:":10" %}
-    <div class="carousel-item">
-      <a href="{% url 'product_detail' product.pk %}">
-        <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
-        <p class="product-name">{{ product.name }}</p>
-        <p class="price">₴{{ product.price }}</p>
-      </a>
+  <!-- Hero секція -->
+  <div class="hero">
+    <img src="{% static 'home_page/main.jpg' %}" alt="Hero Image" class="hero-img" />
+  </div>
+
+  <div class="hover-gallery">
+    <div class="hover-item">
+      <img src="{% static 'home_page/pants.jpg' %}" alt="Photo 1" class="default" />
+      <img src="{% static 'home_page/pants0.png' %}" alt="Photo 1 Hover" class="hover" />
     </div>
-    {% endfor %}
-  </div>
-  <button class="carousel-btn right" onclick="moveCarousel(1, 'carouselTrack')">&#10095;</button>
-</div>
-
-<!-- Друга велика картинка -->
-<div class="hero hero-text">
-  <img src="{% static 'home_page/ownstyle.jpg' %}" alt="Second Hero" class="hero-img">
-  <div class="hero-overlay">
-    <p class="small-text">Керуй трендами</p>
-    <h3 class="big-text">СТВОРИ СВІЙ ВЛАСНИЙ СТИЛЬ</h3>
-    <a href="{% url 'product_search' %}?q=одяг&gender=0" class="link-text">Підібрати одяг</a>
-  </div>
-</div>
-
-{% if recently_viewed %}
-<h2 class="section-title">НЕЩОДАВНО ПЕРЕГЛЯНУТІ</h2>
-<div class="carousel">
-  <button class="carousel-btn left" onclick="moveCarousel(-1, 'recentTrack')">&#10094;</button>
-  <div class="carousel-track" id="recentTrack">
-    {% for product in recently_viewed %}
-    <div class="carousel-item">
-      <a href="{% url 'product_detail' product.pk %}">
-        {% if product.images.first %}
-          <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
-        {% else %}
-          <img src="{% static 'img/no-photo.png' %}" alt="Немає фото">
-        {% endif %}
-        <p class="product-name">{{ product.name }}</p>
-        <p class="price">₴{{ product.price }}</p>
-      </a>
+    <div class="hover-item">
+      <img src="{% static 'home_page/styles0.jpg' %}" alt="Photo 2" class="default" />
+      <img src="{% static 'home_page/styles.jpg' %}" alt="Photo 2 Hover" class="hover" />
     </div>
-    {% endfor %}
+    <div class="hover-item">
+      <img src="{% static 'home_page/closes0.jpg' %}" alt="Photo 3" class="default" />
+      <img src="{% static 'home_page/closes.jpg' %}" alt="Photo 3 Hover" class="hover" />
+    </div>
   </div>
-  <button class="carousel-btn right" onclick="moveCarousel(1, 'recentTrack')">&#10095;</button>
-</div>
-{% endif %}
 
-<h2 class="section-title">ШУКАЄТЕ БІЛЬШЕ ВАРІАНТІВ?</h2>
-<div class="options-buttons">
-  <a href="{% url 'product_search' %}?q=Джинси&gender=0" class="option-btn">Жіночі джинси</a>
-  <a href="{% url 'product_search' %}?q=Шорти&gender=0" class="option-btn">Жіночі шорти</a>
-  <a href="{% url 'product_search' %}?q=Штани&gender=0" class="option-btn">Жіночі штани</a>
-  <a href="{% url 'product_search' %}?q=Топи блузки сорочки&gender=0" class="option-btn">Жіночі топи, блузки та сорочки</a>
-  <a href="{% url 'product_search' %}?q=Джинси з прямими штанинами&gender=0" class="option-btn">Жіночі джинси з прямими штанинами</a>
-  <a href="{% url 'product_search' %}?q=Вільні та мішкуваті джинси&gender=0" class="option-btn">Жіночі вільні та мішкуваті джинси</a>
-</div>
+  <h2 class="section-title">УНІКАЛЬНІ КОЛЕКЦІЇ</h2>
+  <div class="carousel">
+    <button class="carousel-btn left" onclick="moveCarousel(-1, 'carouselTrack')">&#10094;</button>
+    <div class="carousel-track" id="carouselTrack">
+      {% for product in products|slice:':10' %}
+        <div class="carousel-item">
+          <a href="{% url 'product_detail' product.pk %}">
+            <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" />
+            <p class="product-name">{{ product.name }}</p>
+            <p class="price">₴{{ product.price }}</p>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+    <button class="carousel-btn right" onclick="moveCarousel(1, 'carouselTrack')">&#10095;</button>
+  </div>
 
-<style>
-/* Hero */
-.hero {
-  width: 100%;
-  margin-bottom: 30px;
-}
-.hero-img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
+  <div class="hero hero-text">
+    <img src="{% static 'home_page/ownstyle.jpg' %}" alt="Second Hero" class="hero-img" />
+    <div class="hero-overlay">
+      <p class="small-text">Керуй трендами</p>
+      <h3 class="big-text">СТВОРИ СВІЙ ВЛАСНИЙ СТИЛЬ</h3>
+      <a href="{% url 'product_search' %}?q=одяг&gender=0" class="link-text">Підібрати одяг</a>
+    </div>
+  </div>
 
-/*Hover gallery*/
-.hover-gallery {
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
-  gap: 20px;
-}
+  {% if recently_viewed %}
+    <h2 class="section-title">НЕЩОДАВНО ПЕРЕГЛЯНУТІ</h2>
+    <div class="carousel">
+      <button class="carousel-btn left" onclick="moveCarousel(-1, 'recentTrack')">&#10094;</button>
+      <div class="carousel-track" id="recentTrack">
+        {% for product in recently_viewed %}
+          <div class="carousel-item">
+            <a href="{% url 'product_detail' product.pk %}">
+              {% if product.images.first %}
+                <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" />
+              {% else %}
+                <img src="{% static 'img/no-photo.png' %}" alt="Немає фото" />
+              {% endif %}
+              <p class="product-name">{{ product.name }}</p>
+              <p class="price">₴{{ product.price }}</p>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+      <button class="carousel-btn right" onclick="moveCarousel(1, 'recentTrack')">&#10095;</button>
+    </div>
+  {% endif %}
 
-.hover-item {
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.3s ease;
-  flex: 1; 
-}
+  <h2 class="section-title">ШУКАЄТЕ БІЛЬШЕ ВАРІАНТІВ?</h2>
+  <div class="options-buttons">
+    <a href="{% url 'product_search' %}?q=Джинси&gender=0" class="option-btn">Жіночі джинси</a>
+    <a href="{% url 'product_search' %}?q=Шорти&gender=0" class="option-btn">Жіночі шорти</a>
+    <a href="{% url 'product_search' %}?q=Штани&gender=0" class="option-btn">Жіночі штани</a>
+    <a href="{% url 'product_search' %}?q=Топи блузки сорочки&gender=0" class="option-btn">Жіночі топи, блузки та сорочки</a>
+    <a href="{% url 'product_search' %}?q=Джинси з прямими штанинами&gender=0" class="option-btn">Жіночі джинси з прямими штанинами</a>
+    <a href="{% url 'product_search' %}?q=Вільні та мішкуваті джинси&gender=0" class="option-btn">Жіночі вільні та мішкуваті джинси</a>
+  </div>
 
-.hover-gallery .hover-item:nth-child(2) {
-  flex: 2; 
-}
-.hover-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
+  <style>
+    /* Hero */
+    .hero {
+      width: 100%;
+      margin-bottom: 30px;
+    }
+    .hero-img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    
+    /*Hover gallery*/
+    .hover-gallery {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      gap: 20px;
+    }
+    
+    .hover-item {
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+      flex: 1;
+    }
+    
+    .hover-gallery .hover-item:nth-child(2) {
+      flex: 2;
+    }
+    .hover-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    
+    .hover-item img.hover {
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+    }
+    
+    .hover-item:hover img.hover {
+      opacity: 1;
+    }
+    
+    .hover-item:hover img.default {
+      opacity: 0;
+    }
+    
+    /* Section title */
+    .section-title {
+      text-align: center;
+      margin: 40px 0 20px;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    
+    /* Carousel */
+    .carousel {
+      position: relative;
+      max-width: 1200px;
+      margin: 0 auto 60px;
+      overflow: hidden;
+    }
+    .carousel-track {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+    .carousel-item {
+      min-width: 25%;
+      box-sizing: border-box;
+      padding: 10px;
+      text-align: center;
+    }
+    .carousel-item img {
+      width: 100%;
+      height: 360px;
+      object-fit: cover;
+      border-radius: 2px;
+    }
+    .carousel-item .product-name {
+      font-size: 14px;
+      margin: 8px 0 4px;
+      color: #000;
+    }
+    .carousel-item .price {
+      font-weight: bold;
+      color: #000;
+    }
+    
+    /* Buttons */
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.8);
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 50%;
+      transition: background 0.3s;
+      z-index: 10;
+    }
+    
+    .carousel a {
+      text-decoration: none;
+    }
+    
+    .carousel-btn:hover {
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+    }
+    .carousel-btn.left {
+      left: 10px;
+    }
+    .carousel-btn.right {
+      right: 10px;
+    }
+    
+    .options-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin: 30px 0 60px;
+    }
+    
+    .option-btn {
+      padding: 10px 18px;
+      border: 1.5px solid #000;
+      border-radius: 4px;
+      background: #fff;
+      color: #000;
+      text-decoration: none;
+      font-size: 15px;
+      transition: all 0.3s ease;
+    }
+    
+    .option-btn:hover {
+      background: #000;
+      color: #fff;
+    }
+    
+    .hero-text {
+      position: relative;
+    }
+    
+    .hero-overlay {
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #000;
+      text-align: center;
+    }
+    
+    .hero-overlay .small-text {
+      font-size: 16px;
+      font-weight: 500;
+      margin: 0 0 8px 0;
+      text-align: left;
+    }
+    
+    .hero-overlay .big-text {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 0 0 12px 0;
+      line-height: 1.2;
+    }
+    
+    .hero-overlay .link-text {
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: underline;
+      color: #000;
+      display: block;
+      text-align: right;
+    }
+    
+    /* Пошук */
+    .search-bar {
+      text-align: center;
+      margin: 30px 0;
+    }
+    
+    .search-bar form {
+      display: inline-flex;
+      border: 2px solid #000;
+      border-radius: 4px;
+      overflow: hidden;
+      align-items: center;
+      background: #fff;
+    }
+    
+    .search-bar input {
+      border: none;
+      padding: 7px 9px;
+      outline: none;
+      width: 650px;
+      font-size: 16px;
+      height: 23px;
+    }
+    
+    .search-bar button {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 20px;
+      width: 20px;
+      padding: 0;
+      margin: 0;
+    }
+    
+    /* Іконка пошуку */
+    .search-bar button img {
+      width: 24px;
+      height: 24px;
+      margin-right: 10px;
+    }
+  </style>
 
-.hover-item img.hover {
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
-}
-
-.hover-item:hover img.hover {
-  opacity: 1;
-}
-
-.hover-item:hover img.default {
-  opacity: 0;
-}
-
-
-
-/* Section title */
-.section-title {
-  text-align: center;
-  margin: 40px 0 20px;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-/* Carousel */
-.carousel {
-  position: relative;
-  max-width: 1200px;
-  margin: 0 auto 60px;
-  overflow: hidden;
-}
-.carousel-track {
-  display: flex;
-  transition: transform 0.5s ease;
-}
-.carousel-item {
-  min-width: 25%;
-  box-sizing: border-box;
-  padding: 10px;
-  text-align: center;
-}
-.carousel-item img {
-  width: 100%;
-  height: 360px;
-  object-fit: cover;
-  border-radius: 2px;
-}
-.carousel-item .product-name {
-  font-size: 14px;
-  margin: 8px 0 4px;
-  color:#000;
-}
-.carousel-item .price {
-  font-weight: bold;
-  color: #000;
-}
-
-/* Buttons */
-.carousel-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(255,255,255,0.8);
-  border: none;
-  font-size: 28px;
-  cursor: pointer;
-  padding: 10px;
-  border-radius: 50%;
-  transition: background 0.3s;
-  z-index: 10;
-}
-
-.carousel a{
-  text-decoration: none;
-}
-
-.carousel-btn:hover {
-  background: rgba(0,0,0,0.6);
-  color: #fff;
-}
-.carousel-btn.left {
-  left: 10px;
-}
-.carousel-btn.right {
-  right: 10px;
-}
-
-.options-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: center;
-  margin: 30px 0 60px;
-}
-
-.option-btn {
-  padding: 10px 18px;
-  border: 1.5px solid #000;
-  border-radius: 4px;
-  background: #fff;
-  color: #000;
-  text-decoration: none;
-  font-size: 15px;
-  transition: all 0.3s ease;
-}
-
-.option-btn:hover {
-  background: #000;
-  color: #fff;
-}
-
-
-.hero-text {
-  position: relative;
-}
-
-.hero-overlay {
-  position: absolute;
-  top:10%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #000;
-  text-align: center;
-}
-
-.hero-overlay .small-text {
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0 0 8px 0;
-  text-align: left;
-}
-
-.hero-overlay .big-text {
-  font-size: 28px;
-  font-weight: bold;
-  margin: 0 0 12px 0;
-  line-height: 1.2;
-}
-
-.hero-overlay .link-text {
-  font-size: 15px;
-  font-weight: 500;
-  text-decoration: underline;
-  color: #000;
-  display: block;
-  text-align: right;
-}
-
-/* Пошук */
-.search-bar {
-    text-align: center;
-    margin: 30px 0;
-}
-
-.search-bar form {
-    display: inline-flex;
-    border: 2px solid #000;
-    border-radius: 4px;
-    overflow: hidden;
-    align-items: center;
-    background: #fff;
-}
-
-.search-bar input {
-    border: none;
-    padding: 7px 9px;
-    outline: none;
-    width: 650px;
-    font-size: 16px;
-    height: 23px;
-}
-
-.search-bar button {
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 20px;
-    width: 20px;
-    padding: 0;
-    margin: 0;
-}
-
-/* Іконка пошуку */
-.search-bar button img {
-    width: 24px;
-    height: 24px;
-    margin-right: 10px;
-
-}
-
-</style>
-
-<script src="{% static 'js/search.js' %}"></script>
-<script>
-let positions = {};
-
-function moveCarousel(direction, trackId) {
-  const track = document.getElementById(trackId);
-  const items = track.querySelectorAll('.carousel-item');
-  const visibleItems = 4;
-  const totalItems = items.length;
-
-  if (totalItems <= visibleItems) return; // нема що крутити
-
-  const itemWidth = items[0].offsetWidth;
-  const maxPosition = -(itemWidth * (totalItems - visibleItems));
-
-  if (!(trackId in positions)) positions[trackId] = 0;
-  positions[trackId] += direction * itemWidth;
-
-  // робимо циклічну карусель
-  if (positions[trackId] < maxPosition) positions[trackId] = 0;
-  if (positions[trackId] > 0) positions[trackId] = maxPosition;
-
-  track.style.transform = `translateX(${positions[trackId]}px)`;
-}
-</script>
-
+  <script src="{% static 'js/search.js' %}"></script>
+  <script>
+    let positions = {}
+    
+    function moveCarousel(direction, trackId) {
+      const track = document.getElementById(trackId)
+      const items = track.querySelectorAll('.carousel-item')
+      const visibleItems = 4
+      const totalItems = items.length
+    
+      if (totalItems <= visibleItems) return // нема що крутити
+    
+      const itemWidth = items[0].offsetWidth
+      const maxPosition = -(itemWidth * (totalItems - visibleItems))
+    
+      if (!(trackId in positions)) positions[trackId] = 0
+      positions[trackId] += direction * itemWidth
+    
+      // робимо циклічну карусель
+      if (positions[trackId] < maxPosition) positions[trackId] = 0
+      if (positions[trackId] > 0) positions[trackId] = maxPosition
+    
+      track.style.transform = `translateX(${positions[trackId]}px)`
+    }
+  </script>
 {% endblock %}

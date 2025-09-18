@@ -1,269 +1,777 @@
-<!DOCTYPE html>
-<html lang="uk">
+{% extends 'main/base.html' %}
+{% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>{{ product.name }}</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #fff;
-            margin: 0;
-            padding: 0;
-        }
+{% block content %}
+  <link rel="stylesheet" href="{% static 'css/main.css' %}" />
 
-        .container {
-            display: flex;
-            gap: 40px;
-            padding: 40px;
-            max-width: 1200px;
-            margin: auto;
-        }
-
-        .gallery {
-            width: 40%;
-        }
-
-        .main-image {
-            position: relative;
-        }
-
-        .main-image img {
-            width: 100%;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-        }
-
-        .main-image button {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.5);
-            color: #fff;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            z-index: 10;
-            font-size: 20px;
-        }
-
-        #prevBtn {
-            left: 10px;
-        }
-
-        #nextBtn {
-            right: 10px;
-        }
-
-        .thumbnails {
-            display: flex;
-            justify-content: start;
-            gap: 10px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-
-        .thumb {
-            width: 60px;
-            height: 80px;
-            object-fit: cover;
-            border: 2px solid transparent;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: transform 0.2s, border 0.2s;
-        }
-
-        .thumb.active {
-            border-color: #333;
-            transform: scale(1.1);
-        }
-
-        .product-info {
-            width: 60%;
-        }
-
-        .price {
-            color: green;
-            font-size: 24px;
-            margin: 10px 0;
-        }
-
-        select {
-            padding: 8px;
-            margin: 10px 0;
-            width: 200px;
-        }
-
-        .add-to-cart {
-            background: green;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-
-        .accordion {
-            margin-top: 20px;
-        }
-
-        .accordion-item {
-            border-top: 1px solid #ccc;
-            padding: 10px 0;
-        }
-
-        .accordion-item summary {
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .color-box {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 1px solid #000;
-            vertical-align: middle;
-        }
-
-        .recently-viewed {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 40px;
-        }
-        .recently-viewed h3 {
-            margin-bottom: 20px;
-        }
-        .recent-products {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        .recent-product {
-            width: 160px;
-            text-align: center;
-        }
-        .recent-product img {
-            width: 100%;
-            height: auto;
-            border: 1px solid #ccc;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container">
-        <div class="gallery" id="gallery">
-            <div class="main-image">
-                <img id="mainImage" src="{{ product.images.first.image.url }}" alt="Main">
-                <button id="prevBtn">❮</button>
-                <button id="nextBtn">❯</button>
+  <div class="product-page">
+    <div class="product-grid">
+      <div class="col thumbs-col">
+        <div class="thumbs-wrap">
+          {% if product.images.all %}
+            {% for img in product.images.all %}
+              <button class="thumb" data-index="{{ forloop.counter0 }}" data-src="{{ img.image.url }}"><img src="{{ img.image.url }}" alt="{{ product.name }} - {{ forloop.counter }}" /></button>
+            {% endfor %}
+          {% else %}
+            <div class="thumb no-thumb">
+              <img src="{% static 'images/placeholder.png' %}" alt="no image" />
             </div>
-            <div class="thumbnails">
-                {% for image in product.images.all %}
-                <img src="{{ image.image.url }}" class="thumb {% if forloop.first %}active{% endif %}"
-                    data-index="{{ forloop.counter0 }}">
-                {% endfor %}
-            </div>
+          {% endif %}
         </div>
+      </div>
 
-        <div class="product-info">
-            <h1>{{ product.name }}</h1>
-            <p class="price">{{ product.price }} грн</p>
-            {% if product.color %}
-            <p><strong>Колір:</strong> {{ product.color.name }}</p>
+      <div class="col main-col">
+        <div class="main-image-wrap">
+          {% with first_image=product.images.first %}
+            {% if first_image %}
+              <img id="mainImage" src="{{ first_image.image.url }}" alt="{{ product.name }}" />
+            {% else %}
+              <img id="mainImage" src="{% static 'images/placeholder.png' %}" alt="{{ product.name }}" />
             {% endif %}
+          {% endwith %}
 
-            <label for="size"><strong>Оберіть розмір:</strong></label><br>
-            <select id="size" name="size">
-                <option disabled selected>Будь ласка, виберіть</option>
-                <option>XS</option>
-                <option>S</option>
-                <option>M</option>
-                <option>L</option>
-                <option>XL</option>
-            </select>
+          <button class="nav prev" id="prevBtn" aria-label="previous">❮</button>
+          <button class="nav next" id="nextBtn" aria-label="next">❯</button>
 
-            <form action="{% url 'move_to_cart' product.id %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="add-to-cart">ДОДАТИ ДО КОШИКА</button>
-            </form>
-
-            <details class="dropdown">
-                <summary>Бренд</summary>
-                <p>{{ product.brand }}</p>
-            </details>
-
-            
-            <details class="dropdown">
-                <summary>Бережи мене</summary>
-                <p>{{ product.look_after_me }}</p>
-            </details>
-
-            <details class="dropdown">
-                <summary>Про мене</summary>
-                <p>{{ product.about_me }}</p>
-            </details>
-
-            <details class="dropdown">
-                <summary>Деталі продукту</summary>
-                <p>{{ product.product_details }}</p>
-            </details>
-    </div>
-</div>
-
-<div class="recently-viewed">
-    <h3>Переглянуті товари</h3>
-    <div class="recent-products">
-        {% for item in recently_viewed %}
-        <div class="recent-product">
-            <a href="{% url 'product_detail' item.pk %}">
-                {% if item.images.first %}
-                    <img src="{{ item.images.first.image.url }}" alt="{{ item.name }}">
-                {% else %}
-                    <p>Немає фото</p>
-                {% endif %}
-                <p>{{ item.name }}</p>
-            </a>
+          <div class="dots" id="dots"></div>
         </div>
-        {% endfor %}
+      </div>
+
+      <div class="col info-col">
+        <div class="title-row">
+          <h1 class="product-title">{{ product.name }}</h1>
+
+          <button id="wishlistBtn" class="wishlist-btn" aria-label="wishlist" data-product-id="{{ product.id }}"><span class="heart{% if user.is_authenticated and product.id in wishlist_products %} active{% endif %}">♡</span></button>
+        </div>
+
+        <div class="rating-row">
+          <div class="rating-count">★★★★★({{ product.rating_count|default:0 }})</div>
+        </div>
+
+        <div class="price-row">
+          {% if product.discount %}
+            <div class="price-old">{{ product.price }} грн</div>
+            <div class="price-new">{{ product.final_price }} грн</div>
+            <div class="discount-note">Знижка {{ product.discount }}% застосовується автоматично при оформленні</div>
+          {% else %}
+            <div>{{ product.price }} грн</div>
+          {% endif %}
+        </div>
+
+        {% if product.color %}
+          <div class="color-row">
+            <div class="color-label">Колір:</div>
+            <div class="color-swatch" title="{{ product.color.name }}">
+              <span class="color-box"></span>
+              <span class="color-name">{{ product.color.name }}</span>
+            </div>
+          </div>
+        {% endif %}
+
+        {% if product.sizes %}
+          <div class="sizes-row">
+            <div class="label">Розмір:</div>
+            <div class="sizes-grid">
+              {% for s in product.sizes %}
+                <button type="button" class="size-btn" data-size="{{ s }}">{{ s }}</button>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        {% if product.lengths %}
+          <div class="lengths-row">
+            <div class="label">Довжина:</div>
+            <div class="lengths-grid">
+              {% for l in product.lengths %}
+                <button type="button" class="length-btn" data-length="{{ l }}">{{ l }}</button>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'move_to_cart' product.id %}" id="addToCartForm" class="addcart-form">
+          {% csrf_token %}
+          <input type="hidden" name="size" id="selectedSize" value="" />
+          <input type="hidden" name="length" id="selectedLength" value="" />
+          <input type="hidden" name="quantity" id="quantityInput" value="1" />
+
+          <div class="qty-row">
+            <div class="qty-label">Кількість</div>
+            <div class="qty-controls">
+              <button type="button" class="qty-btn" id="qtyMinus">−</button>
+              <input type="text" id="qtyDisplay" value="1" readonly />
+              <button type="button" class="qty-btn" id="qtyPlus">+</button>
+            </div>
+          </div>
+
+          <div class="delivery-options">
+            <div class="option">
+              <strong>Самовивіз з магазину</strong><br />
+              <small>Зареєструйтесь і вкажіть своє місто щоб дізнатися чи є у нас магазин</small>
+            </div>
+            <div class="option">
+              <strong>Відділення пошти</strong><br />
+              <small>Вкажіть при оформленні зручне відділення</small>
+            </div>
+          </div>
+
+          <button type="submit" class="add-to-cart-btn">Додати в кошик</button>
+        </form>
+
+        <div class="meta-row">
+          <div>
+            Стан: <strong>
+              {% if product.stock > 0 %}
+                В наявності
+              {% else %}
+                Немає
+              {% endif %}
+            </strong>
+          </div>
+          <div>Категорія: {{ product.category.name }}</div>
+        </div>
+      </div>
     </div>
-</div>
 
-    <script>
-        const thumbs = Array.from(document.querySelectorAll(".thumb"));
-        const mainImage = document.getElementById("mainImage");
-        const nextBtn = document.getElementById("nextBtn");
-        const prevBtn = document.getElementById("prevBtn");
+    <section class="desc-section">
+      <div class="desc-left">
+        <h2>Про цей стиль</h2>
+        {% if product.about_me %}
+          <div class="about-text">{{ product.about_me|linebreaksbr }}</div>
+        {% else %}
+          <div class="about-text">Короткий опис стилю відсутній.</div>
+        {% endif %}
 
-        let currentIndex = 0;
+        <div class="sku">Стиль #: {{ product.id }}</div>
+      </div>
 
-        function showImage(index) {
-            if (index >= 0 && index < thumbs.length) {
-                currentIndex = index;
-                mainImage.src = thumbs[index].src;
+      <aside class="desc-right">
+        <h3>Загальний опис</h3>
+        <ul>
+          <li>Стиль: {{ product.get_clothing_style_display }}</li>
+          <li>Візерунок: {{ product.get_pattern_display }}</li>
+          <li>Розтяжність: {{ product.get_stretchiness_display }}</li>
+        </ul>
 
-                thumbs.forEach(t => t.classList.remove("active"));
-                thumbs[index].classList.add("active");
-            }
+        <h3>Склад і догляд</h3>
+
+        {% if product.product_details %}
+          <ul class="bullets">
+            {% for li in product.product_details.splitlines %}
+              {% if li|length > 0 %}
+                <li>{{ li }}</li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        <ul>
+          {% if product.look_after_me %}
+            {% for li in product.look_after_me.splitlines %}
+              {% if li|length > 0 %}
+                <li>{{ li }}</li>
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            <li>Машинне прання згідно з інструкціями</li>
+          {% endif %}
+        </ul>
+      </aside>
+    </section>
+
+    {% if recently_viewed %}
+      <section class="recently-viewed bottom">
+        <h3 class="section-title">Нещодавно переглянуто</h3>
+        <div class="recent-slider">
+          <button class="recent-btn recent-prev">❮</button>
+          <div class="recent-list-wrapper">
+            <div class="recent-list">
+              {% for item in recently_viewed %}
+                <a href="{% url 'product_detail' item.pk %}" class="recent-item">
+                  {% with fi=item.images.first %}
+                    {% if fi %}
+                      <img src="{{ fi.image.url }}" alt="{{ item.name }}" />
+                    {% else %}
+                      <img src="{% static 'images/placeholder.png' %}" alt="{{ item.name }}" />
+                    {% endif %}
+                  {% endwith %}
+                  <div class="recent-info">
+                    <div class="recent-name">{{ item.name }}</div>
+                    <div class="recent-price">
+                      {% if item.discount %}
+                        <span class="price-old">{{ item.price }} грн</span>
+                        <br />
+                        <span class="price-new">{{ item.final_price }} грн</span>
+                      {% else %}
+                        <span class="price-new">{{ item.price }} грн</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                </a>
+              {% endfor %}
+            </div>
+          </div>
+          <button class="recent-btn recent-next">❯</button>
+        </div>
+      </section>
+    {% endif %}
+  </div>
+
+  <style>
+    .product-grid {
+      display: grid;
+      grid-template-columns: 80px 0.9fr 450px;
+      gap: 24px;
+      align-items: start;
+    }
+    .thumbs-col {
+      position: relative;
+    }
+    .thumbs-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 800px;
+      overflow: auto;
+      padding-right: 6px;
+    }
+    .thumb {
+      border: none;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+    }
+    .thumb img {
+      width: 78px;
+      height: 100px;
+      object-fit: cover;
+      border: 1px solid #eee;
+      border-radius: 6px;
+      display: block;
+    }
+    .main-image-wrap {
+      position: relative;
+      text-align: center;
+    }
+    .main-image-wrap img {
+      width: 100%;
+      object-fit: cover;
+      border: 1px solid #f0f0f0;
+      border-radius: 0px;
+    }
+    .nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.45);
+      color: #fff;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .nav.prev {
+      left: 10px;
+    }
+    .nav.next {
+      right: 10px;
+    }
+    .dots {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 12px;
+    }
+    .dots .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ddd;
+    }
+    .dots .dot.active {
+      background: #333;
+    }
+    
+    .info-col {
+      padding-top: 6px;
+    }
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .product-title {
+      font-size: 28px;
+      margin: 0 0 6px;
+      line-height: 1.1;
+    }
+    .wishlist-btn {
+      background: transparent;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .heart {
+      font-size: 22px;
+      color: #999;
+      transition: color 0.2s;
+    }
+    .heart.active {
+      color: #e33;
+    }
+    
+    .rating-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .stars .star {
+      color: #f5c542;
+      font-size: 16px;
+      margin-right: 2px;
+    }
+    .rating-count {
+      color: #777;
+      font-size: 13px;
+    }
+    
+    .price-row {
+      margin: 12px 0 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .price-old {
+      text-decoration: line-through;
+      color: #888;
+      font-size: 16px;
+    }
+    .price-new {
+      font-size: 22px;
+      font-weight: 700;
+      color: #e60023;
+    }
+    .discount-note {
+      margin-top: 2px;
+      color: #555;
+      font-size: 13px;
+    }
+    
+    .color-row {
+      margin: 12px 0;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .color-box {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid #ccc;
+      vertical-align: middle;
+    }
+    .color-name {
+      margin-left: 8px;
+      color: #333;
+    }
+    
+    .sizes-grid,
+    .lengths-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .size-btn,
+    .length-btn {
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      background: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+      min-width: 44px;
+      text-align: center;
+    }
+    .size-btn.active,
+    .length-btn.active {
+      border-color: #111;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+    }
+    
+    .qty-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 18px 0;
+    }
+    .qty-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .qty-btn {
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      background: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #qtyDisplay {
+      width: 40px;
+      text-align: center;
+      border: 1px solid #eee;
+      padding: 6px;
+      border-radius: 6px;
+    }
+    
+    .delivery-options {
+      display: flex;
+      gap: 12px;
+      margin: 14px 0;
+    }
+    .delivery-options .option {
+      border: 1px solid #eee;
+      padding: 10px;
+      flex: 1;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    
+    .add-to-cart-btn {
+      display: block;
+      width: 100%;
+      margin-top: 10px;
+      background: #000;
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 4px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    
+    .meta-row {
+      margin-top: 10px;
+      color: #666;
+      font-size: 13px;
+    }
+    
+    .desc-section {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 32px;
+      margin-top: 40px;
+      padding: 26px;
+      border-top: 1px solid #eee;
+    }
+    .desc-left h2 {
+      margin-top: 0;
+    }
+    .bullets {
+      margin-top: 10px;
+    }
+    .recently-viewed.bottom {
+      margin-top: 30px;
+    }
+    .recent-list {
+      display: flex;
+      gap: 12px;
+    }
+    .recent-item {
+      text-decoration: none;
+      color: inherit;
+      width: 120px;
+    }
+    .recent-item img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border: 1px solid #eee;
+    }
+    .recent-name {
+      font-size: 13px;
+      margin-top: 6px;
+      text-align: center;
+    }
+    @media (max-width: 1100px) {
+      .product-grid {
+        grid-template-columns: 60px 1fr;
+      }
+      .info-col {
+        grid-column: 1/ -1;
+        margin-top: 18px;
+      }
+      .main-image-wrap img {
+        height: 500px;
+      }
+    }
+    .recent-slider {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+    
+    .recent-list-wrapper {
+      overflow: hidden;
+    }
+    
+    .section-title {
+      text-align: center;
+      margin: 40px 0 20px;
+      font-size: 35px;
+      font-weight: bold;
+    }
+    
+    .recent-list {
+      display: flex;
+      transition: transform 0.4s ease;
+    }
+    
+    .recent-item {
+      flex: 0 0 220px;
+      margin: 0 10px;
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      text-decoration: none;
+      color: #333;
+      transition: transform 0.3s;
+    }
+    .recent-item:hover {
+      transform: translateY(-5px);
+    }
+    
+    .recent-item img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+    }
+    
+    .recent-info {
+      padding: 8px;
+      font-size: 14px;
+    }
+    
+    .recent-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    
+    .price-old {
+      text-decoration: line-through;
+      color: #999;
+      margin-right: 5px;
+    }
+    .price-new {
+      color: #000000;
+      font-weight: bold;
+    }
+    
+    /* Стрілки */
+    .recent-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.8);
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 5px 12px;
+      border-radius: 50%;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      transition: background 0.3s;
+      z-index: 10;
+    }
+    .recent-btn:hover {
+      background: rgba(255, 255, 255, 1);
+    }
+    
+    .recent-prev {
+      left: 5px;
+    }
+    .recent-next {
+      right: 5px;
+    }
+    
+    .star {
+      font-size: 20px;
+      color: #ccc;
+      cursor: default;
+    }
+    
+    .star.filled {
+      color: #f39c12;
+    }
+    
+    .vote-stars .star {
+      font-size: 30px;
+      cursor: pointer;
+      color: #ccc;
+      transition: color 0.2s;
+    }
+    
+    .vote-stars .star.active,
+    .vote-stars .star:hover,
+    .vote-stars .star.hovered {
+      color: #f39c12;
+    }
+  </style>
+  <script>
+    ;(function () {
+      const thumbs = Array.from(document.querySelectorAll('.thumb'))
+      const mainImg = document.getElementById('mainImage')
+      const prevBtn = document.getElementById('prevBtn')
+      const nextBtn = document.getElementById('nextBtn')
+      const dotsWrap = document.getElementById('dots')
+    
+      let current = 0
+    
+      if (thumbs.length === 0) {
+      } else {
+        thumbs.forEach((t, i) => {
+          const dot = document.createElement('span')
+          dot.className = 'dot' + (i === 0 ? ' active' : '')
+          dot.dataset.index = i
+          dotsWrap.appendChild(dot)
+          dot.addEventListener('click', () => showImage(i))
+    
+          t.addEventListener('click', () => showImage(i))
+        })
+    
+        function setActiveThumb(i) {
+          thumbs.forEach((tt, idx) => tt.classList.toggle('active', idx === i))
+          Array.from(dotsWrap.children).forEach((d, idx) => d.classList.toggle('active', idx === i))
         }
-
-        thumbs.forEach((thumb, i) => {
-            thumb.addEventListener("click", () => showImage(i));
-        });
-
-        nextBtn.addEventListener("click", () => showImage(currentIndex + 1));
-        prevBtn.addEventListener("click", () => showImage(currentIndex - 1));
-
-        document.addEventListener("keydown", (e) => {
-            if (e.key === "ArrowRight") showImage(currentIndex + 1);
-            if (e.key === "ArrowLeft") showImage(currentIndex - 1);
-        });
-
-        document.getElementById("gallery").addEventListener("wheel", (e) => {
-            if (e.deltaY > 0) showImage(currentIndex + 1);
-            else showImage(currentIndex - 1);
-        });
-    </script>
-</body>
-
-</html>
+    
+        function showImage(index) {
+          if (thumbs.length === 0) return
+          current = (index + thumbs.length) % thumbs.length
+          const src = thumbs[current].dataset.src || thumbs[current].querySelector('img').src
+          mainImg.src = src
+          setActiveThumb(current)
+        }
+    
+        prevBtn.addEventListener('click', () => showImage(current - 1))
+        nextBtn.addEventListener('click', () => showImage(current + 1))
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowLeft') showImage(current - 1)
+          if (e.key === 'ArrowRight') showImage(current + 1)
+        })
+    
+        setActiveThumb(0)
+      }
+    
+      const sizeBtns = document.querySelectorAll('.size-btn')
+      const lengthBtns = document.querySelectorAll('.length-btn')
+      const selectedSize = document.getElementById('selectedSize')
+      const selectedLength = document.getElementById('selectedLength')
+    
+      sizeBtns.forEach((b) =>
+        b.addEventListener('click', () => {
+          sizeBtns.forEach((x) => x.classList.remove('active'))
+          b.classList.add('active')
+          selectedSize.value = b.dataset.size
+        })
+      )
+    
+      lengthBtns.forEach((b) =>
+        b.addEventListener('click', () => {
+          lengthBtns.forEach((x) => x.classList.remove('active'))
+          b.classList.add('active')
+          selectedLength.value = b.dataset.length
+        })
+      )
+    
+      const qtyMinus = document.getElementById('qtyMinus')
+      const qtyPlus = document.getElementById('qtyPlus')
+      const qtyDisplay = document.getElementById('qtyDisplay')
+      const qtyInput = document.getElementById('quantityInput')
+    
+      qtyMinus.addEventListener('click', () => {
+        let v = parseInt(qtyDisplay.value || '1')
+        if (v > 1) v--
+        qtyDisplay.value = v
+        qtyInput.value = v
+      })
+      qtyPlus.addEventListener('click', () => {
+        let v = parseInt(qtyDisplay.value || '1')
+        v++
+        qtyDisplay.value = v
+        qtyInput.value = v
+      })
+    
+      const wishlistBtn = document.getElementById('wishlistBtn')
+      if (wishlistBtn) {
+        wishlistBtn.addEventListener('click', function (e) {
+          e.preventDefault()
+          const pid = this.dataset.productId
+    
+          function getCookie(name) {
+            const value = `; ${document.cookie}`
+            const parts = value.split(`; ${name}=`)
+            if (parts.length === 2) return parts.pop().split(';').shift()
+          }
+          const csrftoken = getCookie('csrftoken')
+    
+          fetch("{% url 'toggle_wishlist' product.id %}", {
+            method: 'POST',
+            headers: {
+              'X-CSRFToken': csrftoken,
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({ product_id: pid })
+          })
+            .then((r) => r.json())
+            .then((data) => {
+              const heart = wishlistBtn.querySelector('.heart')
+              if (data.status === 'added') heart.classList.add('active')
+              else heart.classList.remove('active')
+            })
+            .catch((err) => {
+              console.error(err)
+              window.location.href = "{% url 'login_email' %}?next={{ request.path }}"
+            })
+        })
+      }
+    
+      const recentList = document.querySelector('.recent-list')
+      const recentItems = document.querySelectorAll('.recent-item')
+      const recentPrev = document.querySelector('.recent-prev')
+      const recentNext = document.querySelector('.recent-next')
+    
+      if (recentList && recentItems.length > 0) {
+        let currentRecent = 0
+        const visible = 4
+        const itemWidth = recentItems[0].offsetWidth + 20
+    
+        function updateRecent() {
+          recentList.style.transform = `translateX(${-currentRecent * itemWidth}px)`
+        }
+    
+        recentNext.addEventListener('click', () => {
+          if (currentRecent < recentItems.length - visible) {
+            currentRecent++
+            updateRecent()
+          }
+        })
+    
+        recentPrev.addEventListener('click', () => {
+          if (currentRecent > 0) {
+            currentRecent--
+            updateRecent()
+          }
+        })
+      }
+    })()
+  </script>
+{% endblock %}

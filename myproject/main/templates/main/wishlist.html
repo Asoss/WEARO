@@ -1,435 +1,420 @@
-{% extends "main/base.html" %}
+{% extends 'main/base.html' %}
 {% load static %}
 
 {% block content %}
-<div class="wishlist-container">
-        <!-- Заголовок -->
-        <div class="wishlist-header">
-            <h1>Мій список вподобань</h1>
-            <div id="item-counter">{{ products|length }} товарів</div>
-        </div>
-
-        <!-- Панель управління -->
-        <div class="wishlist-panel">
-            <label class="select-all">
-                <input type="checkbox" id="select-all">
-                Вибрати все
-            </label>
-            <span class="divider">|</span>
-            <button id="move-to-cart" disabled class="panel-btn">Перемістити в кошик</button>
-            <span class="divider">|</span>
-            <button id="delete-selected" disabled class="panel-btn">Видалити</button>
-        </div>
-
-        <!-- Сітка товарів -->
-        <div id="products-grid" class="grid">
-            {% for product in products %}
-            <div class="product-card" data-product-id="{{ product.id }}">
-                <input type="checkbox" class="product-select">
-
-                <!-- Іконка видалення (твоя картинка) -->
-                <img src="{% static 'icons/delete.png' %}" 
-                     class="wishlist-toggle" 
-                     data-product-id="{{ product.id }}">
-
-                <a href="{% url 'product_detail' product.pk %}">
-                    {% with product.images.first as first_image %}
-                    {% if first_image %}
-                    <img src="{{ first_image.image.url }}" alt="{{ product.name }}" class="product-img">
-                    {% else %}
-                    <div class="no-img">Немає фото</div>
-                    {% endif %}
-                    {% endwith %}
-                </a>
-
-                <div class="product-info">
-                    <div class="product-name-price">
-                        <h3>{{ product.name }}</h3>
-                        {% if product.old_price %}
-                        <p>
-                            <span class="old-price">{{ product.old_price }} грн</span>
-                            <span class="price">{{ product.price }} грн</span>
-                        </p>
-                        {% else %}
-                        <p class="price">{{ product.price }} грн</p>
-                        {% endif %}
-                    </div>
-
-                    <div class="product-pattern">
-                        <p>Візерунок: Відсутній</p>
-                    </div>
-
-                    <p>Розмір: {{ product.size }}</p>
-                </div>
-
-                <button class="btn btn-black move-to-cart-btn" data-product-id="{{ product.id }}">
-                    Перемістити в кошик
-                </button>
-            </div>
-            {% empty %}
-            <div class="wishlist-empty">
-                <div>❤️</div>
-                <p>Ваш список бажань порожній</p>
-            </div>
-            {% endfor %}
-        </div>
+  <div class="wishlist-container">
+    <!-- Заголовок -->
+    <div class="wishlist-header">
+      <h1>Мій список вподобань</h1>
+      <div id="item-counter">{{ products|length }} товарів</div>
     </div>
 
-   <style>
-        /* Контейнер */
-        .wishlist-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+    <!-- Панель управління -->
+    <div class="wishlist-panel">
+      <label class="select-all"><input type="checkbox" id="select-all" />Вибрати все</label>
+      <span class="divider">|</span>
+      <button id="move-to-cart" disabled class="panel-btn">Перемістити в кошик</button>
+      <span class="divider">|</span>
+      <button id="delete-selected" disabled class="panel-btn">Видалити</button>
+    </div>
 
-        /* Заголовок */
-        .wishlist-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .wishlist-header h1 {
-            font-size: 20px;
-            font-weight: bold;
-        }
-        #item-counter {
-            font-size: 14px;
-            font-weight: 500;
-            color: #000;
-        }
+    <!-- Сітка товарів -->
+    <div id="products-grid" class="grid">
+      {% for product in products %}
+        <div class="product-card" data-product-id="{{ product.id }}">
+          <input type="checkbox" class="product-select" />
 
-        /* Панель */
-        .wishlist-panel {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-        .select-all {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-        .select-all input {
-            margin-right: 6px;
-            transform: scale(1.1);
-        }
-        .panel-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            color: #000;
-            padding: 0;
-        }
-        .panel-btn:disabled {
-            color: #aaa;
-            cursor: not-allowed;
-        }
-        .divider {
-            color: #aaa;
-        }
+          <!-- Іконка видалення (твоя картинка) -->
+          <img src="{% static 'icons/delete.png' %}" class="wishlist-toggle" data-product-id="{{ product.id }}" />
 
-        /* Сітка */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 20px;
-        }
+          <a href="{% url 'product_detail' product.pk %}">
+            {% with first_image=product.images.first %}
+              {% if first_image %}
+                <img src="{{ first_image.image.url }}" alt="{{ product.name }}" class="product-img" />
+              {% else %}
+                <div class="no-img">Немає фото</div>
+              {% endif %}
+            {% endwith %}
+          </a>
 
-        /* Картка товару */
-        .product-card {
-            position: relative;
-            border-radius: 1px;
-            background: #fff;
-            overflow: hidden;
-            transition: 0.2s ease;
-        }
-        .product-card:hover {
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
+          <div class="product-info">
+            <div class="product-name-price">
+              <h3>{{ product.name }}</h3>
+              {% if product.old_price %}
+                <p>
+                  <span class="old-price">{{ product.old_price }} грн</span>
+                  <span class="price">{{ product.price }} грн</span>
+                </p>
+              {% else %}
+                <p class="price">{{ product.price }} грн</p>
+              {% endif %}
+            </div>
 
-        /* Виділена картка */
-        .product-card.selected {
-            background: #f1f1f1;
-        }
-        .product-card.selected .product-img {
-            filter: none; 
-        }
+            <div class="product-pattern">
+              <p>Візерунок: Відсутній</p>
+            </div>
 
-        /* Чекбокс */
-        .product-select {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            transform: scale(1.2);
-            z-index: 2;
-        }
+            <p>Розмір: {{ product.size }}</p>
+          </div>
 
-        /* Іконка видалення */
-        .wishlist-toggle {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            width: 22px;
-            height: 22px;
-            cursor: pointer;
-            z-index: 2;
-        }
+          <button class="btn btn-black move-to-cart-btn" data-product-id="{{ product.id }}">Перемістити в кошик</button>
+        </div>
+      {% empty %}
+        <div class="wishlist-empty">
+          <div>❤️</div>
+          <p>Ваш список бажань порожній</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
 
-        /* Фото */
-        .product-img {
-            width: 100%;
-            height: 100%%;
-            object-fit: cover;
-        }
-        .no-img {
-            height: 240px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f8f9fa;
-            color: #777;
-        }
-
-        /* Інфо */
-        .product-info {
-            padding: 5px;
-            font-size: 14px;
-        }
-        .product-info h3 {
-            font-size: 16px;
-            margin: 5px 0;
-        }
-        
-        /* Лінія під назвою з ціною */
-        .product-name-price {
-            border-bottom: 1px solid #ccc;
-        }
-        
-        /* Лінія під візерунком */
-        .product-pattern {
-            border-bottom: 1px solid #ccc;
-        }
-        
-        .price {
-            font-weight: bold;
-        }
-        .old-price {
-            text-decoration: line-through;
-            color: #777;
-            margin-right: 6px;
-        }
-
-        /* Кнопки */
-        .btn {
-            width: 100%;
-            padding: 10px;
-            font-size: 14px;
-            cursor: pointer;
-            border: none;
-            transition: 0.2s;
-        }
-        .btn-black {
-            background: #000;
-            color: #fff;
-        }
-        .btn-black:hover {
-            opacity: 0.9;
-        }
-        .btn-red {
-            background: #dc3545;
-            color: #fff;
-        }
-        .btn:disabled {
-            cursor: not-allowed;
-            opacity: 0.5;
-        }
-
-        /* Порожній список */
-        .wishlist-empty {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 60px 20px;
-            font-size: 18px;
-            color: #666;
-        }
-        .wishlist-empty div {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-    </style>
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const selectAllCheckbox = document.getElementById('select-all');
-    const productCheckboxes = document.querySelectorAll('.product-select');
-    const moveToCartBtn = document.getElementById('move-to-cart');
-    const deleteSelectedBtn = document.getElementById('delete-selected');
-    const itemCounter = document.getElementById('item-counter');
-    const wishlistToggles = document.querySelectorAll(".wishlist-toggle");
-
-    function updateCounter() {
-        const totalItems = document.querySelectorAll('.product-card').length;
-        const selectedItems = document.querySelectorAll('.product-select:checked').length;
-        itemCounter.textContent = selectedItems > 0 
-            ? `Вибрано ${selectedItems} з ${totalItems} предметів`
-            : `${totalItems} предметів`;
+  <style>
+    /* Контейнер */
+    .wishlist-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
     }
-
-    function updateButtons() {
-        const hasSelection = document.querySelectorAll('.product-select:checked').length > 0;
-        moveToCartBtn.disabled = !hasSelection;
-        deleteSelectedBtn.disabled = !hasSelection;
+    
+    /* Заголовок */
+    .wishlist-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
     }
+    .wishlist-header h1 {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    #item-counter {
+      font-size: 14px;
+      font-weight: 500;
+      color: #000;
+    }
+    
+    /* Панель */
+    .wishlist-panel {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    .select-all {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .select-all input {
+      margin-right: 6px;
+      transform: scale(1.1);
+    }
+    .panel-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      color: #000;
+      padding: 0;
+    }
+    .panel-btn:disabled {
+      color: #aaa;
+      cursor: not-allowed;
+    }
+    .divider {
+      color: #aaa;
+    }
+    
+    /* Сітка */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    
+    /* Картка товару */
+    .product-card {
+      position: relative;
+      border-radius: 1px;
+      background: #fff;
+      overflow: hidden;
+      transition: 0.2s ease;
+    }
+    .product-card:hover {
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+    
+    /* Виділена картка */
+    .product-card.selected {
+      background: #f1f1f1;
+    }
+    .product-card.selected .product-img {
+      filter: none;
+    }
+    
+    /* Чекбокс */
+    .product-select {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      transform: scale(1.2);
+      z-index: 2;
+    }
+    
+    /* Іконка видалення */
+    .wishlist-toggle {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+      z-index: 2;
+    }
+    
+    /* Фото */
+    .product-img {
+      width: 100%;
+      height: 100%%;
+      object-fit: cover;
+    }
+    .no-img {
+      height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8f9fa;
+      color: #777;
+    }
+    
+    /* Інфо */
+    .product-info {
+      padding: 5px;
+      font-size: 14px;
+    }
+    .product-info h3 {
+      font-size: 16px;
+      margin: 5px 0;
+    }
+    
+    .product-name-price {
+      border-bottom: 1px solid #ccc;
+    }
+    
+    .product-pattern {
+      border-bottom: 1px solid #ccc;
+    }
+    
+    .price {
+      font-weight: bold;
+    }
+    .old-price {
+      text-decoration: line-through;
+      color: #777;
+      margin-right: 6px;
+    }
+    
+    /* Кнопки */
+    .btn {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+      transition: 0.2s;
+    }
+    .btn-black {
+      background: #000;
+      color: #fff;
+    }
+    .btn-black:hover {
+      opacity: 0.9;
+    }
+    .btn-red {
+      background: #dc3545;
+      color: #fff;
+    }
+    .btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+    
+    .wishlist-empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      font-size: 18px;
+      color: #666;
+    }
+    .wishlist-empty div {
+      font-size: 48px;
+      margin-bottom: 15px;
+    }
+  </style>
 
-    selectAllCheckbox.addEventListener('change', function() {
-        const isChecked = this.checked;
-        productCheckboxes.forEach(checkbox => {
-            checkbox.checked = isChecked;
-            checkbox.closest('.product-card').classList.toggle('selected', isChecked);
-        });
-        updateButtons();
-        updateCounter();
-    });
-
-    document.querySelectorAll('.product-card').forEach(card => {
-        card.addEventListener('click', function(e) {
-            if (e.target.closest('.wishlist-toggle') || e.target.closest('.move-to-cart-btn') || e.target.closest('a')) return;
-            const checkbox = this.querySelector('.product-select');
-            checkbox.checked = !checkbox.checked;
-            this.classList.toggle('selected', checkbox.checked);
-            const checkedCount = document.querySelectorAll('.product-select:checked').length;
-            selectAllCheckbox.indeterminate = checkedCount > 0 && checkedCount < productCheckboxes.length;
-            selectAllCheckbox.checked = checkedCount === productCheckboxes.length;
-            updateButtons();
-            updateCounter();
-        });
-    });
-
-    document.querySelectorAll('.move-to-cart-btn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const productId = this.dataset.productId;
-
-        fetch(`/cart/move-to-cart/${productId}/`, {
-            method: "POST",
-            headers: {
-                "X-CSRFToken": getCookie("csrftoken"),
-                "X-Requested-With": "XMLHttpRequest",
-            }
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const selectAllCheckbox = document.getElementById('select-all')
+      const productCheckboxes = document.querySelectorAll('.product-select')
+      const moveToCartBtn = document.getElementById('move-to-cart')
+      const deleteSelectedBtn = document.getElementById('delete-selected')
+      const itemCounter = document.getElementById('item-counter')
+      const wishlistToggles = document.querySelectorAll('.wishlist-toggle')
+    
+      function updateCounter() {
+        const totalItems = document.querySelectorAll('.product-card').length
+        const selectedItems = document.querySelectorAll('.product-select:checked').length
+        itemCounter.textContent = selectedItems > 0 ? `Вибрано ${selectedItems} з ${totalItems} предметів` : `${totalItems} предметів`
+      }
+    
+      function updateButtons() {
+        const hasSelection = document.querySelectorAll('.product-select:checked').length > 0
+        moveToCartBtn.disabled = !hasSelection
+        deleteSelectedBtn.disabled = !hasSelection
+      }
+    
+      selectAllCheckbox.addEventListener('change', function () {
+        const isChecked = this.checked
+        productCheckboxes.forEach((checkbox) => {
+          checkbox.checked = isChecked
+          checkbox.closest('.product-card').classList.toggle('selected', isChecked)
         })
-        .then(r => r.json())
-        .then(data => {
-            if (data.status === "ok") {
-                this.closest(".product-card").remove();
-                updateCounter();
-                updateButtons();
-
+        updateButtons()
+        updateCounter()
+      })
+    
+      document.querySelectorAll('.product-card').forEach((card) => {
+        card.addEventListener('click', function (e) {
+          if (e.target.closest('.wishlist-toggle') || e.target.closest('.move-to-cart-btn') || e.target.closest('a')) return
+          const checkbox = this.querySelector('.product-select')
+          checkbox.checked = !checkbox.checked
+          this.classList.toggle('selected', checkbox.checked)
+          const checkedCount = document.querySelectorAll('.product-select:checked').length
+          selectAllCheckbox.indeterminate = checkedCount > 0 && checkedCount < productCheckboxes.length
+          selectAllCheckbox.checked = checkedCount === productCheckboxes.length
+          updateButtons()
+          updateCounter()
+        })
+      })
+    
+      document.querySelectorAll('.move-to-cart-btn').forEach((btn) => {
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation()
+          const productId = this.dataset.productId
+    
+          fetch(`/cart/move-to-cart/${productId}/`, {
+            method: 'POST',
+            headers: {
+              'X-CSRFToken': getCookie('csrftoken'),
+              'X-Requested-With': 'XMLHttpRequest'
+            }
+          })
+            .then((r) => r.json())
+            .then((data) => {
+              if (data.status === 'ok') {
+                this.closest('.product-card').remove()
+                updateCounter()
+                updateButtons()
+    
                 if (wishlistBadge && data.wishlist_count !== undefined) {
-                    wishlistBadge.textContent = data.wishlist_count;
+                  wishlistBadge.textContent = data.wishlist_count
                 }
-
-                alert("Товар додано в кошик 🛒");
-            }
-        });
-    });
-});
-
-
-    moveToCartBtn.addEventListener('click', function() {
-    const selectedProducts = Array.from(document.querySelectorAll('.product-select:checked'))
-        .map(cb => cb.closest('.product-card').dataset.productId);
-
-    selectedProducts.forEach(productId => {
-        fetch(`/cart/move-to-cart/${productId}/`, {
-            method: "POST",
-            headers: {
-                "X-CSRFToken": getCookie("csrftoken"),
-                "X-Requested-With": "XMLHttpRequest",
-            }
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.status === "ok") {
-                const card = document.querySelector(`.product-card[data-product-id="${productId}"]`);
-                if (card) card.remove();
-                updateCounter();
-                updateButtons();
-            }
-        });
-    });
-});
-
-    deleteSelectedBtn.addEventListener('click', function() {
-    const selectedCheckboxes = document.querySelectorAll('.product-select:checked');
-    if (!selectedCheckboxes.length) return;
-    if (confirm(`Видалити ${selectedCheckboxes.length} товарів?`)) {
-        selectedCheckboxes.forEach(cb => {
-            const card = cb.closest('.product-card');
-            const productId = card.dataset.productId;
-            fetch(`/wishlist/toggle/${productId}/`, {
-                method: "POST",
-                headers: {"X-CSRFToken": getCookie("csrftoken"), "X-Requested-With": "XMLHttpRequest"},
+    
+                alert('Товар додано в кошик 🛒')
+              }
             })
-            .then(r => r.json())
-            .then(data => {
-                if (data.status === "removed") {
-                    card.remove();
-                    updateCounter();
-                    updateButtons();
-                    if (wishlistBadge && data.wishlist_count !== undefined) {
-                        wishlistBadge.textContent = data.wishlist_count;
-                    }
-                }
-            });
-        });
-    }
-});
-
-    wishlistToggles.forEach(btn => {
-    btn.addEventListener("click", function(e) {
-        e.preventDefault();
-        const productId = this.dataset.productId;
-        const card = this.closest(".product-card");
-        fetch(`/wishlist/toggle/${productId}/`, {
-            method: "POST",
-            headers: {"X-CSRFToken": getCookie("csrftoken"), "X-Requested-With": "XMLHttpRequest"},
         })
-        .then(r => r.json())
-        .then(data => {
-            if (data.status === "removed") {
-                card.remove();
-                updateCounter();
-                updateButtons();
+      })
+    
+      moveToCartBtn.addEventListener('click', function () {
+        const selectedProducts = Array.from(document.querySelectorAll('.product-select:checked')).map((cb) => cb.closest('.product-card').dataset.productId)
+    
+        selectedProducts.forEach((productId) => {
+          fetch(`/cart/move-to-cart/${productId}/`, {
+            method: 'POST',
+            headers: {
+              'X-CSRFToken': getCookie('csrftoken'),
+              'X-Requested-With': 'XMLHttpRequest'
             }
-            if (wishlistBadge && data.wishlist_count !== undefined) {
-                wishlistBadge.textContent = data.wishlist_count;
-            }
-        });
-    });
-});
-
-
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== "") {
-            const cookies = document.cookie.split(";");
-            for (let cookie of cookies) {
-                cookie = cookie.trim();
-                if (cookie.startsWith(name + "=")) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
+          })
+            .then((r) => r.json())
+            .then((data) => {
+              if (data.status === 'ok') {
+                const card = document.querySelector(`.product-card[data-product-id="${productId}"]`)
+                if (card) card.remove()
+                updateCounter()
+                updateButtons()
+              }
+            })
+        })
+      })
+    
+      deleteSelectedBtn.addEventListener('click', function () {
+        const selectedCheckboxes = document.querySelectorAll('.product-select:checked')
+        if (!selectedCheckboxes.length) return
+        if (confirm(`Видалити ${selectedCheckboxes.length} товарів?`)) {
+          selectedCheckboxes.forEach((cb) => {
+            const card = cb.closest('.product-card')
+            const productId = card.dataset.productId
+            fetch(`/wishlist/toggle/${productId}/`, {
+              method: 'POST',
+              headers: { 'X-CSRFToken': getCookie('csrftoken'), 'X-Requested-With': 'XMLHttpRequest' }
+            })
+              .then((r) => r.json())
+              .then((data) => {
+                if (data.status === 'removed') {
+                  card.remove()
+                  updateCounter()
+                  updateButtons()
+                  if (wishlistBadge && data.wishlist_count !== undefined) {
+                    wishlistBadge.textContent = data.wishlist_count
+                  }
                 }
-            }
+              })
+          })
         }
-        return cookieValue;
-    }
-
-    updateCounter();
-});
-</script>
+      })
+    
+      wishlistToggles.forEach((btn) => {
+        btn.addEventListener('click', function (e) {
+          e.preventDefault()
+          const productId = this.dataset.productId
+          const card = this.closest('.product-card')
+          fetch(`/wishlist/toggle/${productId}/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': getCookie('csrftoken'), 'X-Requested-With': 'XMLHttpRequest' }
+          })
+            .then((r) => r.json())
+            .then((data) => {
+              if (data.status === 'removed') {
+                card.remove()
+                updateCounter()
+                updateButtons()
+              }
+              if (wishlistBadge && data.wishlist_count !== undefined) {
+                wishlistBadge.textContent = data.wishlist_count
+              }
+            })
+        })
+      })
+    
+      function getCookie(name) {
+        let cookieValue = null
+        if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';')
+          for (let cookie of cookies) {
+            cookie = cookie.trim()
+            if (cookie.startsWith(name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1))
+              break
+            }
+          }
+        }
+        return cookieValue
+      }
+    
+      updateCounter()
+    })
+  </script>
 {% endblock %}

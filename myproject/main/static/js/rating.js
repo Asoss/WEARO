@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-
-    // додаємо базові стилі для зірок
     if (!document.getElementById('rating-display-styles')) {
         const style = document.createElement('style');
         style.id = 'rating-display-styles';
@@ -77,7 +75,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.head.appendChild(style);
     }
 
-    // функція для відображення зірок на основі рейтингу
     function displayStars(container, rating, maxStars = 5) {
         const starsContainer = container.querySelector('.stars-container');
         if (!starsContainer) return;
@@ -101,7 +98,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // функція для форматування тексту рейтингу
     function formatRatingText(count, average) {
         if (count === 0) {
             return 'Поки немає оцінок';
@@ -114,20 +110,17 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // ініціалізуємо всі блоки рейтингу
     document.querySelectorAll(".product-rating").forEach(ratingBlock => {
         const productId = ratingBlock.dataset.productId;
         const averageRating = parseFloat(ratingBlock.dataset.averageRating) || 0;
         const ratingCount = parseInt(ratingBlock.dataset.ratingCount) || 0;
         const rateUrl = ratingBlock.dataset.rateUrl || `/product/${productId}/rate/`;
 
-        // перевіряємо чи є необхідні дані
         if (!productId) {
             console.warn('Відсутній product-id для блоку рейтингу');
             return;
         }
 
-        // створюємо структуру якщо її немає
         if (!ratingBlock.querySelector('.stars-container')) {
             ratingBlock.innerHTML = `
                 <div class="stars-container"></div>
@@ -145,11 +138,10 @@ document.addEventListener("DOMContentLoaded", function () {
             ratingInfo.textContent = formatRatingText(ratingCount, averageRating);
         }
 
-        // додаємо title для доступності
         ratingBlock.title = `Рейтинг: ${averageRating.toFixed(1)} з 5 зірок (${ratingCount} оцінок)`;
     });
 
-    // функція для оновлення рейтингу (може використовуватись при AJAX завантаженні)
+    // функція для оновлення рейтингу 
     window.updateRatingDisplay = function (productId, newAverage, newCount) {
         const ratingBlock = document.querySelector(`[data-product-id="${productId}"]`);
         if (ratingBlock) {
@@ -167,7 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    // функція для ініціалізації нових рейтингових блоків (для AJAX контенту)
+    // функція для ініціалізації нових рейтингових блоків 
     window.initializeRatingDisplay = function (container = document) {
         container.querySelectorAll(".product-rating:not([data-initialized])").forEach(ratingBlock => {
             ratingBlock.dataset.initialized = "true";
