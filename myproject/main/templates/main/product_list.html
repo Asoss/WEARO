@@ -2,295 +2,271 @@
 {% load static %}
 
 {% block content %}
-{% csrf_token %}
-<link rel="stylesheet" href="{% static 'css/filters.css' %}">
+  {% csrf_token %}
+  <link rel="stylesheet" href="{% static 'css/filters.css' %}" />
 
-<!-- Пошук -->
-<div class="search-bar">
+  <!-- Пошук -->
+  <div class="search-bar">
     <form id="filter-form" method="get" action="{% url 'product_search' %}">
-        <input type="text" id="searchInput" name="q" placeholder="Пошук"
-               value="{{ request.GET.q|default:'' }}">
-        <button type="submit" class="search-icon">
-            <img src="{% static 'icons/search.jpg' %}" alt="Пошук">
-        </button>
+      <input type="text" id="searchInput" name="q" placeholder="Пошук" value="{{ request.GET.q|default:'' }}" />
+      <button type="submit" class="search-icon"><img src="{% static 'icons/search.jpg' %}" alt="Пошук" /></button>
     </form>
-</div>
+  </div>
 
-<!-- Breadcrumb -->
-<div class="breadcrumb">
-    <a href="{% url 'home' %}">Головна</a> \ 
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="{% url 'home' %}">Головна</a> \
     <span>{{ title }}</span>
-</div>
+  </div>
 
-<!-- Заголовок -->
-<h1 class="page-title">{{ title|upper }}</h1>
+  <!-- Заголовок -->
+  <h1 class="page-title">{{ title|upper }}</h1>
 
-<!-- Категорії -->
-<div class="categories">
+  <!-- Категорії -->
+  <div class="categories">
     {% if gender == 0 %}
-        <!-- ЖІНОЧІ -->
-        <div class="category">
-            <a href="{% url 'product_search' %}?q=Джинси&gender=0">
-                <img src="{% static 'category/women/jeans.jpg' %}" alt="Джинси">
-                <p>ДЖИНСИ</p>
-            </a>
-        </div>
-        <div class="category">
-            <a href="{% url 'product_search' %}?q=Штани&gender=0">
-                <img src="{% static 'category/women/pants.jpg' %}" alt="Штани">
-                <p>ШТАНИ</p>
-            </a>
-        </div>
-        <div class="category">
-            <a href="{% url 'product_search' %}?q=Светр або Світшот&gender=0">
-                <img src="{% static 'category/women/sweaters.jpg' %}" alt="Светри та світшоти">
-                <p>СВЕТРИ ТА СВІТШОТИ</p>
-            </a>
-        </div>
-        <div class="category">
-            <a href="{% url 'product_search' %}?q=Топ або Футболка&gender=0">
-                <img src="{% static 'category/women/tops.jpg' %}" alt="Топи та футболки">
-                <p>ТОПИ ТА ФУТБОЛКИ</p>
-            </a>
-        </div>
+      <!-- ЖІНОЧІ -->
+      <div class="category">
+        <a href="{% url 'product_search' %}?q=Джинси&gender=0">
+          <img src="{% static 'category/women/jeans.jpg' %}" alt="Джинси" />
+          <p>ДЖИНСИ</p>
+        </a>
+      </div>
+      <div class="category">
+        <a href="{% url 'product_search' %}?q=Штани&gender=0">
+          <img src="{% static 'category/women/pants.jpg' %}" alt="Штани" />
+          <p>ШТАНИ</p>
+        </a>
+      </div>
+      <div class="category">
+        <a href="{% url 'product_search' %}?q=Светр або Світшот&gender=0">
+          <img src="{% static 'category/women/sweaters.jpg' %}" alt="Светри та світшоти" />
+          <p>СВЕТРИ ТА СВІТШОТИ</p>
+        </a>
+      </div>
+      <div class="category">
+        <a href="{% url 'product_search' %}?q=Топ або Футболка&gender=0">
+          <img src="{% static 'category/women/tops.jpg' %}" alt="Топи та футболки" />
+          <p>ТОПИ ТА ФУТБОЛКИ</p>
+        </a>
+      </div>
     {% elif gender == 1 %}
-        <!-- ЧОЛОВІЧІ -->
-        <div class="category">
-            <a href="{% url 'product_search' %}?q=Джинси&gender=1">
-                <img src="{% static 'category/men/jeans.jpg' %}" alt="Джинси">
-                <p>ДЖИНСИ</p>
-            </a>
-        </div>
-        <div class="category">
-            <a href="{% url 'product_search' %}?q=Штани&gender=1">
-                <img src="{% static 'category/men/pants.jpg' %}" alt="Штани">
-                <p>ШТАНИ</p>
-            </a>
-        </div>
-        <div class="category">
-            <a href="{% url 'product_search' %}?q=Светр або Світшот&gender=1">
-                <img src="{% static 'category/men/sweaters.jpg' %}" alt="Светри та світшоти">
-                <p>СВЕТРИ ТА СВІТШОТИ</p>
-            </a>
-        </div>
-        <div class="category">
-            <a href="{% url 'product_search' %}?q=Футболка&gender=1">
-                <img src="{% static 'category/men/tshirts.jpg' %}" alt="Футболки">
-                <p>ФУТБОЛКИ</p>
-            </a>
-        </div>
+      <!-- ЧОЛОВІЧІ -->
+      <div class="category">
+        <a href="{% url 'product_search' %}?q=Джинси&gender=1">
+          <img src="{% static 'category/men/jeans.jpg' %}" alt="Джинси" />
+          <p>ДЖИНСИ</p>
+        </a>
+      </div>
+      <div class="category">
+        <a href="{% url 'product_search' %}?q=Штани&gender=1">
+          <img src="{% static 'category/men/pants.jpg' %}" alt="Штани" />
+          <p>ШТАНИ</p>
+        </a>
+      </div>
+      <div class="category">
+        <a href="{% url 'product_search' %}?q=Светр або Світшот&gender=1">
+          <img src="{% static 'category/men/sweaters.jpg' %}" alt="Светри та світшоти" />
+          <p>СВЕТРИ ТА СВІТШОТИ</p>
+        </a>
+      </div>
+      <div class="category">
+        <a href="{% url 'product_search' %}?q=Футболка&gender=1">
+          <img src="{% static 'category/men/tshirts.jpg' %}" alt="Футболки" />
+          <p>ФУТБОЛКИ</p>
+        </a>
+      </div>
     {% endif %}
-</div>
+  </div>
 
-<!-- Основний контейнер з фільтрами та товарами -->
-<div class="page-container">
+  <!-- Основний контейнер з фільтрами та товарами -->
+  <div class="page-container">
     <!-- ФІЛЬТРИ -->
     <div class="filters-container">
-        <div class="filters-header">
-            <img src="{% static 'icons/filter.jpg' %}" alt="Filter" />
-            Фільтри
-        </div>
+      <div class="filters-header">
+        <img src="{% static 'icons/filter.jpg' %}" alt="Filter" />
+        Фільтри
+      </div>
 
-        <!-- Ціна -->
-        <div class="filter-block">
-            <div class="filter-header">
-                <span>Ціна</span>
-                <button class="toggle-btn">+</button>
-            </div>
-            <div class="filter-content" style="display: none;">
-                <div class="price-range">
-                    <input type="range" id="priceSliderMin" min="0" max="10000" value="0" class="price-slider" />
-                    <input type="range" id="priceSliderMax" min="0" max="10000" value="10000" class="price-slider" />
-                    <div class="price-values">
-                        Від<span id="priceMin">500</span> до <span id="priceMax">10000</span>
-                    </div>
-                </div>
-            </div>
+      <!-- Ціна -->
+      <div class="filter-block">
+        <div class="filter-header">
+          <span>Ціна</span>
+          <button class="toggle-btn">+</button>
         </div>
+        <div class="filter-content" style="display: none;">
+          <div class="price-range">
+            <input type="range" id="priceSliderMin" min="0" max="10000" value="0" class="price-slider" />
+            <input type="range" id="priceSliderMax" min="0" max="10000" value="10000" class="price-slider" />
+            <div class="price-values">
+              Від<span id="priceMin">500</span> до <span id="priceMax">10000</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        <!-- Розмір -->
-        <div class="filter-block">
-            <div class="filter-header">
-                <span>Розмір</span>
-                <button class="toggle-btn">+</button>
-            </div>
-            <div class="filter-content" style="display: none;">
-                <div class="size-grid">
-                    <div class="size-btn">36</div>
-                    <div class="size-btn">37</div>
-                    <div class="size-btn">38</div>
-                    <div class="size-btn">39</div>
-                    <div class="size-btn">40</div>
-                    <div class="size-btn">41</div>
-                    <div class="size-btn">42</div>
-                    <div class="size-btn">43</div>
-                    <div class="size-btn">44</div>
-                    <div class="size-btn">45</div>
-                    <div class="size-btn">46</div>
-                    <div class="size-btn">47</div>
-                    <div class="size-btn">48</div>
-                    <div class="size-btn">49</div>
-                </div>
-                <div style="margin-top: 15px;">
-                    <strong style="font-size: 12px; color: #000;">Довжина</strong>
-                    <div class="size-grid" style="margin-top: 5px;">
-                        <div class="size-btn">29</div>
-                        <div class="size-btn">30</div>
-                        <div class="size-btn">31</div>
-                        <div class="size-btn">32</div>
-                        <div class="size-btn">33</div>
-                        <div class="size-btn">34</div>
-                    </div>
-                </div>
-            </div>
+      <!-- Розмір -->
+      <div class="filter-block">
+        <div class="filter-header">
+          <span>Розмір</span>
+          <button class="toggle-btn">+</button>
         </div>
+        <div class="filter-content" style="display: none;">
+          <div class="size-grid">
+            <div class="size-btn" data-size="36">36</div>
+            <div class="size-btn" data-size="37">37</div>
+            <div class="size-btn" data-size="38">38</div>
+            <div class="size-btn" data-size="39">39</div>
+            <div class="size-btn" data-size="40">40</div>
+            <div class="size-btn" data-size="41">41</div>
+            <div class="size-btn" data-size="42">42</div>
+            <div class="size-btn" data-size="43">43</div>
+            <div class="size-btn" data-size="44">44</div>
+            <div class="size-btn" data-size="45">45</div>
+            <div class="size-btn" data-size="46">46</div>
+            <div class="size-btn" data-size="47">47</div>
+            <div class="size-btn" data-size="48">48</div>
+            <div class="size-btn" data-size="49">49</div>
+          </div>
 
-        <!-- Сповіщення про наявність товару -->
-        <div class="filter-block">
-            <div class="filter-header">
-                <span>Сповіщення про наявність товару</span>
-                <button class="toggle-btn">+</button>
+          <div style="margin-top: 15px;">
+            <strong style="font-size: 12px; color: #000;">Довжина</strong>
+            <div class="size-grid" style="margin-top: 5px;">
+              <div class="size-btn" data-length="29">29</div>
+              <div class="size-btn" data-length="30">30</div>
+              <div class="size-btn" data-length="31">31</div>
+              <div class="size-btn" data-length="32">32</div>
+              <div class="size-btn" data-length="33">33</div>
+              <div class="size-btn" data-length="34">34</div>
             </div>
-            <div class="filter-content" style="display: none;">
-                <label><input type="checkbox" />Розпродажені прямий (2)</label>
-                <label><input type="checkbox" />Вільний прямий (3)</label>
-                <label><input type="checkbox" />Розслаблена прилич (45)</label>
-                <label><input type="checkbox"/>Вільний прямий (1)</label>
-                <label><input type="checkbox" />Мішковина (1)</label>
-                <label><input type="checkbox" />Прямий (1)</label>
-                <label><input type="checkbox" />Вільний (1)</label>
-            </div>
+          </div>
         </div>
+      </div>
 
-        <!-- Колір -->
-        <div class="filter-block">
-            <div class="filter-header">
-                <span>Колір</span>
-                <button class="toggle-btn">+</button>
-            </div>
-            <div class="filter-content" style="display: none;">
-                <label><input type="checkbox" />Чорний (2)</label>
-                <label><input type="checkbox" />Сірий (3)</label>
-                <label><input type="checkbox" />Блакитний (45)</label>
-                <label><input type="checkbox" />Рожевий (1)</label>
-                <label><input type="checkbox" />Фіолетовий (1)</label>
-                <label><input type="checkbox" />Червоний (1)</label>
-                <label><input type="checkbox" />Жовтий (1)</label>
-                <label><input type="checkbox" />Зелений (1)</label>
-                <label><input type="checkbox" />Бежавий (1)</label>
-                <label><input type="checkbox" />Білий (1)</label>
-                <label><input type="checkbox" />Смарагдовий (1)</label>
-                <label><input type="checkbox" />Червоно вишневий (1)</label>
-                <button type="button" class="collapse-btn">Згорнути</button>
-            </div>
+      <!-- Загальний вид товару -->
+      <div class="filter-block">
+        <div class="filter-header">
+          <span>Загальний вид товару</span>
+          <button class="toggle-btn">+</button>
         </div>
+        <div class="filter-content" style="display: none;">
+          <label><input type="checkbox" value="Розпродажені прямий" />Розпродажені прямий (<span class="count" data-type="Розпродажені прямий">0</span>)</label>
+          <label><input type="checkbox" value="Вільний прямий" />Вільний прямий (<span class="count" data-type="Вільний прямий">0</span>)</label>
+          <label><input type="checkbox" value="Розслаблена прилич" />Розслаблена прилич (<span class="count" data-type="Розслаблена прилич">0</span>)</label>
+          <label><input type="checkbox" value="Мішковина" />Мішковина (<span class="count" data-type="Мішковина">0</span>)</label>
+          <label><input type="checkbox" value="Прямий" />Прямий (<span class="count" data-type="Прямий">0</span>)</label>
+          <label><input type="checkbox" value="Вільний" />Вільний (<span class="count" data-type="Вільний">0</span>)</label>
+        </div>
+      </div>
 
-        <!-- Розтяжність -->
-        <div class="filter-block">
-            <div class="filter-header">
-                <span>Розтяжність</span>
-                <button class="toggle-btn">+</button>
-            </div>
-            <div class="filter-content" style="display: none;">
-                <label><input type="checkbox" />Висока (12)</label>
-                <label><input type="checkbox" />Середня (8)</label>
-                <label><input type="checkbox" />Низька (5)</label>
-                <label><input type="checkbox" />Без розтяжності (3)</label>
-                <button type="button" class="collapse-btn">Згорнути</button>
-            </div>
+      <!-- Колір -->
+      <div class="filter-block">
+        <div class="filter-header">
+          <span>Колір</span>
+          <button class="toggle-btn">+</button>
         </div>
+        <div class="filter-content" style="display: none;">
+          <label><input type="checkbox" />Чорний (2)</label>
+          <label><input type="checkbox" />Сірий (3)</label>
+          <label><input type="checkbox" />Блакитний (45)</label>
+          <label><input type="checkbox" />Рожевий (1)</label>
+          <label><input type="checkbox" />Фіолетовий (1)</label>
+          <label><input type="checkbox" />Червоний (1)</label>
+          <label><input type="checkbox" />Жовтий (1)</label>
+          <label><input type="checkbox" />Зелений (1)</label>
+          <label><input type="checkbox" />Бежавий (1)</label>
+          <label><input type="checkbox" />Білий (1)</label>
+          <label><input type="checkbox" />Смарагдовий (1)</label>
+          <label><input type="checkbox" />Червоно вишневий (1)</label>
+          <button type="button" class="collapse-btn">Згорнути</button>
+        </div>
+      </div>
 
-        <!-- Матеріал -->
-        <div class="filter-block">
-            <div class="filter-header">
-                <span>Матеріал</span>
-                <button class="toggle-btn">+</button>
-            </div>
-            <div class="filter-content" style="display: none;">
-                <label><input type="checkbox" />Бавовна (25)</label>
-                <label><input type="checkbox" />Джинс (15)</label>
-                <label><input type="checkbox" />Поліестер (10)</label>
-                <label><input type="checkbox" />Еластан (8)</label>
-                <label><input type="checkbox" />Льон (6)</label>
-                <label><input type="checkbox" />Віскоза (4)</label>
-                <button type="button" class="collapse-btn">Згорнути</button>
-            </div>
+      <!-- Розтяжність -->
+      <div class="filter-block">
+        <div class="filter-header">
+          <span>Розтяжність</span>
+          <button class="toggle-btn">+</button>
         </div>
+        <div class="filter-content" style="display: none;">
+          <label><input type="checkbox" value="Висока" />Висока (0)</label>
+          <label><input type="checkbox" value="Середня" />Середня (0)</label>
+          <label><input type="checkbox" value="Низька" />Низька (0)</label>
+        </div>
+      </div>
+
+      <!-- Матеріал -->
+      <div class="filter-block">
+        <div class="filter-header">
+          <span>Матеріал</span>
+          <button class="toggle-btn">+</button>
+        </div>
+        <div class="filter-content" style="display: none;">
+          <label><input type="checkbox" />Бавовна (25)</label>
+          <label><input type="checkbox" />Джинс (15)</label>
+          <label><input type="checkbox" />Поліестер (10)</label>
+          <label><input type="checkbox" />Еластан (8)</label>
+          <label><input type="checkbox" />Льон (6)</label>
+          <label><input type="checkbox" />Віскоза (4)</label>
+          <button type="button" class="collapse-btn">Згорнути</button>
+        </div>
+      </div>
     </div>
     <!-- КІНЕЦЬ ФІЛЬТРІВ -->
 
-<div class="main-content">
-    <div class="products-grid">
+    <div class="main-content">
+      <div class="products-grid">
         {% for product in products %}
-        <div class="product-item"
-             data-price="{{ product.price }}"
-             data-size="{{ product.size|default:'' }}"
-             data-color="{{ product.color|default:'' }}"
-             data-material="{{ product.material|default:'' }}">
-
+          <div class="product-item" data-price="{{ product.final_price }}" data-color="{{ product.color.name|default:'' }}" data-material="Джинс" data-clothing-style="{{ product.get_clothing_style_display }}" data-stretchiness="{{ product.get_stretchiness_display }}">
             <div class="product-image-container">
-                <!-- Wishlist heart -->
-                {% if user.is_authenticated %}
-                    {% if product.id in wishlist_products %}
-                        <img src="{% static 'icons/heart_filled.png' %}" 
-                             data-filled="{% static 'icons/heart_filled.png' %}" 
-                             data-empty="{% static 'icons/heart.png' %}" 
-                             class="wishlist-heart" 
-                             data-product-id="{{ product.id }}" />
-                    {% else %}
-                        <img src="{% static 'icons/heart.png' %}" 
-                             data-filled="{% static 'icons/heart_filled.png' %}" 
-                             data-empty="{% static 'icons/heart.png' %}" 
-                             class="wishlist-heart" 
-                             data-product-id="{{ product.id }}" />
-                    {% endif %}
+              <!-- Wishlist heart -->
+              {% if user.is_authenticated %}
+                {% if product.id in wishlist_products %}
+                  <img src="{% static 'icons/heart_filled.png' %}" data-filled="{% static 'icons/heart_filled.png' %}" data-empty="{% static 'icons/heart.png' %}" class="wishlist-heart" data-product-id="{{ product.id }}" />
                 {% else %}
-                    <a href="{% url 'login_email' %}">
-                        <img src="{% static 'icons/heart.png' %}" class="wishlist-heart-login" />
-                    </a>
+                  <img src="{% static 'icons/heart.png' %}" data-filled="{% static 'icons/heart_filled.png' %}" data-empty="{% static 'icons/heart.png' %}" class="wishlist-heart" data-product-id="{{ product.id }}" />
                 {% endif %}
+              {% else %}
+                <a href="{% url 'login_email' %}"><img src="{% static 'icons/heart.png' %}" class="wishlist-heart-login" /></a>
+              {% endif %}
 
-                <!-- Product image -->
-                {% with first_image=product.images.first %}
-                    {% if first_image %}
-                        <img src="{{ first_image.image.url }}" alt="{{ product.name }}" class="product-image" />
-                    {% else %}
-                        <div class="no-image">Немає фото</div>
-                    {% endif %}
-                {% endwith %}
+              <!-- Product image -->
+              {% with first_image=product.images.first %}
+                {% if first_image %}
+                  <img src="{{ first_image.image.url }}" alt="{{ product.name }}" class="product-image" />
+                {% else %}
+                  <div class="no-image">Немає фото</div>
+                {% endif %}
+              {% endwith %}
             </div>
 
-    <div class="product-info">
-        <a href="{% url 'product_detail' product.id %}" class="product-link">
-            <h3 class="product-name">{{ product.name }}</h3>
-        </a>
+            <div class="product-info">
+              <a href="{% url 'product_detail' product.id %}" class="product-link"><h3 class="product-name">{{ product.name }}</h3></a>
 
-                <!-- Рейтинг і відгуки -->
-<div class="product-rating" 
-     data-product-id="{{ product.id }}"
-     data-average-rating="{{ product.average_rating|floatformat:1 }}"
-     data-rating-count="{{ product.rating_count }}">
-    <div class="stars-container"></div>
-    <span class="reviews">({{ product.rating_count }})</span>
-</div>
-                <!-- Ціна -->
-                <div class="product-prices">
-                    {% if product.old_price %}
-                        <span class="old-price">{{ product.old_price }} грн</span>
-                    {% endif %}
-                    <span class="new-price">{{ product.price }} грн</span>
-                </div>
+              <!-- Рейтинг і відгуки -->
+              <div class="product-rating" data-product-id="{{ product.id }}" data-average-rating="{{ product.average_rating|floatformat:1 }}" data-rating-count="{{ product.rating_count }}">
+                <div class="stars-container"></div>
+                <span class="reviews">({{ product.rating_count }})</span>
+              </div>
+              <!-- Ціна -->
+              <div class="product-prices">
+                {% if product.old_price %}
+                  <span class="old-price">{{ product.old_price }} грн</span>
+                {% endif %}
+                <span class="new-price">{{ product.price }} грн</span>
+              </div>
             </div>
-        </div>
+          </div>
         {% empty %}
-        <div class="no-products">
+          <div class="no-products">
             <p>Немає товарів</p>
-        </div>
+          </div>
         {% endfor %}
+      </div>
     </div>
-</div>
-<script src="{% static 'js/rating.js' %}"></script>
-<script src="{% static 'js/search.js' %}"></script>
-<script src="{% static 'js/filters.js' %}"></script>
-<script src="{% static 'js/wishlist.js' %}"></script>
+  </div>
+  <script src="{% static 'js/rating.js' %}"></script>
+  <script src="{% static 'js/search.js' %}"></script>
+  <script src="{% static 'js/filters.js' %}"></script>
+  <script src="{% static 'js/wishlist.js' %}"></script>
 {% endblock %}

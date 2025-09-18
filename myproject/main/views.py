@@ -23,6 +23,29 @@ from django.db.models import Q
 
 from main import models
 
+def products_api(request):
+    products = Product.objects.select_related('color').values(
+        'id', 'name', 'price', 'color__name', 'sizes', 'lengths',
+        'clothing_style', 'stretchiness'
+    )
+    
+    products_list = []
+    for product in products:
+        products_list.append({
+            'id': product['id'],
+            'name': product['name'],
+            'price': float(product['price']),
+            'final_price': float(product['price']),  # бо метода нема
+            'color': product['color__name'] or 'Без кольору',
+            'sizes': product['sizes'],
+            'lengths': product['lengths'],
+            'clothing_style': dict(Product.CLOTHING_STYLE_CHOICES).get(product['clothing_style'], product['clothing_style']),
+            'stretchiness': dict(Product.STRETCH_CHOICES).get(product['stretchiness'], product['stretchiness']),
+            'material': 'Джинс'
+        })
+    
+    return JsonResponse(products_list, safe=False)
+ 
 
 def home(request):
     products = Product.objects.filter(stock__gt=0)
