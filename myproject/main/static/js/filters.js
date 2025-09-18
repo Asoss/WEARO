@@ -1,4 +1,3 @@
-
 class ProductFilters {
     constructor() {
         this.allProducts = [];
@@ -181,8 +180,6 @@ class ProductFilters {
                 }
             });
         }
-
-
 
         // Матеріали
         const materialBlock = document.querySelector('.filter-block:nth-child(7)');

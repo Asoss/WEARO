@@ -1,13 +1,13 @@
 function showOverlay() {
     document.getElementById('searchOverlay').style.display = 'block';
-    // document.getElementById('recentSearches').style.display = 'block'; // 🔒 вимкнено
-    // updateRecentList(); // 🔒 вимкнено
+    // document.getElementById('recentSearches').style.display = 'block'; // вимкнено
+    // updateRecentList(); // вимкнено
     toggleIcons();
 }
 
 function hideOverlay() {
     document.getElementById('searchOverlay').style.display = 'none';
-    // document.getElementById('recentSearches').style.display = 'none'; // 🔒 вимкнено
+    // document.getElementById('recentSearches').style.display = 'none'; // вимкнено
 }
 
 function clearSearch() {
@@ -16,7 +16,7 @@ function clearSearch() {
     toggleIcons();
 }
 
-/* 🔒 saveSearchTerm повністю закоментований
+/* saveSearchTerm повністю закоментований
 function saveSearchTerm() {
     const input = document.getElementById('searchInput');
     const value = input.value.trim();
@@ -31,7 +31,7 @@ function saveSearchTerm() {
 }
 */
 
-/* 🔒 updateRecentList закоментований
+/* updateRecentList закоментований
 function updateRecentList() {
     const list = document.getElementById('searchList');
     list.innerHTML = '';
@@ -50,7 +50,7 @@ function updateRecentList() {
 }
 */
 
-/* 🔒 clearRecentSearches закоментований
+/* clearRecentSearches закоментований
 function clearRecentSearches() {
     localStorage.removeItem('recentSearches');
     updateRecentList();
@@ -59,14 +59,14 @@ function clearRecentSearches() {
 
 function toggleIcons() {
     const input = document.getElementById('searchInput');
-    // const clearBtn = document.querySelector('.clear-btn'); // 🔒 прибрав
+    // const clearBtn = document.querySelector('.clear-btn'); // прибрав
     const searchIcon = document.querySelector('.search-icon');
 
     if (input.value.trim()) {
-        // clearBtn.style.display = 'block'; // 🔒 вимкнено
+        // clearBtn.style.display = 'block'; // вимкнено
         searchIcon.style.backgroundColor = '#0077cc';
     } else {
-        // clearBtn.style.display = 'none'; // 🔒 вимкнено
+        // clearBtn.style.display = 'none'; // вимкнено
         searchIcon.style.backgroundColor = 'white';
     }
 }
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
         input.addEventListener('input', toggleIcons);
     }
 
-    // робимо нечутливим до регістру (автоматично переводимо в lowerCase)
+    // робимо нечутливим до регістру
     const form = document.getElementById('filter-form');
     if (form) {
         form.addEventListener('submit', (e) => {

@@ -128,6 +128,7 @@ def my_returns(request):
 
 def need_help(request):
     return render(request, 'main/need_help.html')
+
 @login_required
 def my_details(request):
     user = request.user
@@ -140,7 +141,7 @@ def my_details(request):
         if user_form.is_valid() and details_form.is_valid():
             user_form.save()
             details_form.save()
-            return redirect("my_details")  # після збереження перезавантажуємо
+            return redirect("my_details")
     else:
         user_form = UserForm(instance=user)
         details_form = UserDetailsForm(instance=details)
@@ -190,19 +191,20 @@ def register(request):
 
 def email_step(request):
     error = None
-    next_url = request.GET.get("next", "login_password")
+    next_url = request.GET.get("next", "home")
 
     if request.method == "POST":
         email = request.POST.get("email").strip().lower()
         request.session["login_email"] = email
-
+        request.session["next_url"] = next_url  
         try:
             User.objects.get(email=email)
-            return redirect(next_url)
+            return redirect("login_password")
         except User.DoesNotExist:
             error = "Упс! Невірна адреса електронної пошти"
 
     return render(request, "main/login_email.html", {"error": error})
+
 
 def password_step(request):
     email = request.session.get("login_email")
@@ -218,15 +220,15 @@ def password_step(request):
             auth_user = authenticate(request, username=user.username, password=password)
             if auth_user:
                 login(request, auth_user)
-                request.session.pop("login_email", None) 
-                return redirect("home")
+                request.session.pop("login_email", None)
+                next_url = request.session.pop("next_url", "home")
+                return redirect(next_url)  
             else:
                 error = "Невірний пароль"
         except User.DoesNotExist:
             return redirect("login_email")
 
     return render(request, "main/login_password.html", {"error": error, "email": email})
-
 
 
 def password_reset_request(request):

@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 .then(response => {
                     if (response.status === 403) {
                         alert("Щоб зберігати товари у вподобаних — спершу увійдіть 👤");
-                        window.location.href = "/login/"; // або {% url 'login_email' %}
+                        window.location.href = "/login/";
                         return;
                     }
                     if (!response.ok) {
