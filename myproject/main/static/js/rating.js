@@ -87,10 +87,8 @@ document.addEventListener("DOMContentLoaded", function () {
             star.innerHTML = '★';
 
             if (i <= Math.floor(rating)) {
-                // повна зірка
                 star.classList.add('active');
             } else if (i - rating < 1 && i - rating > 0) {
-                // напівзірка
                 star.classList.add('half');
             }
 
