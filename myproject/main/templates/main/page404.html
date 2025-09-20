@@ -1,127 +1,125 @@
 <!DOCTYPE html>
 <html lang="uk">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>404%</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      background: #fff;
-      font-family: 'Arial', sans-serif;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-    }
-
-    .container {
-      text-align: center;
-      transform: scale(1.5);
-    }
-
-    .box {
-      display: inline-block;
-      border: 4.5px solid black;
-      padding: 20px 80px;
-    }
-
-    .percentage {
-      font-family: Impact, Charcoal, sans-serif;
-      font-size: 150px;
-      padding: 7px;
-      font-weight: normal;
-      color: #000;
-    }
-
-    .text {
-      margin-top: 60px;
-      font-size: 14px;
-      color: rgba(0, 0, 0, 60%);
-      letter-spacing: 0.5px;
-    }
-
-    .button {
-      margin-top: 10px;
-      padding: 7px 10px;
-      font-size: 12px;
-      background-color: rgba(0, 0, 0, 60%);
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 0.7px;
-      text-decoration: none;
-      display: inline-block;
-    }
-
-    .button:hover {
-      background-color: #555;
-    }
-
-    @media (max-width: 768px) {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404%</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      
+      body {
+        margin: 0;
+        background: #fff;
+        font-family: 'Arial', sans-serif;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      
       .container {
-        transform: scale(1);
+        text-align: center;
+        transform: scale(1.5);
       }
-
-      .percentage {
-        font-size: 100px;
-      }
-
+      
       .box {
-        padding: 10px 40px;
+        display: inline-block;
+        border: 4.5px solid black;
+        padding: 20px 80px;
       }
-    }
-  </style>
-</head>
+      
+      .percentage {
+        font-family: Impact, Charcoal, sans-serif;
+        font-size: 150px;
+        padding: 7px;
+        font-weight: normal;
+        color: #000;
+      }
+      
+      .text {
+        margin-top: 60px;
+        font-size: 14px;
+        color: rgba(0, 0, 0, 60%);
+        letter-spacing: 0.5px;
+      }
+      
+      .button {
+        margin-top: 10px;
+        padding: 7px 10px;
+        font-size: 12px;
+        background-color: rgba(0, 0, 0, 60%);
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
+        text-decoration: none;
+        display: inline-block;
+      }
+      
+      .button:hover {
+        background-color: #555;
+      }
+      
+      @media (max-width: 768px) {
+        .container {
+          transform: scale(1);
+        }
+      
+        .percentage {
+          font-size: 100px;
+        }
+      
+        .box {
+          padding: 10px 40px;
+        }
+      }
+    </style>
+  </head>
 
-<body>
-
-  <div class="container">
-    <div class="box">
-      <div class="percentage" id="counter">0%</div>
+  <body>
+    <div class="container">
+      <div class="box">
+        <div class="percentage" id="counter">0%</div>
+      </div>
+      <div class="text">
+        <b>На жаль, цієї сторінки поки не існує</b>
+      </div>
+      <a href="{% url 'home' %}" class="button"><b>Повернутись назад</b></a>
     </div>
-    <div class="text"><b>На жаль, цієї сторінки поки не існує</b></div>
-    <a href="{% url 'home' %}" class="button"><b>Повернутись назад</b></a>
-  </div>
 
-  <script>
-    let counter = 0;
-    const target = 404;
-    const el = document.getElementById('counter');
-
-    function easeOutCubic(t) {
-      return 1 - Math.pow(1 - t, 3);
-    }
-
-    const duration = 1000;
-    const start = performance.now();
-
-    function animate(time) {
-      let progress = (time - start) / duration;
-      if (progress > 1) progress = 1;
-
-      let eased = easeOutCubic(progress);
-      counter = Math.floor(eased * target);
-
-      el.textContent = counter + '%';
-
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        el.textContent = target + '%';
+    <script>
+      let counter = 0
+      const target = 404
+      const el = document.getElementById('counter')
+      
+      function easeOutCubic(t) {
+        return 1 - Math.pow(1 - t, 3)
       }
-    }
-
-    requestAnimationFrame(animate);
-  </script>
-
-</body>
-
+      
+      const duration = 1000
+      const start = performance.now()
+      
+      function animate(time) {
+        let progress = (time - start) / duration
+        if (progress > 1) progress = 1
+      
+        let eased = easeOutCubic(progress)
+        counter = Math.floor(eased * target)
+      
+        el.textContent = counter + '%'
+      
+        if (progress < 1) {
+          requestAnimationFrame(animate)
+        } else {
+          el.textContent = target + '%'
+        }
+      }
+      
+      requestAnimationFrame(animate)
+    </script>
+  </body>
 </html>

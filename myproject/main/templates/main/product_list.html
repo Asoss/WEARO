@@ -230,14 +230,17 @@
                 <a href="{% url 'login_email' %}"><img src="{% static 'icons/heart.png' %}" class="wishlist-heart-login" /></a>
               {% endif %}
 
-              <!-- Product image -->
-              {% with first_image=product.images.first %}
+              <!-- Product images -->
+              {% with first_image=product.images.first second_image=product.images.all|slice:'1:2'|first %}
                 {% if first_image %}
-                  <img src="{{ first_image.image.url }}" alt="{{ product.name }}" class="product-image" />
-                {% else %}
-                  <div class="no-image">Немає фото</div>
+                  <img src="{{ first_image.image.url }}" alt="{{ product.name }}" class="product-image img-front" />
+                {% endif %}
+                {% if second_image %}
+                  <img src="{{ second_image.image.url }}" alt="{{ product.name }}" class="product-image img-back" />
                 {% endif %}
               {% endwith %}
+
+              <button type="submit" class="add-to-cart-btn">Додати в кошик</button>
             </div>
 
             <div class="product-info">
@@ -249,14 +252,12 @@
                 <span class="reviews">({{ product.rating_count }})</span>
               </div>
               <!-- Ціна -->
-              <div class="price-row">
-                {% if product.discount %}
-                <div class="price-old">{{ product.price }} грн</div>
-                <div class="price-new">{{ product.final_price }} грн</div>
-                {% else %}
-                <div>{{ product.price }} грн</div>
+              <div class="product-prices">
+                {% if product.old_price %}
+                  <span class="old-price">{{ product.old_price }} грн</span>
                 {% endif %}
-            </div>
+                <span class="new-price">{{ product.price }} грн</span>
+              </div>
             </div>
           </div>
         {% empty %}
@@ -267,6 +268,52 @@
       </div>
     </div>
   </div>
+
+  <style>
+    .product-image-container {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .product-image {
+      width: 100%;
+      display: block;
+      transition: opacity 0.9s ease;
+    }
+    
+    .img-back {
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+    }
+    
+    .product-image-container:hover .img-front {
+      opacity: 0;
+    }
+    
+    .product-image-container:hover .img-back {
+      opacity: 1;
+    }
+    
+    .add-to-cart-btn {
+      position: absolute;
+      bottom: -50px;
+      left: 0;
+      width: 100%;
+      padding: 12px;
+      background: #3f51b5;
+      color: #fff;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      transition: bottom 0.4s ease;
+    }
+    
+    .product-image-container:hover .add-to-cart-btn {
+      bottom: 0;
+    }
+  </style>
   <script src="{% static 'js/rating.js' %}"></script>
   <script src="{% static 'js/search.js' %}"></script>
   <script src="{% static 'js/filters.js' %}"></script>

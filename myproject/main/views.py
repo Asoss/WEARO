@@ -430,7 +430,7 @@ def rate_product(request):
             product_id = request.POST.get("product_id")
             rating = request.POST.get("rating")
         else:
-            # якщо form-data нема → парсимо JSON
+            # якщо form-data нема  парсимо JSON
             try:
                 data = json.loads(request.body)
                 product_id = data.get("product_id")

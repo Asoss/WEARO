@@ -1,139 +1,560 @@
-{% extends "main/base.html" %}
+{% extends 'main/base.html' %}
 {% load static %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}" />
 
-<h1>Ваш результат за пошуком "{{ query }}"</h1>
+  <style>
+    .search-results {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #ffffff;
+    }
+    
+    .search-header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 40px 0;
+      background: #000000;
+      color: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    }
+    
+    .search-header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 0 0 10px 0;
+    }
+    
+    .search-query {
+      font-size: 1.1rem;
+      opacity: 0.8;
+      font-weight: 300;
+    }
+    
+    .filter-section {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      border: 1px solid #e1e5e9;
+    }
+    
+    .filter-form {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .filter-form select,
+    .filter-form input[type='number'] {
+      padding: 12px 16px;
+      border: 2px solid #e1e5e9;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: #ffffff;
+      color: #2d3748;
+      transition: all 0.3s ease;
+      min-width: 150px;
+    }
+    
+    .filter-form select:focus,
+    .filter-form input[type='number']:focus {
+      outline: none;
+      border-color: #000000;
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .filter-form select:hover,
+    .filter-form input[type='number']:hover {
+      border-color: #cbd5e0;
+    }
+    
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+      margin: 40px 0;
+    }
+    
+    .product-item {
+      background: #ffffff;
+      border-radius: 0;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      position: relative;
+      border: 1px solid #e1e5e9;
+    }
+    
+    .product-item:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+      border-color: #000000;
+    }
+    
+    .product-image-container {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 1;
+      background: #f8f9fa;
+    }
+    
+    .product-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    
+    .product-item:hover .product-image {
+      transform: scale(1.05);
+    }
+    
+    .wishlist-heart,
+    .wishlist-heart-login {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.2s ease;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }
+    
+    .wishlist-heart:hover,
+    .wishlist-heart-login:hover {
+      transform: scale(1.1);
+    }
+    
+    .no-image {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      background: linear-gradient(45deg, #f1f3f4, #e8eaed);
+      color: #6b7280;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    
+    .product-info {
+      padding: 16px;
+    }
+    
+    .product-link {
+      text-decoration: none;
+      color: inherit;
+    }
+    
+    .product-link:hover {
+      text-decoration: none;
+      color: inherit;
+    }
+    
+    .product-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1a202c;
+      margin-bottom: 8px;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .product-rating {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    
+    .stars-container {
+      display: flex;
+      gap: 2px;
+    }
+    
+    .star {
+      width: 16px;
+      height: 16px;
+      background: #e1e5e9;
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      transition: background 0.2s ease;
+    }
+    
+    .star.filled {
+      background: #fbbf24;
+    }
+    
+    .reviews {
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+    
+    .price-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+    }
+    
+    .price-old {
+      text-decoration: line-through;
+      color: #9ca3af;
+      font-size: 0.9rem;
+    }
+    
+    .price-new {
+      color: #dc2626;
+      font-size: 1.1rem;
+    }
+    
+    .progress-section {
+      text-align: center;
+      margin: 40px auto;
+      padding: 30px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      max-width: 600px;
+      border: 1px solid #e1e5e9;
+    }
+    
+    .progress-text {
+      font-size: 1.1rem;
+      color: #4a5568;
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+    
+    .progress-bar-container {
+      background: #e2e8f0;
+      height: 8px;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .progress-bar {
+      background: #000000;
+      height: 100%;
+      border-radius: 12px;
+      transition: width 0.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+    
+    @keyframes shimmer {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(100%);
+      }
+    }
+    
+    .load-more-btn {
+      display: block;
+      margin: 40px auto;
+      padding: 16px 32px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      background: #000000;
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .load-more-btn:hover {
+      background: #2d3748;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    .load-more-btn:active {
+      transform: translateY(-1px);
+    }
+    
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      margin: 40px 0;
+      border: 1px solid #e1e5e9;
+    }
+    
+    .no-results h3 {
+      font-size: 1.5rem;
+      color: #1a202c;
+      margin-bottom: 12px;
+    }
+    
+    .no-results p {
+      color: #4a5568;
+      font-size: 1.1rem;
+    }
+    
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .search-results {
+        padding: 15px;
+      }
+    
+      .search-header h1 {
+        font-size: 2rem;
+      }
+    
+      .filter-form {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    
+      .filter-form select,
+      .filter-form input[type='number'] {
+        min-width: auto;
+        width: 100%;
+      }
+    
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+      }
+    
+      .product-info {
+        padding: 16px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .products-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    
+      .search-header h1 {
+        font-size: 1.7rem;
+      }
+    }
+  </style>
 
-<form id="filter-form" method="GET" action="{% url 'product_search' %}" 
-      style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-    <select name="brand" style="padding: 5px;">
-        <option value="">Всі бренди</option>
-        {% for brand in brands %}
-        <option value="{{ brand }}" {% if request.GET.brand == brand %}selected{% endif %}>
-            {{ brand }}
-        </option>
-        {% endfor %}
-    </select>
-
-    <select name="size" style="padding: 5px;">
-        <option value="">Всі розміри</option>
-        {% for size in sizes %}
-        <option value="{{ size }}" {% if request.GET.size == size %}selected{% endif %}>
-            {{ size }}
-        </option>
-        {% endfor %}
-    </select>
-
-    <input type="number" name="price_min" placeholder="Мін. ціна" style="padding: 5px;"
-           value="{{ request.GET.price_min }}">
-    <input type="number" name="price_max" placeholder="Макс. ціна" style="padding: 5px;"
-           value="{{ request.GET.price_max }}">
-    <input type="hidden" name="q" value="{{ request.GET.q }}">
-</form>
-
-<script>
-    const form = document.getElementById('filter-form');
-    form.querySelectorAll('select').forEach(el => {
-        el.addEventListener('change', () => form.submit());
-    });
-    let timeout;
-    form.querySelectorAll('input[type="number"]').forEach(el => {
-        el.addEventListener('input', () => {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => form.submit(), 500);
-        });
-    });
-</script>
-
-{% if products %}
-<div id="products-container" style="display:flex; flex-wrap:wrap; justify-content:center; margin-top:20px;">
-    {% for product in products %}
-        <div class="product" style="margin:10px; border:1px solid #ddd; padding:10px; width:200px; text-align:center;">
-            {% with product.images.first as first_image %}
-                {% if first_image %}
-                    <img src="{{ first_image.image.url }}" alt="{{ product.name }}" style="max-width:100%;">
-                {% else %}
-                    <p>Немає фото</p>
-                {% endif %}
-            {% endwith %}
-            <h3>{{ product.name }}</h3>
-            <p>{{ product.price }} грн</p>
-            <a href="{% url 'product_detail' product.pk %}">Детальніше</a>
-        </div>
-    {% endfor %}
-</div>
-
-<div style="text-align:center; margin:20px auto; width:60%;">
-    <p id="progress-text">Ви переглянули {{ seen }} з {{ total }} товарів</p>
-    <div style="background:#eee; height:6px; border-radius:4px;">
-        <div id="progress-bar" style="background:#0070f3; width:{{ percent }}%; height:6px; border-radius:4px;"></div>
+  <div class="search-results">
+    <div class="search-header">
+      <h1>Ваш результат за пошуком</h1>
+      <div class="search-query">"{{ query }}"</div>
     </div>
-</div>
 
-<div style="text-align:center; margin:20px;">
-    {% if page_obj.has_next %}
-        <button id="load-more" 
-                data-next-page="{{ page_obj.next_page_number }}" 
-                style="padding:10px 20px; font-size:16px; border:1px solid #000; background:#fff; cursor:pointer;">
-            LOAD MORE
-        </button>
+    {% if products %}
+      <div class="products-grid" id="products-container">
+        {% for product in products %}
+          <div class="product-item" data-price="{{ product.final_price }}" data-color="{{ product.color.name|default:'' }}" data-material="Джинс" data-clothing-style="{{ product.get_clothing_style_display }}" data-stretchiness="{{ product.get_stretchiness_display }}">
+            <div class="product-image-container">
+              <!-- Wishlist heart -->
+              {% if user.is_authenticated %}
+                {% if product.id in wishlist_products %}
+                  <img src="{% static 'icons/heart_filled.png' %}" data-filled="{% static 'icons/heart_filled.png' %}" data-empty="{% static 'icons/heart.png' %}" class="wishlist-heart" data-product-id="{{ product.id }}" />
+                {% else %}
+                  <img src="{% static 'icons/heart.png' %}" data-filled="{% static 'icons/heart_filled.png' %}" data-empty="{% static 'icons/heart.png' %}" class="wishlist-heart" data-product-id="{{ product.id }}" />
+                {% endif %}
+              {% else %}
+                <a href="{% url 'login_email' %}"><img src="{% static 'icons/heart.png' %}" class="wishlist-heart-login" /></a>
+              {% endif %}
+
+              <!-- Product image -->
+              {% with first_image=product.images.first %}
+                {% if first_image %}
+                  <img src="{{ first_image.image.url }}" alt="{{ product.name }}" class="product-image" />
+                {% else %}
+                  <div class="no-image">Немає фото</div>
+                {% endif %}
+              {% endwith %}
+            </div>
+
+            <div class="product-info">
+              <a href="{% url 'product_detail' product.id %}" class="product-link"><h3 class="product-name">{{ product.name }}</h3></a>
+
+              <!-- Рейтинг і відгуки -->
+              <div class="product-rating" data-product-id="{{ product.id }}" data-average-rating="{{ product.average_rating|floatformat:1 }}" data-rating-count="{{ product.rating_count }}">
+                <div class="stars-container"></div>
+                <span class="reviews">({{ product.rating_count }})</span>
+              </div>
+
+              <!-- Ціна -->
+              <div class="price-row">
+                {% if product.discount %}
+                  <div class="price-old">{{ product.price }} грн</div>
+                  <div class="price-new">{{ product.final_price }} грн</div>
+                {% else %}
+                  <div>{{ product.price }} грн</div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="progress-section">
+        <div class="progress-text" id="progress-text">Ви переглянули {{ seen }} з {{ total }} товарів</div>
+        <div class="progress-bar-container">
+          <div class="progress-bar" id="progress-bar" style="width: {{ percent }}%;"></div>
+        </div>
+      </div>
+
+      {% if page_obj.has_next %}
+        <button class="load-more-btn" id="load-more" data-next-page="{{ page_obj.next_page_number }}">LOAD MORE</button>
+      {% endif %}
+    {% else %}
+      <div class="no-results">
+        <h3>Нічого не знайдено</h3>
+        <p>За запитом "{{ request.GET.q }}" товарів не знайдено</p>
+      </div>
     {% endif %}
-</div>
+  </div>
 
-{% else %}
-<p style="text-align:center;">Нічого не знайдено за запитом "{{ request.GET.q }}"</p>
-{% endif %}
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const loadMoreBtn = document.getElementById("load-more");
-    if (!loadMoreBtn) return;
-
-    loadMoreBtn.addEventListener("click", () => {
-        const nextPage = loadMoreBtn.dataset.nextPage;
-        const url = new URL(window.location.href);
-        url.searchParams.set("page", nextPage);
-
+  <script>
+    const form = document.getElementById('filter-form')
+    form.querySelectorAll('select').forEach((el) => {
+      el.addEventListener('change', () => form.submit())
+    })
+    let timeout
+    form.querySelectorAll('input[type="number"]').forEach((el) => {
+      el.addEventListener('input', () => {
+        clearTimeout(timeout)
+        timeout = setTimeout(() => form.submit(), 500)
+      })
+    })
+    
+    // Rating stars initialization
+    document.addEventListener('DOMContentLoaded', function () {
+      const ratingElements = document.querySelectorAll('.product-rating')
+      ratingElements.forEach((element) => {
+        const averageRating = parseFloat(element.dataset.averageRating) || 0
+        const starsContainer = element.querySelector('.stars-container')
+    
+        for (let i = 1; i <= 5; i++) {
+          const star = document.createElement('div')
+          star.className = 'star'
+          if (i <= averageRating) {
+            star.classList.add('filled')
+          }
+          starsContainer.appendChild(star)
+        }
+      })
+    
+      const loadMoreBtn = document.getElementById('load-more')
+      if (!loadMoreBtn) return
+    
+      loadMoreBtn.addEventListener('click', () => {
+        loadMoreBtn.style.opacity = '0.7'
+        loadMoreBtn.textContent = 'Завантаження...'
+    
+        const nextPage = loadMoreBtn.dataset.nextPage
+        const url = new URL(window.location.href)
+        url.searchParams.set('page', nextPage)
+    
         fetch(url)
-            .then(response => response.text())
-            .then(html => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, "text/html");
-
-                // Додаємо нові товари
-                const newProducts = doc.querySelectorAll("#products-container .product");
-                const productsContainer = document.getElementById("products-container");
-                newProducts.forEach(prod => productsContainer.appendChild(prod));
-
-                // Оновлюємо прогрес бар
-                const newProgressBar = doc.querySelector("#progress-bar");
-                const progressBar = document.getElementById("progress-bar");
-                if (newProgressBar && progressBar) {
-                    progressBar.style.width = newProgressBar.style.width;
+          .then((response) => response.text())
+          .then((html) => {
+            const parser = new DOMParser()
+            const doc = parser.parseFromString(html, 'text/html')
+    
+            // Додаємо нові товари з анімацією
+            const newProducts = doc.querySelectorAll('.products-grid .product-item')
+            const productsContainer = document.getElementById('products-container')
+    
+            newProducts.forEach((prod, index) => {
+              prod.style.opacity = '0'
+              prod.style.transform = 'translateY(20px)'
+              productsContainer.appendChild(prod)
+    
+              // Initialize rating stars for new products
+              const ratingElement = prod.querySelector('.product-rating')
+              if (ratingElement) {
+                const averageRating = parseFloat(ratingElement.dataset.averageRating) || 0
+                const starsContainer = ratingElement.querySelector('.stars-container')
+                starsContainer.innerHTML = ''
+    
+                for (let i = 1; i <= 5; i++) {
+                  const star = document.createElement('div')
+                  star.className = 'star'
+                  if (i <= averageRating) {
+                    star.classList.add('filled')
+                  }
+                  starsContainer.appendChild(star)
                 }
-
-                // Оновлюємо текст прогресу
-                const newProgressText = doc.querySelector("#progress-text");
-                const progressText = document.getElementById("progress-text");
-                if (newProgressText && progressText) {
-                    progressText.textContent = newProgressText.textContent;
-                }
-
-                // Перевіряємо чи є наступна сторінка
-                const newBtn = doc.querySelector("#load-more");
-                if (newBtn && newBtn.dataset.nextPage) {
-                    loadMoreBtn.dataset.nextPage = newBtn.dataset.nextPage;
-                } else {
-                    loadMoreBtn.remove();
-                }
+              }
+    
+              setTimeout(() => {
+                prod.style.transition = 'all 0.5s ease'
+                prod.style.opacity = '1'
+                prod.style.transform = 'translateY(0)'
+              }, index * 100)
             })
-            .catch(error => {
-                console.error('Error loading more products:', error);
-            });
-    });
-});
-</script>
-
+    
+            // Оновлюємо прогрес бар
+            const newProgressBar = doc.querySelector('.progress-bar')
+            const progressBar = document.getElementById('progress-bar')
+            if (newProgressBar && progressBar) {
+              progressBar.style.width = newProgressBar.style.width
+            }
+    
+            // Оновлюємо текст прогресу
+            const newProgressText = doc.querySelector('.progress-text')
+            const progressText = document.getElementById('progress-text')
+            if (newProgressText && progressText) {
+              progressText.textContent = newProgressText.textContent
+            }
+    
+            // Перевіряємо чи є наступна сторінка
+            const newBtn = doc.querySelector('.load-more-btn')
+            if (newBtn && newBtn.dataset.nextPage) {
+              loadMoreBtn.dataset.nextPage = newBtn.dataset.nextPage
+              loadMoreBtn.style.opacity = '1'
+              loadMoreBtn.textContent = 'LOAD MORE'
+            } else {
+              loadMoreBtn.style.opacity = '0'
+              loadMoreBtn.style.transform = 'translateY(10px)'
+              setTimeout(() => loadMoreBtn.remove(), 300)
+            }
+          })
+          .catch((error) => {
+            console.error('Error loading more products:', error)
+            loadMoreBtn.style.opacity = '1'
+            loadMoreBtn.textContent = 'Помилка завантаження'
+            setTimeout(() => {
+              loadMoreBtn.textContent = 'LOAD MORE'
+            }, 2000)
+          })
+      })
+    })
+  </script>
+  <script src="{% static 'js/wishlist.js' %}"></script>
+  <script src="{% static 'js/search.js' %}"></script>
+  <script src="{% static 'js/rating.js' %}"></script>
 {% endblock %}
