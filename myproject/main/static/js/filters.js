@@ -9,7 +9,7 @@ class ProductFilters {
             clothing_styles: [],
             colors: [],
             stretchiness: [],
-            materials: []
+            patterns: []
         };
 
         this.init();
@@ -86,10 +86,11 @@ class ProductFilters {
     }
 
     setupSizeFilters() {
+        // Обробка кнопок розмірів
         const sizeBtns = document.querySelectorAll('.size-btn[data-size]');
         sizeBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const size = e.target.getAttribute('data-size');
+                const size = parseInt(e.target.getAttribute('data-size'));
                 e.target.classList.toggle('active');
 
                 if (this.filters.sizes.includes(size)) {
@@ -102,10 +103,11 @@ class ProductFilters {
             });
         });
 
+        // Обробка кнопок довжин
         const lengthBtns = document.querySelectorAll('.size-btn[data-length]');
         lengthBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const length = e.target.getAttribute('data-length');
+                const length = parseInt(e.target.getAttribute('data-length'));
                 e.target.classList.toggle('active');
 
                 if (this.filters.lengths.includes(length)) {
@@ -136,13 +138,28 @@ class ProductFilters {
             });
         }
 
-        // Кольори
+        // КОЛЬОРИ 
+        const colorGrid = document.querySelector('.color-grid');
+        if (colorGrid) {
+            colorGrid.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', (e) => {
+                    const colorName = e.target.value;
+                    if (e.target.checked) {
+                        this.filters.colors.push(colorName);
+                    } else {
+                        this.filters.colors = this.filters.colors.filter(c => c !== colorName);
+                    }
+                    this.applyFilters();
+                });
+            });
+        }
+
+        // Кольори 
         const colorBlock = document.querySelector('.filter-block:nth-child(5)');
         if (colorBlock) {
             colorBlock.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
                 checkbox.addEventListener('change', (e) => {
-                    const label = checkbox.parentNode.textContent;
-                    const colorName = label.split(' (')[0];
+                    const colorName = e.target.value;
                     if (e.target.checked) {
                         this.filters.colors.push(colorName);
                     } else {
@@ -158,40 +175,28 @@ class ProductFilters {
             stretchBlock.addEventListener('change', (e) => {
                 if (e.target.matches('input[type="checkbox"]')) {
                     const value = e.target.value;
-                    console.log('Клікнули на чекбокс розтяжності:', value);
-
-                    if (!this.filters) {
-                        console.error('⚠ this.filters не знайдено!', this);
-                        return;
-                    }
 
                     if (e.target.checked) {
                         this.filters.stretchiness.push(value);
-                        console.log(`✅ Додано: ${value}`, this.filters.stretchiness);
                     } else {
                         this.filters.stretchiness = this.filters.stretchiness.filter(s => s !== value);
-                        console.log(`❌ Видалено: ${value}`, this.filters.stretchiness);
                     }
 
-                    if (typeof this.applyFilters === 'function') {
-                        console.log('Викликаємо applyFilters()');
-                        this.applyFilters();
-                    }
+                    this.applyFilters();
                 }
             });
         }
 
-        // Матеріали
-        const materialBlock = document.querySelector('.filter-block:nth-child(7)');
-        if (materialBlock) {
-            materialBlock.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        // Візерунки 
+        const patternGrid = document.querySelector('.pattern-grid');
+        if (patternGrid) {
+            patternGrid.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
                 checkbox.addEventListener('change', (e) => {
-                    const label = checkbox.parentNode.textContent;
-                    const materialName = label.split(' (')[0];
+                    const patternName = e.target.value;
                     if (e.target.checked) {
-                        this.filters.materials.push(materialName);
+                        this.filters.patterns.push(patternName);
                     } else {
-                        this.filters.materials = this.filters.materials.filter(m => m !== materialName);
+                        this.filters.patterns = this.filters.patterns.filter(p => p !== patternName);
                     }
                     this.applyFilters();
                 });
@@ -220,12 +225,12 @@ class ProductFilters {
                 price: parseFloat(el.getAttribute('data-price')) || 0,
                 size: el.getAttribute('data-size') || '',
                 color: el.getAttribute('data-color') || '',
-                material: el.getAttribute('data-material') || '',
+                pattern: el.getAttribute('data-pattern') || '',
                 name: el.querySelector('.product-name')?.textContent || '',
                 clothing_style: this.extractClothingStyle(el),
                 stretchiness: this.extractStretchiness(el),
-                sizes: this.extractSizes(el),
-                lengths: this.extractLengths(el)
+                sizes: this.extractSizesFromData(el),
+                lengths: this.extractLengthsFromData(el)
             };
             this.allProducts.push(product);
         });
@@ -264,23 +269,80 @@ class ProductFilters {
         return 'Середня';
     }
 
-    extractSizes(element) {
-        return [36, 37, 38, 39, 40, 41, 42, 43, 44, 45];
+    extractSizesFromData(element) {
+        const sizesAttr = element.getAttribute('data-sizes');
+        if (sizesAttr && sizesAttr.trim() !== '') {
+            return sizesAttr.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n));
+        }
+        return [];
     }
 
-    extractLengths(element) {
-        return [29, 30, 31, 32, 33, 34];
+    extractLengthsFromData(element) {
+        const lengthsAttr = element.getAttribute('data-lengths');
+        if (lengthsAttr && lengthsAttr.trim() !== '') {
+            return lengthsAttr.split(',').map(l => parseInt(l.trim())).filter(n => !isNaN(n));
+        }
+
+        return [];
+    }
+    extractSizeFromName(name) {
+        const lowerName = name.toLowerCase();
+        const sizes = [];
+
+        const sizePatterns = [
+            /розмір\s*(\d+)/g,
+            /size\s*(\d+)/g,
+            /(\d{2})\s*розмір/g,
+            /(\d{2})\s*size/g
+        ];
+
+        sizePatterns.forEach(pattern => {
+            let match;
+            while ((match = pattern.exec(lowerName)) !== null) {
+                const size = parseInt(match[1]);
+                if (size >= 36 && size <= 49 && !sizes.includes(size)) {
+                    sizes.push(size);
+                }
+            }
+        });
+
+        return sizes;
+    }
+
+    extractLengthFromName(name) {
+        const lowerName = name.toLowerCase();
+        const lengths = [];
+
+        const lengthPatterns = [
+            /довжина\s*(\d+)/g,
+            /length\s*(\d+)/g,
+            /(\d{2})\s*довжина/g,
+            /(\d{2})\s*length/g,
+            /l(\d{2})/g
+        ];
+
+        lengthPatterns.forEach(pattern => {
+            let match;
+            while ((match = pattern.exec(lowerName)) !== null) {
+                const length = parseInt(match[1]);
+                if (length >= 29 && length <= 34 && !lengths.includes(length)) {
+                    lengths.push(length);
+                }
+            }
+        });
+
+        return lengths;
     }
 
     applyFilters() {
         this.filteredProducts = this.allProducts.filter(product => {
             if (product.price < this.filters.price.min || product.price > this.filters.price.max) return false;
             if (this.filters.sizes.length > 0) {
-                const hasSize = this.filters.sizes.some(size => product.sizes.includes(parseInt(size)));
+                const hasSize = this.filters.sizes.some(size => product.sizes.includes(size));
                 if (!hasSize) return false;
             }
             if (this.filters.lengths.length > 0) {
-                const hasLength = this.filters.lengths.some(length => product.lengths.includes(parseInt(length)));
+                const hasLength = this.filters.lengths.some(length => product.lengths.includes(length));
                 if (!hasLength) return false;
             }
             if (this.filters.clothing_styles.length > 0) {
@@ -293,9 +355,9 @@ class ProductFilters {
             if (this.filters.stretchiness.length > 0) {
                 if (!this.filters.stretchiness.includes(product.stretchiness)) return false;
             }
-            if (this.filters.materials.length > 0) {
-                const productMaterial = product.material || this.extractMaterialFromName(product.name);
-                if (!this.filters.materials.some(material => productMaterial.includes(material))) return false;
+            if (this.filters.patterns.length > 0) {
+                const productPattern = product.pattern || this.extractPatternFromName(product.name);
+                if (!this.filters.patterns.some(pattern => productPattern.includes(pattern))) return false;
             }
             return true;
         });
@@ -319,15 +381,13 @@ class ProductFilters {
         return 'Інший';
     }
 
-    extractMaterialFromName(name) {
+    extractPatternFromName(name) {
         const lowerName = name.toLowerCase();
-        if (lowerName.includes('джинс')) return 'Джинс';
-        if (lowerName.includes('бавовн')) return 'Бавовна';
-        if (lowerName.includes('поліестер')) return 'Поліестер';
-        if (lowerName.includes('еластан')) return 'Еластан';
-        if (lowerName.includes('льон')) return 'Льон';
-        if (lowerName.includes('віскоз')) return 'Віскоза';
-        return 'Змішаний';
+        if (lowerName.includes('смугаст')) return 'Смугастий';
+        if (lowerName.includes('клітин') || lowerName.includes('шахмат')) return 'Клітинка';
+        if (lowerName.includes('квітков') || lowerName.includes('флорал')) return 'Квітковий';
+        if (lowerName.includes('горошок') || lowerName.includes('принт') || lowerName.includes('малюнок')) return 'Інший';
+        return 'Відсутній';
     }
 
     displayProducts() {
@@ -361,20 +421,21 @@ class ProductFilters {
 
         this.updateColorCounts();
         this.updateStretchCounts();
-        this.updateMaterialCounts();
+        this.updatePatternCounts();
         this.updateResultsCount();
     }
 
     updateColorCounts() {
-        const colorLabels = document.querySelectorAll('.filter-block:nth-child(5) label');
-        colorLabels.forEach(label => {
-            const text = label.textContent;
-            const colorName = text.split(' (')[0];
-            const count = this.allProducts.filter(p => {
-                const productColor = p.color || this.extractColorFromName(p.name);
-                return productColor.includes(colorName);
+        const colorSpans = document.querySelectorAll('.color-count[data-color]');
+
+        colorSpans.forEach(span => {
+            const colorName = span.getAttribute('data-color');
+            const count = this.allProducts.filter(product => {
+                const productColor = product.color || this.extractColorFromName(product.name);
+                return productColor.toLowerCase().includes(colorName.toLowerCase()) ||
+                    colorName.toLowerCase().includes(productColor.toLowerCase());
             }).length;
-            label.innerHTML = label.innerHTML.replace(/\(\d+\)/, `(${count})`);
+            span.textContent = count;
         });
     }
 
@@ -388,16 +449,17 @@ class ProductFilters {
         });
     }
 
-    updateMaterialCounts() {
-        const materialLabels = document.querySelectorAll('.filter-block:nth-child(7) label');
-        materialLabels.forEach(label => {
-            const text = label.textContent;
-            const materialName = text.split(' (')[0];
-            const count = this.allProducts.filter(p => {
-                const productMaterial = p.material || this.extractMaterialFromName(p.name);
-                return productMaterial.includes(materialName);
+    updatePatternCounts() {
+        const patternSpans = document.querySelectorAll('.pattern-count[data-pattern]');
+
+        patternSpans.forEach(span => {
+            const patternName = span.getAttribute('data-pattern');
+            const count = this.allProducts.filter(product => {
+                const productPattern = product.pattern || this.extractPatternFromName(product.name);
+                return productPattern.toLowerCase().includes(patternName.toLowerCase()) ||
+                    patternName.toLowerCase().includes(productPattern.toLowerCase());
             }).length;
-            label.innerHTML = label.innerHTML.replace(/\(\d+\)/, `(${count})`);
+            span.textContent = count;
         });
     }
 
@@ -408,7 +470,6 @@ class ProductFilters {
             resultCount.className = 'results-count';
             document.querySelector('.main-content').insertBefore(resultCount, document.querySelector('.products-grid'));
         }
-
     }
 
     clearAllFilters() {
@@ -419,8 +480,9 @@ class ProductFilters {
             clothing_styles: [],
             colors: [],
             stretchiness: [],
-            materials: []
+            patterns: []
         };
+
         document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
         document.querySelectorAll('.size-btn.active').forEach(btn => btn.classList.remove('active'));
 
@@ -429,10 +491,31 @@ class ProductFilters {
         if (minSlider && maxSlider) {
             minSlider.value = minSlider.min;
             maxSlider.value = maxSlider.max;
+            this.filters.price.min = parseInt(minSlider.min);
+            this.filters.price.max = parseInt(maxSlider.max);
             document.getElementById('priceMin').textContent = minSlider.min;
             document.getElementById('priceMax').textContent = maxSlider.max;
         }
+
         this.applyFilters();
+    }
+
+    debugProducts() {
+        console.log('=== НАЛАГОДЖЕННЯ ТОВАРІВ ===');
+        this.allProducts.forEach((product, index) => {
+            console.log(`Товар ${index + 1}:`);
+            console.log(`  Назва: ${product.name}`);
+            console.log(`  Розміри: [${product.sizes.join(', ')}]`);
+            console.log(`  Довжини: [${product.lengths.join(', ')}]`);
+            console.log(`  Ціна: ${product.price}`);
+            console.log('---');
+        });
+
+        const allSizes = [...new Set(this.allProducts.flatMap(p => p.sizes))].sort((a, b) => a - b);
+        const allLengths = [...new Set(this.allProducts.flatMap(p => p.lengths))].sort((a, b) => a - b);
+
+        console.log(`Усі доступні розміри: [${allSizes.join(', ')}]`);
+        console.log(`Усі доступні довжини: [${allLengths.join(', ')}]`);
     }
 }
 
