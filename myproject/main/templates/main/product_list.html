@@ -162,23 +162,24 @@
       <!-- Колір -->
       <div class="filter-block">
         <div class="filter-header">
-          <span>Колір</span>
+          <span>Кольори</span>
           <button class="toggle-btn">+</button>
         </div>
         <div class="filter-content" style="display: none;">
-          <label><input type="checkbox" />Чорний (2)</label>
-          <label><input type="checkbox" />Сірий (3)</label>
-          <label><input type="checkbox" />Блакитний (45)</label>
-          <label><input type="checkbox" />Рожевий (1)</label>
-          <label><input type="checkbox" />Фіолетовий (1)</label>
-          <label><input type="checkbox" />Червоний (1)</label>
-          <label><input type="checkbox" />Жовтий (1)</label>
-          <label><input type="checkbox" />Зелений (1)</label>
-          <label><input type="checkbox" />Бежавий (1)</label>
-          <label><input type="checkbox" />Білий (1)</label>
-          <label><input type="checkbox" />Смарагдовий (1)</label>
-          <label><input type="checkbox" />Червоно вишневий (1)</label>
-          <button type="button" class="collapse-btn">Згорнути</button>
+          <div class="color-grid">
+            <label><input type="checkbox" value="Синій" />Синій (<span class="color-count" data-color="Синій">0</span>)</label>
+            <label><input type="checkbox" value="Кремовий" />Кремовий (<span class="color-count" data-color="Кремовий">0</span>)</label>
+            <label><input type="checkbox" value="Коричневий" />Коричневий (<span class="color-count" data-color="Коричневий">0</span>)</label>
+            <label><input type="checkbox" value="Оранжевий" />Оранжевий (<span class="color-count" data-color="Оранжевий">0</span>)</label>
+            <label><input type="checkbox" value="Червоний" />Червоний (<span class="color-count" data-color="Червоний">0</span>)</label>
+            <label><input type="checkbox" value="Жовтий" />Жовтий (<span class="color-count" data-color="Жовтий">0</span>)</label>
+            <label><input type="checkbox" value="Зелений" />Зелений (<span class="color-count" data-color="Зелений">0</span>)</label>
+            <label><input type="checkbox" value="Сірий" />Сірий (<span class="color-count" data-color="Сірий">0</span>)</label>
+            <label><input type="checkbox" value="Фіолетовий" />Фіолетовий (<span class="color-count" data-color="Фіолетовий">0</span>)</label>
+            <label><input type="checkbox" value="Блакитний" />Блакитний (<span class="color-count" data-color="Блакитний">0</span>)</label>
+            <label><input type="checkbox" value="Білий" />Білий (<span class="color-count" data-color="Білий">0</span>)</label>
+            <label><input type="checkbox" value="Чорний" />Чорний (<span class="color-count" data-color="Чорний">0</span>)</label>
+          </div>
         </div>
       </div>
 
@@ -195,20 +196,20 @@
         </div>
       </div>
 
-      <!-- Матеріал -->
+      <!-- Візерунок -->
       <div class="filter-block">
         <div class="filter-header">
-          <span>Матеріал</span>
+          <span>Візерунок</span>
           <button class="toggle-btn">+</button>
         </div>
         <div class="filter-content" style="display: none;">
-          <label><input type="checkbox" />Бавовна (25)</label>
-          <label><input type="checkbox" />Джинс (15)</label>
-          <label><input type="checkbox" />Поліестер (10)</label>
-          <label><input type="checkbox" />Еластан (8)</label>
-          <label><input type="checkbox" />Льон (6)</label>
-          <label><input type="checkbox" />Віскоза (4)</label>
-          <button type="button" class="collapse-btn">Згорнути</button>
+          <div class="pattern-grid">
+            <label><input type="checkbox" value="Відсутній" />Відсутній (<span class="pattern-count" data-pattern="Відсутній">0</span>)</label>
+            <label><input type="checkbox" value="Смугастий" />Смугастий (<span class="pattern-count" data-pattern="Смугастий">0</span>)</label>
+            <label><input type="checkbox" value="Клітинка" />Клітинка (<span class="pattern-count" data-pattern="Клітинка">0</span>)</label>
+            <label><input type="checkbox" value="Квітковий" />Квітковий (<span class="pattern-count" data-pattern="Квітковий">0</span>)</label>
+            <label><input type="checkbox" value="Інший" />Інший (<span class="pattern-count" data-pattern="Інший">0</span>)</label>
+          </div>
         </div>
       </div>
     </div>
@@ -217,7 +218,7 @@
     <div class="main-content">
       <div class="products-grid">
         {% for product in products %}
-          <div class="product-item" data-price="{{ product.final_price }}" data-color="{{ product.color.name|default:'' }}" data-material="Джинс" data-clothing-style="{{ product.get_clothing_style_display }}" data-stretchiness="{{ product.get_stretchiness_display }}">
+          <div class="product-item" data-price="{{ product.final_price }}" data-color="{{ product.color.name|default:'' }}" data-pattern="{{ product.get_pattern_display }}" data-clothing-style="{{ product.get_clothing_style_display }}" data-stretchiness="{{ product.get_stretchiness_display }}" data-sizes="{{ product.sizes|join:',' }}" data-lengths="{{ product.lengths|join:',' }}">
             <div class="product-image-container">
               <!-- Wishlist heart -->
               {% if user.is_authenticated %}

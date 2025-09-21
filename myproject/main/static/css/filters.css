@@ -42,8 +42,19 @@
     margin-right: 10px;
 
 }
-.price-row { margin: 12px 0 18px; display: flex; flex-direction: column; gap: 4px; }
-.price-old { text-decoration: line-through; color: #888; font-size: 16px; }
+
+.price-row {
+    margin: 12px 0 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.price-old {
+    text-decoration: line-through;
+    color: #888;
+    font-size: 16px;
+}
 
 /* Breadcrumb */
 .breadcrumb {
@@ -124,8 +135,8 @@
     flex-shrink: 0;
     background: #fff;
     height: fit-content;
-    position: sticky;
-    top: 20px;
+    position: relative;
+    top: auto;
 }
 
 /* Заголовок фільтрів з іконкою */

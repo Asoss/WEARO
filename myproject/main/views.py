@@ -24,24 +24,23 @@ from django.db.models import Q
 from main import models
 
 def products_api(request):
-    products = Product.objects.select_related('color').values(
-        'id', 'name', 'price', 'color__name', 'sizes', 'lengths',
-        'clothing_style', 'stretchiness'
-    )
+    products = Product.objects.select_related('color').prefetch_related('category')
     
     products_list = []
     for product in products:
+        final_price = product.final_price()
+        
         products_list.append({
-            'id': product['id'],
-            'name': product['name'],
-            'price': float(product['price']),
-            'final_price': float(product['price']),  # бо метода нема
-            'color': product['color__name'] or 'Без кольору',
-            'sizes': product['sizes'],
-            'lengths': product['lengths'],
-            'clothing_style': dict(Product.CLOTHING_STYLE_CHOICES).get(product['clothing_style'], product['clothing_style']),
-            'stretchiness': dict(Product.STRETCH_CHOICES).get(product['stretchiness'], product['stretchiness']),
-            'material': 'Джинс'
+            'id': product.id,
+            'name': product.name,
+            'price': float(product.price),
+            'final_price': float(final_price),
+            'color': product.color.name if product.color else 'Без кольору',
+            'sizes': product.sizes or [],
+            'lengths': product.lengths or [],
+            'clothing_style': product.get_clothing_style_display(),
+            'stretchiness': product.get_stretchiness_display(),
+            'pattern': product.get_pattern_display()
         })
     
     return JsonResponse(products_list, safe=False)
