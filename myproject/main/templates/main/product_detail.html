@@ -3,6 +3,7 @@
 
 {% block content %}
   <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/rating.css' %}" />
 
   <div class="product-page">
     <div class="product-grid">
@@ -180,42 +181,114 @@
       </aside>
     </section>
 
-    {% if recently_viewed %}
-      <section class="recently-viewed bottom">
-        <h3 class="section-title">Нещодавно переглянуто</h3>
-        <div class="recent-slider">
-          <button class="recent-btn recent-prev">❮</button>
-          <div class="recent-list-wrapper">
-            <div class="recent-list">
-              {% for item in recently_viewed %}
-                <a href="{% url 'product_detail' item.pk %}" class="recent-item">
-                  {% with fi=item.images.first %}
-                    {% if fi %}
-                      <img src="{{ fi.image.url }}" alt="{{ item.name }}" />
-                    {% else %}
-                      <img src="{% static 'images/placeholder.png' %}" alt="{{ item.name }}" />
-                    {% endif %}
-                  {% endwith %}
-                  <div class="recent-info">
-                    <div class="recent-name">{{ item.name }}</div>
-                    <div class="recent-price">
-                      {% if item.discount %}
-                        <span class="price-old">{{ item.price }} грн</span>
-                        <br />
-                        <span class="price-new">{{ item.final_price }} грн</span>
-                      {% else %}
-                        <span class="price-new">{{ item.price }} грн</span>
-                      {% endif %}
-                    </div>
-                  </div>
-                </a>
+    <div class="product-reviews">
+      <!-- Форма додавання відгуку -->
+      {% if user.is_authenticated %}
+        <section class="review-section">
+          <h2>ВІДГУК ДЛЯ ЦЬОГО ТОВАРУ</h2>
+          <p class="subtitle">Оцініть цей продукт</p>
+
+          <form method="post" action="{% url 'add_review' product.id %}" id="review-form">
+            {% csrf_token %}
+            <input type="hidden" name="rating" id="rating-input" value="{{ user_review.rating|default:'' }}" />
+
+            <div class="star-rating">
+              {% for i in range %}
+                <button type="button" class="star-btn {% if user_review.rating >= forloop.counter %}active{% endif %}" data-value="{{ forloop.counter }}"><img src="{% static 'icons/star.png' %}" alt="Зірка {{ forloop.counter }}" /></button>
               {% endfor %}
             </div>
+
+            <textarea name="comment" class="review-text" placeholder="Будемо дуже вдячні якщо напишете відгук">{{ user_review.comment|default:'' }}</textarea>
+
+            <button type="submit" class="submit-btn">
+              {% if user_review %}
+                Оновити відгук
+              {% else %}
+                Залишити відгук
+              {% endif %}
+            </button>
+          </form>
+        </section>
+      {% endif %}
+
+      {% if recently_viewed %}
+        <section class="recently-viewed bottom">
+          <h3 class="section-title">Нещодавно переглянуто</h3>
+          <div class="recent-slider">
+            <button class="recent-btn recent-prev">❮</button>
+            <div class="recent-list-wrapper">
+              <div class="recent-list">
+                {% for item in recently_viewed %}
+                  <a href="{% url 'product_detail' item.pk %}" class="recent-item">
+                    {% with fi=item.images.first %}
+                      {% if fi %}
+                        <img src="{{ fi.image.url }}" alt="{{ item.name }}" />
+                      {% else %}
+                        <img src="{% static 'images/placeholder.png' %}" alt="{{ item.name }}" />
+                      {% endif %}
+                    {% endwith %}
+                    <div class="recent-info">
+                      <div class="recent-name">{{ item.name }}</div>
+                      <div class="recent-price">
+                        {% if item.discount %}
+                          <span class="price-old">{{ item.price }} грн</span>
+                          <br />
+                          <span class="price-new">{{ item.final_price }} грн</span>
+                        {% else %}
+                          <span class="price-new">{{ item.price }} грн</span>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </a>
+                {% endfor %}
+              </div>
+            </div>
+            <button class="recent-btn recent-next">❯</button>
           </div>
-          <button class="recent-btn recent-next">❯</button>
+        </section>
+      {% endif %}
+
+      <!-- Список відгуків -->
+      <section class="reviews-list">
+        <h3>Відгуки ({{ total_reviews }})</h3>
+
+        {% if product.average_rating > 0 %}
+          <div class="average-rating">
+            <span class="avg-number">{{ product.average_rating }}</span>
+            <div class="avg-stars">
+              {% for i in range %}
+                <span class="star {% if product.average_rating >= forloop.counter %}filled{% endif %}">⭐</span>
+              {% endfor %}
+            </div>
+            <span class="review-count">на основі {{ total_reviews }} відгук{{ total_reviews|pluralize:'ів' }}</span>
+          </div>
+        {% endif %}
+
+        <div class="reviews-container">
+          {% for review in reviews %}
+            <div class="review-item">
+              <div class="review-header">
+                <div class="user-info">
+                  <strong>{{ review.user.username }}</strong>
+                  <div class="rating-stars">
+                    {% for i in range %}
+                      <span class="star {% if review.rating >= forloop.counter %}filled{% endif %}">⭐</span>
+                    {% endfor %}
+                  </div>
+                </div>
+                <div class="review-time">{{ review.get_time_since }} тому</div>
+              </div>
+
+              {% if review.comment %}
+                <div class="review-content">{{ review.comment|linebreaks }}</div>
+              {% endif %}
+            </div>
+          {% empty %}
+            <p class="no-reviews">Поки що немає відгуків. Будьте першим!</p>
+          {% endfor %}
         </div>
       </section>
-    {% endif %}
+    </div>
   </div>
 
   <style>
@@ -602,31 +675,26 @@
     .recent-next {
       right: 5px;
     }
-    
-    .star {
-      font-size: 20px;
-      color: #ccc;
-      cursor: default;
-    }
-    
-    .star.filled {
-      color: #f39c12;
-    }
-    
-    .vote-stars .star {
-      font-size: 30px;
-      cursor: pointer;
-      color: #ccc;
-      transition: color 0.2s;
-    }
-    
-    .vote-stars .star.active,
-    .vote-stars .star:hover,
-    .vote-stars .star.hovered {
-      color: #f39c12;
-    }
   </style>
+
   <script>
+    document.querySelectorAll('.star-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const value = parseInt(btn.dataset.value)
+    
+        // Встановити значення рейтингу в прихований інпут
+        document.getElementById('rating-input').value = value
+    
+        // Оновити візуальний стан зірок
+        document.querySelectorAll('.star-btn').forEach((b, index) => {
+          if (index < value) {
+            b.classList.add('active')
+          } else {
+            b.classList.remove('active')
+          }
+        })
+      })
+    })
     ;(function () {
       const thumbs = Array.from(document.querySelectorAll('.thumb'))
       const mainImg = document.getElementById('mainImage')
