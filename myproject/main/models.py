@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 from myproject import settings
@@ -28,6 +29,7 @@ class Color(models.Model):
         return f'<div style="width:20px; height:20px; background:{self.hex_code}; border:1px solid #000;"></div>'
 
     color_box.allow_tags = True
+
 
 
 class Category(models.Model):
@@ -123,6 +125,30 @@ class Product(models.Model):
         return self.name
 
 
+class Review(models.Model):
+    RATING_CHOICES = [
+        (1, '1 зірка'),
+        (2, '2 зірки'),
+        (3, '3 зірки'),
+        (4, '4 зірки'),
+        (5, '5 зірок'),
+    ]
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    rating = models.IntegerField(choices=RATING_CHOICES)
+    comment = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    
+    class Meta:
+        unique_together = ('user', 'product')
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f'{self.user.username} - {self.product.name} ({self.rating}/5)'
+    
+    def get_time_since(self):
+        from django.utils.timesince import timesince
+        return timesince(self.created_at)
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
