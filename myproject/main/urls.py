@@ -10,7 +10,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('women/', views.women, name='women'),
     path('men/', views.men, name='men'),
-    path('product/<int:pk>/', views.product_detail, name='product_detail'),
     path('my-account/', views.my_account, name='my_account'),
     path('orders/', views.my_orders, name='my_orders'),
     path('returns/', views.my_returns, name='my_returns'),
@@ -49,5 +48,7 @@ urlpatterns = [
     path("rate-product/", views.rate_product, name="rate_product"),
     path('rate-product/<int:product_id>/', views.rate_product, name='rate_product'),
     path('api/products/', views.products_api, name='products_api'),
+    path('product/<int:product_id>/review/', views.add_review, name='add_review'),
+    path('product/<int:product_id>/', views.product_detail, name='product_detail'),
 ]
 

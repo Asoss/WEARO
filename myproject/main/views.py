@@ -12,9 +12,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from cart.models import Cart, CartItem
-from .models import Product, ProductRating, UserDetails, Wishlist
+from .models import Product, ProductRating, Review, UserDetails, Wishlist
 from .forms import RegisterForm, UserForm,UserDetailsForm
 import random
 from .models import Product, Category
@@ -96,25 +97,74 @@ def women(request):
 def men(request):
     return product_list_by_gender(request, gender=1, title="Чоловічі товари")
 
-def product_detail(request, pk):
-    product = get_object_or_404(Product, pk=pk)
+def product_detail(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    reviews = Review.objects.filter(product=product)
+    user_review = None
 
-    viewed = request.session.get('viewed_products', [])
+    paginator = Paginator(reviews, 5)  
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
-    if pk in viewed:
-        viewed.remove(pk)
-    viewed.insert(0, pk)
+    if request.user.is_authenticated:
+        try:
+            user_review = Review.objects.get(user=request.user, product=product)
+        except Review.DoesNotExist:
+            pass
 
-    viewed = viewed[:5]
-    request.session['viewed_products'] = viewed
+    total_reviews = reviews.count()
+    recommended_count = reviews.filter(rating__gte=4).count() if total_reviews > 0 else 0
+    recommended_percent = round((recommended_count / total_reviews) * 100, 1) if total_reviews > 0 else 0
 
-    recently_viewed = Product.objects.filter(pk__in=viewed).exclude(pk=pk)
-
-    return render(request, 'main/product_detail.html', {
+    context = {
         'product': product,
-        'recently_viewed': recently_viewed
-    })
+        'reviews': page_obj,
+        'user_review': user_review,
+        'total_reviews': total_reviews,
+        'recommended_count': recommended_count,
+        'recommended_percent': recommended_percent,
+        'range': range(1, 6),
+    }
+    return render(request, 'main/product_detail.html', context)
 
+
+
+
+@login_required
+def add_review(request, product_id):
+    if request.method == 'POST':
+        product = get_object_or_404(Product, id=product_id)
+        rating = request.POST.get('rating')
+        comment = request.POST.get('comment', '').strip()
+        
+        if rating and 1 <= int(rating) <= 5:
+            review, created = Review.objects.get_or_create(
+                user=request.user,
+                product=product,
+                defaults={
+                    'rating': int(rating),
+                    'comment': comment
+                }
+            )
+            
+            if created:
+                product.rating_sum += int(rating)
+                product.rating_count += 1
+                product.save()
+                messages.success(request, 'Дякуємо за відгук!')
+            else:
+                old_rating = review.rating
+                review.rating = int(rating)
+                review.comment = comment
+                review.save()
+                
+                product.rating_sum = product.rating_sum - old_rating + int(rating)
+                product.save()
+                messages.success(request, 'Ваш відгук оновлено!')
+        else:
+            messages.error(request, 'Будь ласка, оберіть рейтинг від 1 до 5 зірок.')
+    
+    return redirect('product_detail', product_id=product_id)
 
 def my_account(request):
     return render(request, 'main/my_account.html')
