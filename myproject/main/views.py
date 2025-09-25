@@ -102,42 +102,32 @@ def product_detail(request, product_id):
     reviews = Review.objects.filter(product=product)
     user_review = None
 
+    paginator = Paginator(reviews, 5)  
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     if request.user.is_authenticated:
         try:
             user_review = Review.objects.get(user=request.user, product=product)
         except Review.DoesNotExist:
             pass
 
+    total_reviews = reviews.count()
+    recommended_count = reviews.filter(rating__gte=4).count() if total_reviews > 0 else 0
+    recommended_percent = round((recommended_count / total_reviews) * 100, 1) if total_reviews > 0 else 0
+
     context = {
         'product': product,
-        'reviews': reviews,
+        'reviews': page_obj,
         'user_review': user_review,
-        'total_reviews': reviews.count(),
+        'total_reviews': total_reviews,
+        'recommended_count': recommended_count,
+        'recommended_percent': recommended_percent,
         'range': range(1, 6),
     }
     return render(request, 'main/product_detail.html', context)
 
 
-@login_required
-def add_review(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-
-    if request.method == "POST":
-        rating = request.POST.get("rating")
-        comment = request.POST.get("comment")
-
-        # якщо юзер вже залишав відгук – оновлюємо
-        review, created = Review.objects.get_or_create(
-            product=product,
-            user=request.user,
-            defaults={"rating": rating, "comment": comment}
-        )
-        if not created:
-            review.rating = rating
-            review.comment = comment
-            review.save()
-
-    return redirect("product_detail", product_id=product.id)
 
 
 @login_required

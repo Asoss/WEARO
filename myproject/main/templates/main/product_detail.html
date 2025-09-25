@@ -3,7 +3,7 @@
 
 {% block content %}
   <link rel="stylesheet" href="{% static 'css/main.css' %}" />
-  <link rel="stylesheet" href="{% static 'css/rating.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/product_detail.css' %}" />
 
   <div class="product-page">
     <div class="product-grid">
@@ -31,6 +31,16 @@
             {% endif %}
           {% endwith %}
 
+          {% if user.is_authenticated %}
+            {% if product.id in wishlist_products %}
+              <img src="{% static 'icons/heart_filled.png' %}" data-filled="{% static 'icons/heart_filled.png' %}" data-empty="{% static 'icons/heart.png' %}" class="wishlist-heart" data-product-id="{{ product.id }}" />
+            {% else %}
+              <img src="{% static 'icons/heart.png' %}" data-filled="{% static 'icons/heart_filled.png' %}" data-empty="{% static 'icons/heart.png' %}" class="wishlist-heart" data-product-id="{{ product.id }}" />
+            {% endif %}
+          {% else %}
+            <a href="{% url 'login_email' %}"><img src="{% static 'icons/heart.png' %}" class="wishlist-heart-login" /></a>
+          {% endif %}
+
           <button class="nav prev" id="prevBtn" aria-label="previous">❮</button>
           <button class="nav next" id="nextBtn" aria-label="next">❯</button>
 
@@ -41,12 +51,39 @@
       <div class="col info-col">
         <div class="title-row">
           <h1 class="product-title">{{ product.name }}</h1>
-
-          <button id="wishlistBtn" class="wishlist-btn" aria-label="wishlist" data-product-id="{{ product.id }}"><span class="heart{% if user.is_authenticated and product.id in wishlist_products %} active{% endif %}">♡</span></button>
         </div>
 
-        <div class="rating-row">
-          <div class="rating-count">★★★★★({{ product.rating_count|default:0 }})</div>
+        <div class="product-rating" data-product-id="{{ product.id }}" data-average-rating="{{ product.average_rating|floatformat:1 }}" data-rating-count="{{ product.rating_count }}">
+          <div class="rating-display">
+            <div class="rating-stars">
+              {% if product.average_rating >= 1 %}
+                <span class="star filled">★</span>
+              {% else %}
+                <span class="star">☆</span>
+              {% endif %}
+              {% if product.average_rating >= 2 %}
+                <span class="star filled">★</span>
+              {% else %}
+                <span class="star">☆</span>
+              {% endif %}
+              {% if product.average_rating >= 3 %}
+                <span class="star filled">★</span>
+              {% else %}
+                <span class="star">☆</span>
+              {% endif %}
+              {% if product.average_rating >= 4 %}
+                <span class="star filled">★</span>
+              {% else %}
+                <span class="star">☆</span>
+              {% endif %}
+              {% if product.average_rating >= 5 %}
+                <span class="star filled">★</span>
+              {% else %}
+                <span class="star">☆</span>
+              {% endif %}
+            </div>
+            <span class="reviews">({{ product.rating_count|default:0 }})</span>
+          </div>
         </div>
 
         <div class="price-row">
@@ -182,31 +219,26 @@
     </section>
 
     <div class="product-reviews">
-      <!-- Форма додавання відгуку -->
+      <!-- Форма додавання відгуку (верхня) -->
       {% if user.is_authenticated %}
         <section class="review-section">
           <h2>ВІДГУК ДЛЯ ЦЬОГО ТОВАРУ</h2>
           <p class="subtitle">Оцініть цей продукт</p>
 
-          <form method="post" action="{% url 'add_review' product.id %}" id="review-form">
+          <form method="post" action="{% url 'add_review' product.id %}" id="quick-review-form">
             {% csrf_token %}
-            <input type="hidden" name="rating" id="rating-input" value="{{ user_review.rating|default:'' }}" />
+            <input type="hidden" name="rating" id="quick-rating-input" value="{{ user_review.rating|default:'' }}" />
 
-            <div class="star-rating">
+            <!-- Зірочки -->
+            <div class="star-rating" data-form="quick">
               {% for i in range %}
                 <button type="button" class="star-btn {% if user_review.rating >= forloop.counter %}active{% endif %}" data-value="{{ forloop.counter }}"><img src="{% static 'icons/star.png' %}" alt="Зірка {{ forloop.counter }}" /></button>
               {% endfor %}
             </div>
 
-            <textarea name="comment" class="review-text" placeholder="Будемо дуже вдячні якщо напишете відгук">{{ user_review.comment|default:'' }}</textarea>
-
-            <button type="submit" class="submit-btn">
-              {% if user_review %}
-                Оновити відгук
-              {% else %}
-                Залишити відгук
-              {% endif %}
-            </button>
+            <p class="write-review-link">
+              <a href="#reviews-list">Будемо дуже вдячні якщо напишете відгук</a>
+            </p>
           </form>
         </section>
       {% endif %}
@@ -249,450 +281,128 @@
       {% endif %}
 
       <!-- Список відгуків -->
-      <section class="reviews-list">
-        <h3>Відгуки ({{ total_reviews }})</h3>
-
-        {% if product.average_rating > 0 %}
-          <div class="average-rating">
-            <span class="avg-number">{{ product.average_rating }}</span>
-            <div class="avg-stars">
-              {% for i in range %}
-                <span class="star {% if product.average_rating >= forloop.counter %}filled{% endif %}">⭐</span>
-              {% endfor %}
-            </div>
-            <span class="review-count">на основі {{ total_reviews }} відгук{{ total_reviews|pluralize:'ів' }}</span>
+      <div class="product-reviews">
+        <!-- Заголовок -->
+        <div class="reviews-header">
+          <!-- Ліва колонка -->
+          <div class="left">
+            <h2>ВІДГУКИ</h2>
+            <p class="subtitle">Загальний рейтинг</p>
+            <div class="avg-rating">{{ product.average_rating|floatformat:1 }}</div>
+            <a href="#reviews-list">{{ product.rating_count|default:0 }} відгуків</a>
+            <p class="recommend-info">{{ recommended_count }} з {{ product.rating_count|default:0 }}
+              ({{ recommended_percent }}%) рецензентів рекомендують цей продукт</p>
           </div>
-        {% endif %}
 
-        <div class="reviews-container">
+          <!-- Права колонка -->
+          <div class="right">
+            <p>Ваша оцінка цього продукту</p>
+            {% if user.is_authenticated %}
+              <form method="post" action="{% url 'add_review' product.id %}" id="main-review-form">
+                {% csrf_token %}
+                <input type="hidden" name="rating" id="main-rating-input" value="{{ user_review.rating|default:'' }}" />
+
+                <div class="star-rating" data-form="main">
+                  {% for i in range %}
+                    <button type="button" class="star-btn {% if user_review.rating >= forloop.counter %}active{% endif %}" data-value="{{ forloop.counter }}"><img src="{% static 'icons/star.png' %}" alt="Зірка {{ forloop.counter }}" /></button>
+                  {% endfor %}
+                </div>
+
+                <textarea name="comment" class="review-text" placeholder="Ваш відгук...">{{ user_review.comment|default:'' }}</textarea>
+
+                <button type="submit" class="submit-btn">
+                  {% if user_review %}
+                    Оновити відгук
+                  {% else %}
+                    Залишити відгук
+                  {% endif %}
+                </button>
+              </form>
+            {% else %}
+              <p class="login-note">
+                Щоб залишити відгук, потрібно <a href="{% url 'login' %}">увійти</a>
+              </p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Сортування -->
+        <div class="sort-container">
+          <label for="sortReviews">Сортувати</label>
+          <select id="sortReviews" name="sortReviews">
+            <option value="recent">Нещодавні</option>
+            <option value="latest">Останні</option>
+            <option value="highest">З найвищою оцінкою</option>
+            <option value="popular">Найпопулярніші</option>
+          </select>
+        </div>
+        <span class="page-info">Оцінка від {{ reviews.start_index }}–{{ reviews.end_index }} з {{ reviews.paginator.count }} коментарів</span>
+
+        <!-- Список відгуків -->
+        <div id="reviews-list">
           {% for review in reviews %}
             <div class="review-item">
               <div class="review-header">
-                <div class="user-info">
-                  <strong>{{ review.user.username }}</strong>
-                  <div class="rating-stars">
-                    {% for i in range %}
-                      <span class="star {% if review.rating >= forloop.counter %}filled{% endif %}">⭐</span>
-                    {% endfor %}
-                  </div>
-                </div>
-                <div class="review-time">{{ review.get_time_since }} тому</div>
+                <strong>{{ review.user.username }}</strong>
+                <span class="review-time">{{ review.get_time_since }} тому</span>
               </div>
-
-              {% if review.comment %}
-                <div class="review-content">{{ review.comment|linebreaks }}</div>
-              {% endif %}
+              <div class="review-rating-stars">
+                {% for i in range %}
+                  <span class="star {% if review.rating >= forloop.counter %}filled{% endif %}">★</span>
+                {% endfor %}
+              </div>
+              <div class="review-content">{{ review.comment|linebreaks }}</div>
             </div>
           {% empty %}
-            <p class="no-reviews">Поки що немає відгуків. Будьте першим!</p>
+            <p>Поки що немає відгуків. Будьте першим!</p>
           {% endfor %}
         </div>
-      </section>
+
+        <!-- Пагінація -->
+        <div class="pagination">
+          {% if reviews.has_previous %}
+            <a href="?page={{ reviews.previous_page_number }}" class="page-btn prev">◀</a>
+          {% endif %}
+
+          <span class="page-info">Оцінка від {{ reviews.start_index }}–{{ reviews.end_index }} з {{ reviews.paginator.count }} коментарів</span>
+
+          {% if reviews.has_next %}
+            <a href="?page={{ reviews.next_page_number }}" class="page-btn next">▶</a>
+          {% endif %}
+        </div>
+      </div>
     </div>
   </div>
-
-  <style>
-    .product-grid {
-      display: grid;
-      grid-template-columns: 80px 0.9fr 450px;
-      gap: 24px;
-      align-items: start;
-    }
-    .thumbs-col {
-      position: relative;
-    }
-    .thumbs-wrap {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      max-height: 800px;
-      overflow: auto;
-      padding-right: 6px;
-    }
-    .thumb {
-      border: none;
-      background: transparent;
-      padding: 0;
-      cursor: pointer;
-    }
-    .thumb img {
-      width: 78px;
-      height: 100px;
-      object-fit: cover;
-      border: 1px solid #eee;
-      border-radius: 6px;
-      display: block;
-    }
-    .main-image-wrap {
-      position: relative;
-      text-align: center;
-    }
-    .main-image-wrap img {
-      width: 100%;
-      object-fit: cover;
-      border: 1px solid #f0f0f0;
-      border-radius: 0px;
-    }
-    .nav {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(0, 0, 0, 0.45);
-      color: #fff;
-      border: none;
-      width: 36px;
-      height: 36px;
-      border-radius: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-    .nav.prev {
-      left: 10px;
-    }
-    .nav.next {
-      right: 10px;
-    }
-    .dots {
-      display: flex;
-      gap: 6px;
-      justify-content: center;
-      margin-top: 12px;
-    }
-    .dots .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #ddd;
-    }
-    .dots .dot.active {
-      background: #333;
-    }
-    
-    .info-col {
-      padding-top: 6px;
-    }
-    .title-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
-    }
-    .product-title {
-      font-size: 28px;
-      margin: 0 0 6px;
-      line-height: 1.1;
-    }
-    .wishlist-btn {
-      background: transparent;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-    }
-    .heart {
-      font-size: 22px;
-      color: #999;
-      transition: color 0.2s;
-    }
-    .heart.active {
-      color: #e33;
-    }
-    
-    .rating-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-    .stars .star {
-      color: #f5c542;
-      font-size: 16px;
-      margin-right: 2px;
-    }
-    .rating-count {
-      color: #777;
-      font-size: 13px;
-    }
-    
-    .price-row {
-      margin: 12px 0 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .price-old {
-      text-decoration: line-through;
-      color: #888;
-      font-size: 16px;
-    }
-    .price-new {
-      font-size: 22px;
-      font-weight: 700;
-      color: #e60023;
-    }
-    .discount-note {
-      margin-top: 2px;
-      color: #555;
-      font-size: 13px;
-    }
-    
-    .color-row {
-      margin: 12px 0;
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-    .color-box {
-      display: inline-block;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      border: 1px solid #ccc;
-      vertical-align: middle;
-    }
-    .color-name {
-      margin-left: 8px;
-      color: #333;
-    }
-    
-    .sizes-grid,
-    .lengths-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
-    }
-    .size-btn,
-    .length-btn {
-      padding: 10px 12px;
-      border: 1px solid #ccc;
-      background: #fff;
-      border-radius: 6px;
-      cursor: pointer;
-      min-width: 44px;
-      text-align: center;
-    }
-    .size-btn.active,
-    .length-btn.active {
-      border-color: #111;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
-    }
-    
-    .qty-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 18px 0;
-    }
-    .qty-controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .qty-btn {
-      padding: 6px 12px;
-      border: 1px solid #ccc;
-      background: #fff;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    #qtyDisplay {
-      width: 40px;
-      text-align: center;
-      border: 1px solid #eee;
-      padding: 6px;
-      border-radius: 6px;
-    }
-    
-    .delivery-options {
-      display: flex;
-      gap: 12px;
-      margin: 14px 0;
-    }
-    .delivery-options .option {
-      border: 1px solid #eee;
-      padding: 10px;
-      flex: 1;
-      border-radius: 6px;
-      font-size: 13px;
-    }
-    
-    .add-to-cart-btn {
-      display: block;
-      width: 100%;
-      margin-top: 10px;
-      background: #000;
-      color: #fff;
-      border: none;
-      padding: 14px;
-      border-radius: 4px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    
-    .meta-row {
-      margin-top: 10px;
-      color: #666;
-      font-size: 13px;
-    }
-    
-    .desc-section {
-      display: grid;
-      grid-template-columns: 1fr 320px;
-      gap: 32px;
-      margin-top: 40px;
-      padding: 26px;
-      border-top: 1px solid #eee;
-    }
-    .desc-left h2 {
-      margin-top: 0;
-    }
-    .bullets {
-      margin-top: 10px;
-    }
-    .recently-viewed.bottom {
-      margin-top: 30px;
-    }
-    .recent-list {
-      display: flex;
-      gap: 12px;
-    }
-    .recent-item {
-      text-decoration: none;
-      color: inherit;
-      width: 120px;
-    }
-    .recent-item img {
-      width: 100%;
-      height: 120px;
-      object-fit: cover;
-      border: 1px solid #eee;
-    }
-    .recent-name {
-      font-size: 13px;
-      margin-top: 6px;
-      text-align: center;
-    }
-    @media (max-width: 1100px) {
-      .product-grid {
-        grid-template-columns: 60px 1fr;
-      }
-      .info-col {
-        grid-column: 1/ -1;
-        margin-top: 18px;
-      }
-      .main-image-wrap img {
-        height: 500px;
-      }
-    }
-    .recent-slider {
-      position: relative;
-      width: 100%;
-      overflow: hidden;
-    }
-    
-    .recent-list-wrapper {
-      overflow: hidden;
-    }
-    
-    .section-title {
-      text-align: center;
-      margin: 40px 0 20px;
-      font-size: 35px;
-      font-weight: bold;
-    }
-    
-    .recent-list {
-      display: flex;
-      transition: transform 0.4s ease;
-    }
-    
-    .recent-item {
-      flex: 0 0 220px;
-      margin: 0 10px;
-      background: #fff;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      text-decoration: none;
-      color: #333;
-      transition: transform 0.3s;
-    }
-    .recent-item:hover {
-      transform: translateY(-5px);
-    }
-    
-    .recent-item img {
-      width: 100%;
-      height: 300px;
-      object-fit: cover;
-    }
-    
-    .recent-info {
-      padding: 8px;
-      font-size: 14px;
-    }
-    
-    .recent-name {
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-    
-    .price-old {
-      text-decoration: line-through;
-      color: #999;
-      margin-right: 5px;
-    }
-    .price-new {
-      color: #000000;
-      font-weight: bold;
-    }
-    
-    /* Стрілки */
-    .recent-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255, 255, 255, 0.8);
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      padding: 5px 12px;
-      border-radius: 50%;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-      transition: background 0.3s;
-      z-index: 10;
-    }
-    .recent-btn:hover {
-      background: rgba(255, 255, 255, 1);
-    }
-    
-    .recent-prev {
-      left: 5px;
-    }
-    .recent-next {
-      right: 5px;
-    }
-  </style>
+  <script src="{% static 'js/wishlist.js' %}"></script>
 
   <script>
+    // Синхронізація зірочок між формами
+    function updateStarsInAllForms(rating) {
+      // Оновлюємо всі hidden inputs
+      const quickRatingInput = document.getElementById('quick-rating-input')
+      const mainRatingInput = document.getElementById('main-rating-input')
+    
+      if (quickRatingInput) quickRatingInput.value = rating
+      if (mainRatingInput) mainRatingInput.value = rating
+    
+      // Оновлюємо зірочки в усіх формах
+      document.querySelectorAll('.star-rating').forEach(function (starRating) {
+        const starBtns = starRating.querySelectorAll('.star-btn')
+        starBtns.forEach(function (btn, index) {
+          if (index < rating) {
+            btn.classList.add('active')
+          } else {
+            btn.classList.remove('active')
+          }
+        })
+      })
+    }
+    
+    // Додаємо обробники подій для всіх зірочок
     document.querySelectorAll('.star-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
         const value = parseInt(btn.dataset.value)
-    
-        // Встановити значення рейтингу в прихований інпут
-        document.getElementById('rating-input').value = value
-    
-        // Оновити візуальний стан зірок
-        document.querySelectorAll('.star-btn').forEach((b, index) => {
-          if (index < value) {
-            b.classList.add('active')
-          } else {
-            b.classList.remove('active')
-          }
-        })
+        updateStarsInAllForms(value)
       })
     })
     ;(function () {
@@ -819,7 +529,7 @@
     
       if (recentList && recentItems.length > 0) {
         let currentRecent = 0
-        const visible = 4
+        const visible = 3
         const itemWidth = recentItems[0].offsetWidth + 20
     
         function updateRecent() {
