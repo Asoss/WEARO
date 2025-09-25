@@ -17,18 +17,6 @@ class UserDetails(models.Model):
 
     def __str__(self):
         return f"{self.user.username} details"
-class Color(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-    hex_code = models.CharField(max_length=7, help_text='HTML-код кольору, напр. #000000')
-
-    def __str__(self):
-        return self.name
-
-    def color_box(self):
-        return f'<div style="width:20px; height:20px; background:{self.hex_code}; border:1px solid #000;"></div>'
-
-    color_box.allow_tags = True
-
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -36,6 +24,16 @@ class Category(models.Model):
 
     def __str__(self):
         return f"{self.parent.name + ' > ' if self.parent else ''}{self.name}"
+
+from django.db import models
+
+class Color(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    hex_code = models.CharField(max_length=7, help_text="Hex код кольору, напр. #FF0000")
+
+    def __str__(self):
+        return self.name
+
 
 class Product(models.Model):
     GENDER_CHOICES = [
@@ -54,7 +52,6 @@ class Product(models.Model):
         ('medium', 'Середня'),
         ('high', 'Висока'),
     ]
-
     CLOTHING_STYLE_CHOICES = [
         ('relaxed_straight', 'Розслаблений прямий'),
         ('loose_straight', 'Вільний прямий'),
@@ -64,9 +61,33 @@ class Product(models.Model):
         ('straight', 'Прямий'),
         ('fitted', 'Приталений'),
     ]
+
+    basic_colors = [
+        ("Червоний", "#FF0000"),
+        ("Зелений", "#008000"),
+        ("Синій", "#0000FF"),
+        ("Чорний", "#000000"),
+        ("Білий", "#FFFFFF"),
+        ("Сірий", "#808080"),
+        ("Жовтий", "#FFFF00"),
+        ("Помаранчевий", "#FFA500"),
+        ("Фіолетовий", "#C300FF"),
+        ("Рожевий", "#FFC0CB"),
+        ("Бежевий", "#F5F5DC"),
+        ("Коричневий", "#640000"),
+        ("Блакитний", "#00AAFF"),
+        ("Бордo", "#800000"),
+        ("Світло-сірий", "#D3D3D3"),
+        ("Темно-синій", "#00008B"),
+        ("Оливковий", "#808000"),
+        ("М’ятний", "#98FF98"),
+        ("Золотий", "#FFD700"),
+        ("Срібний", "#C0C0C0"),
+    ]
+
     name = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey("Category", on_delete=models.CASCADE)
     brand = models.CharField(max_length=100, blank=True)
     color = models.ForeignKey(Color, on_delete=models.SET_NULL, null=True, blank=True)
     stock = models.PositiveIntegerField(default=1, help_text="Кількість доступних одиниць товару")
@@ -91,21 +112,20 @@ class Product(models.Model):
         default='medium',
         verbose_name="Розтяжність"
     )
-
     clothing_style = models.CharField(
         max_length=50,
         choices=CLOTHING_STYLE_CHOICES,
         default='loose_straight',
         verbose_name="Загальний вид одягу"
     )
-    
+
     def final_price(self):
         if self.discount:
             price = self.price * (100 - self.discount) / 100
         else:
             price = self.price
         return round(price, 2)
-    
+
     def save(self, *args, **kwargs):
         if not self.sizes:
             self.sizes = [36, 37, 38, 39, 40]
@@ -117,7 +137,6 @@ class Product(models.Model):
         if self.rating_count == 0:
             return 0
         return round(self.rating_sum / self.rating_count, 1)
-
 
     def __str__(self):
         return self.name

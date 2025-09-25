@@ -7,11 +7,15 @@ class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 1
 
+@admin.register(Color)
+class ColorAdmin(admin.ModelAdmin):
+    list_display = ('name', 'hex_code')
+
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     form = ProductForm
-    list_display = ('name', 'price', 'discount', 'final_price_display', 'stock', 'pattern', 'category', 'stretchiness', 'clothing_style')
+    list_display = ('name', 'price',"color", 'discount', 'final_price_display', 'stock', 'pattern', 'category', 'stretchiness', 'clothing_style')
     list_filter = ('stock', 'brand', 'color', 'category', 'discount', 'pattern', 'stretchiness', 'clothing_style')
     search_fields = ('name', 'brand')
     exclude = ('rating_sum', 'rating_count',)
@@ -28,7 +32,3 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
-@admin.register(Color)
-class ColorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'hex_code')
-    search_fields = ('name',)

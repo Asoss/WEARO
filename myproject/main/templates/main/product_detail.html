@@ -44,9 +44,13 @@
           <button id="wishlistBtn" class="wishlist-btn" aria-label="wishlist" data-product-id="{{ product.id }}"><span class="heart{% if user.is_authenticated and product.id in wishlist_products %} active{% endif %}">♡</span></button>
         </div>
 
+        
+
         <div class="rating-row">
           <div class="rating-count">★★★★★({{ product.rating_count|default:0 }})</div>
         </div>
+        
+        
 
         <div class="price-row">
           {% if product.discount %}
@@ -62,7 +66,7 @@
           <div class="color-row">
             <div class="color-label">Колір:</div>
             <div class="color-swatch" title="{{ product.color.name }}">
-              <span class="color-box"></span>
+              <span class="color-box" style="background-color: {{ product.color.hex_code }}"></span>
               <span class="color-name">{{ product.color.name }}</span>
             </div>
           </div>
@@ -105,16 +109,20 @@
             </div>
           </div>
 
-          <div class="delivery-options">
-            <div class="option">
+         <div class="delivery-options">
+            <label class="option">
+              <input type="radio" name="delivery" value="store" hidden>
               <strong>Самовивіз з магазину</strong><br />
               <small>Зареєструйтесь і вкажіть своє місто щоб дізнатися чи є у нас магазин</small>
-            </div>
-            <div class="option">
+            </label>
+
+            <label class="option">
+              <input type="radio" name="delivery" value="post" hidden>
               <strong>Відділення пошти</strong><br />
               <small>Вкажіть при оформленні зручне відділення</small>
-            </div>
+            </label>
           </div>
+
 
           <button type="submit" class="add-to-cart-btn">Додати в кошик</button>
         </form>
@@ -135,37 +143,37 @@
     </div>
 
     <section class="desc-section">
-      <div class="desc-left">
-        <h2>Про цей стиль</h2>
-        {% if product.about_me %}
-          <div class="about-text">{{ product.about_me|linebreaksbr }}</div>
-        {% else %}
-          <div class="about-text">Короткий опис стилю відсутній.</div>
-        {% endif %}
+    <div >
+      <h1>Про цей стиль</h1>
 
-        <div class="sku">Стиль #: {{ product.id }}</div>
-      </div>
+      {% if product.product_details %}
+        <ul >
+          {% for li in product.product_details.splitlines %}
+            {% if li|length > 0 %}
+              <li>{{ li }}</li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endif %}
+      <div >Стиль #: {{ product.id }}</div>
+    </div>
 
-      <aside class="desc-right">
-        <h3>Загальний опис</h3>
+      <aside>
+        <h2>Загальний опис</h2>
         <ul>
           <li>Стиль: {{ product.get_clothing_style_display }}</li>
           <li>Візерунок: {{ product.get_pattern_display }}</li>
           <li>Розтяжність: {{ product.get_stretchiness_display }}</li>
         </ul>
 
-        <h3>Склад і догляд</h3>
-
-        {% if product.product_details %}
-          <ul class="bullets">
-            {% for li in product.product_details.splitlines %}
-              {% if li|length > 0 %}
-                <li>{{ li }}</li>
-              {% endif %}
-            {% endfor %}
-          </ul>
+        <h2>Склад і догляд</h2>
+        <ul>
+          {% if product.about_me %}
+          <div ><li>{{ product.about_me|linebreaksbr }}</li></div>
+        {% else %}
+          <div ><li></li>Короткий опис стилю відсутній.</div>
         {% endif %}
-
+        </ul>
         <ul>
           {% if product.look_after_me %}
             {% for li in product.look_after_me.splitlines %}
@@ -179,6 +187,7 @@
         </ul>
       </aside>
     </section>
+
 
     {% if recently_viewed %}
       <section class="recently-viewed bottom">
@@ -221,8 +230,8 @@
   <style>
     .product-grid {
       display: grid;
-      grid-template-columns: 80px 0.9fr 450px;
-      gap: 24px;
+      grid-template-columns: 140px 0.9fr 450px;
+      gap: 10px;
       align-items: start;
     }
     .thumbs-col {
@@ -232,22 +241,19 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      max-height: 800px;
+      max-height: 900px;
       overflow: auto;
-      padding-right: 6px;
     }
     .thumb {
       border: none;
       background: transparent;
-      padding: 0;
+      padding: 10;
       cursor: pointer;
     }
     .thumb img {
-      width: 78px;
-      height: 100px;
+      width: 110px;
+      height: 130px;
       object-fit: cover;
-      border: 1px solid #eee;
-      border-radius: 6px;
       display: block;
     }
     .main-image-wrap {
@@ -364,24 +370,27 @@
       font-size: 13px;
     }
     
-    .color-row {
-      margin: 12px 0;
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-    .color-box {
-      display: inline-block;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      border: 1px solid #ccc;
-      vertical-align: middle;
-    }
-    .color-name {
-      margin-left: 8px;
-      color: #333;
-    }
+   .color-row {
+  margin: 12px 0;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.color-swatch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.color-box {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+}
+
     
     .sizes-grid,
     .lengths-grid {
@@ -433,18 +442,33 @@
       border-radius: 6px;
     }
     
-    .delivery-options {
-      display: flex;
-      gap: 12px;
-      margin: 14px 0;
-    }
-    .delivery-options .option {
-      border: 1px solid #eee;
-      padding: 10px;
-      flex: 1;
-      border-radius: 6px;
-      font-size: 13px;
-    }
+.delivery-options {
+  display: flex;
+  gap: 12px;
+  margin: 14px 0;
+}
+
+.delivery-options .option {
+  border: 1px solid #eee;
+  padding: 10px;
+  flex: 1;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+
+.delivery-options .option:hover {
+  border-color: #999;
+  background-color: #fafafa;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.delivery-options .option:has(input[type="radio"]:checked) {
+  border-color: #000;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
     
     .add-to-cart-btn {
       display: block;
@@ -472,9 +496,6 @@
       margin-top: 40px;
       padding: 26px;
       border-top: 1px solid #eee;
-    }
-    .desc-left h2 {
-      margin-top: 0;
     }
     .bullets {
       margin-top: 10px;
@@ -625,6 +646,20 @@
     .vote-stars .star.hovered {
       color: #f39c12;
     }
+    .desc-section {
+  margin: 60px auto;      /* зверху/знизу більше відступу */
+  padding: 0px;
+  border-top: 2px solid #ddd;
+  max-width: 1100px;      /* обмежуємо ширину */
+}
+
+
+
+
+
+
+
+
   </style>
   <script>
     ;(function () {
