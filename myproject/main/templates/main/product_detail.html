@@ -85,6 +85,8 @@
             <span class="reviews">({{ product.rating_count|default:0 }})</span>
           </div>
         </div>
+        
+        
 
         <div class="price-row">
           {% if product.discount %}
@@ -100,7 +102,7 @@
           <div class="color-row">
             <div class="color-label">Колір:</div>
             <div class="color-swatch" title="{{ product.color.name }}">
-              <span class="color-box"></span>
+              <span class="color-box" style="background-color: {{ product.color.hex_code }}"></span>
               <span class="color-name">{{ product.color.name }}</span>
             </div>
           </div>
@@ -143,16 +145,20 @@
             </div>
           </div>
 
-          <div class="delivery-options">
-            <div class="option">
+         <div class="delivery-options">
+            <label class="option">
+              <input type="radio" name="delivery" value="store" hidden>
               <strong>Самовивіз з магазину</strong><br />
               <small>Зареєструйтесь і вкажіть своє місто щоб дізнатися чи є у нас магазин</small>
-            </div>
-            <div class="option">
+            </label>
+
+            <label class="option">
+              <input type="radio" name="delivery" value="post" hidden>
               <strong>Відділення пошти</strong><br />
               <small>Вкажіть при оформленні зручне відділення</small>
-            </div>
+            </label>
           </div>
+
 
           <button type="submit" class="add-to-cart-btn">Додати в кошик</button>
         </form>
@@ -173,37 +179,37 @@
     </div>
 
     <section class="desc-section">
-      <div class="desc-left">
-        <h2>Про цей стиль</h2>
-        {% if product.about_me %}
-          <div class="about-text">{{ product.about_me|linebreaksbr }}</div>
-        {% else %}
-          <div class="about-text">Короткий опис стилю відсутній.</div>
-        {% endif %}
+    <div >
+      <h1>Про цей стиль</h1>
 
-        <div class="sku">Стиль #: {{ product.id }}</div>
-      </div>
+      {% if product.product_details %}
+        <ul >
+          {% for li in product.product_details.splitlines %}
+            {% if li|length > 0 %}
+              <li>{{ li }}</li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endif %}
+      <div >Стиль #: {{ product.id }}</div>
+    </div>
 
-      <aside class="desc-right">
-        <h3>Загальний опис</h3>
+      <aside>
+        <h2>Загальний опис</h2>
         <ul>
           <li>Стиль: {{ product.get_clothing_style_display }}</li>
           <li>Візерунок: {{ product.get_pattern_display }}</li>
           <li>Розтяжність: {{ product.get_stretchiness_display }}</li>
         </ul>
 
-        <h3>Склад і догляд</h3>
-
-        {% if product.product_details %}
-          <ul class="bullets">
-            {% for li in product.product_details.splitlines %}
-              {% if li|length > 0 %}
-                <li>{{ li }}</li>
-              {% endif %}
-            {% endfor %}
-          </ul>
+        <h2>Склад і догляд</h2>
+        <ul>
+          {% if product.about_me %}
+          <div ><li>{{ product.about_me|linebreaksbr }}</li></div>
+        {% else %}
+          <div ><li></li>Короткий опис стилю відсутній.</div>
         {% endif %}
-
+        </ul>
         <ul>
           {% if product.look_after_me %}
             {% for li in product.look_after_me.splitlines %}
@@ -375,6 +381,432 @@
   </div>
   <script src="{% static 'js/wishlist.js' %}"></script>
 
+  <style>
+    .product-grid {
+      display: grid;
+      grid-template-columns: 140px 0.9fr 450px;
+      gap: 10px;
+      align-items: start;
+    }
+    .thumbs-col {
+      position: relative;
+    }
+    .thumbs-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 900px;
+      overflow: auto;
+    }
+    .thumb {
+      border: none;
+      background: transparent;
+      padding: 10;
+      cursor: pointer;
+    }
+    .thumb img {
+      width: 110px;
+      height: 130px;
+      object-fit: cover;
+      display: block;
+    }
+    .main-image-wrap {
+      position: relative;
+      text-align: center;
+    }
+    .main-image-wrap img {
+      width: 100%;
+      object-fit: cover;
+      border: 1px solid #f0f0f0;
+      border-radius: 0px;
+    }
+    .nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.45);
+      color: #fff;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .nav.prev {
+      left: 10px;
+    }
+    .nav.next {
+      right: 10px;
+    }
+    .dots {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 12px;
+    }
+    .dots .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ddd;
+    }
+    .dots .dot.active {
+      background: #333;
+    }
+    
+    .info-col {
+      padding-top: 6px;
+    }
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .product-title {
+      font-size: 28px;
+      margin: 0 0 6px;
+      line-height: 1.1;
+    }
+    .wishlist-btn {
+      background: transparent;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .heart {
+      font-size: 22px;
+      color: #999;
+      transition: color 0.2s;
+    }
+    .heart.active {
+      color: #e33;
+    }
+    
+    .rating-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .stars .star {
+      color: #f5c542;
+      font-size: 16px;
+      margin-right: 2px;
+    }
+    .rating-count {
+      color: #777;
+      font-size: 13px;
+    }
+    
+    .price-row {
+      margin: 12px 0 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .price-old {
+      text-decoration: line-through;
+      color: #888;
+      font-size: 16px;
+    }
+    .price-new {
+      font-size: 22px;
+      font-weight: 700;
+      color: #e60023;
+    }
+    .discount-note {
+      margin-top: 2px;
+      color: #555;
+      font-size: 13px;
+    }
+    
+   .color-row {
+  margin: 12px 0;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.color-swatch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.color-box {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+}
+
+    
+    .sizes-grid,
+    .lengths-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .size-btn,
+    .length-btn {
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      background: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+      min-width: 44px;
+      text-align: center;
+    }
+    .size-btn.active,
+    .length-btn.active {
+      border-color: #111;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+    }
+    
+    .qty-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 18px 0;
+    }
+    .qty-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .qty-btn {
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      background: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #qtyDisplay {
+      width: 40px;
+      text-align: center;
+      border: 1px solid #eee;
+      padding: 6px;
+      border-radius: 6px;
+    }
+    
+.delivery-options {
+  display: flex;
+  gap: 12px;
+  margin: 14px 0;
+}
+
+.delivery-options .option {
+  border: 1px solid #eee;
+  padding: 10px;
+  flex: 1;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+
+.delivery-options .option:hover {
+  border-color: #999;
+  background-color: #fafafa;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.delivery-options .option:has(input[type="radio"]:checked) {
+  border-color: #000;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+    
+    .add-to-cart-btn {
+      display: block;
+      width: 100%;
+      margin-top: 10px;
+      background: #000;
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 4px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    
+    .meta-row {
+      margin-top: 10px;
+      color: #666;
+      font-size: 13px;
+    }
+    
+    .desc-section {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 32px;
+      margin-top: 40px;
+      padding: 26px;
+      border-top: 1px solid #eee;
+    }
+    .bullets {
+      margin-top: 10px;
+    }
+    .recently-viewed.bottom {
+      margin-top: 30px;
+    }
+    .recent-list {
+      display: flex;
+      gap: 12px;
+    }
+    .recent-item {
+      text-decoration: none;
+      color: inherit;
+      width: 120px;
+    }
+    .recent-item img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border: 1px solid #eee;
+    }
+    .recent-name {
+      font-size: 13px;
+      margin-top: 6px;
+      text-align: center;
+    }
+    @media (max-width: 1100px) {
+      .product-grid {
+        grid-template-columns: 60px 1fr;
+      }
+      .info-col {
+        grid-column: 1/ -1;
+        margin-top: 18px;
+      }
+      .main-image-wrap img {
+        height: 500px;
+      }
+    }
+    .recent-slider {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+    
+    .recent-list-wrapper {
+      overflow: hidden;
+    }
+    
+    .section-title {
+      text-align: center;
+      margin: 40px 0 20px;
+      font-size: 35px;
+      font-weight: bold;
+    }
+    
+    .recent-list {
+      display: flex;
+      transition: transform 0.4s ease;
+    }
+    
+    .recent-item {
+      flex: 0 0 220px;
+      margin: 0 10px;
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      text-decoration: none;
+      color: #333;
+      transition: transform 0.3s;
+    }
+    .recent-item:hover {
+      transform: translateY(-5px);
+    }
+    
+    .recent-item img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+    }
+    
+    .recent-info {
+      padding: 8px;
+      font-size: 14px;
+    }
+    
+    .recent-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    
+    .price-old {
+      text-decoration: line-through;
+      color: #999;
+      margin-right: 5px;
+    }
+    .price-new {
+      color: #000000;
+      font-weight: bold;
+    }
+    
+    /* Стрілки */
+    .recent-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.8);
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 5px 12px;
+      border-radius: 50%;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      transition: background 0.3s;
+      z-index: 10;
+    }
+    .recent-btn:hover {
+      background: rgba(255, 255, 255, 1);
+    }
+    
+    .recent-prev {
+      left: 5px;
+    }
+    .recent-next {
+      right: 5px;
+    }
+    
+    .star {
+      font-size: 20px;
+      color: #ccc;
+      cursor: default;
+    }
+    
+    .star.filled {
+      color: #f39c12;
+    }
+    
+    .vote-stars .star {
+      font-size: 30px;
+      cursor: pointer;
+      color: #ccc;
+      transition: color 0.2s;
+    }
+    
+    .vote-stars .star.active,
+    .vote-stars .star:hover,
+    .vote-stars .star.hovered {
+      color: #f39c12;
+    }
+    .desc-section {
+  margin: 60px auto;      /* зверху/знизу більше відступу */
+  padding: 0px;
+  border-top: 2px solid #ddd;
+  max-width: 1100px;      /* обмежуємо ширину */
+}
+  </style>
   <script>
     // Синхронізація зірочок між формами
     function updateStarsInAllForms(rating) {
@@ -405,6 +837,7 @@
         updateStarsInAllForms(value)
       })
     })
+
     ;(function () {
       const thumbs = Array.from(document.querySelectorAll('.thumb'))
       const mainImg = document.getElementById('mainImage')
