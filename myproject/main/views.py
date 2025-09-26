@@ -13,7 +13,7 @@ from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
+from django.db.models import Case, When
 from cart.models import Cart, CartItem
 from .models import Product, ProductRating, Review, UserDetails, Wishlist
 from .forms import RegisterForm, UserForm,UserDetailsForm
@@ -102,7 +102,7 @@ def product_detail(request, product_id):
     reviews = Review.objects.filter(product=product)
     user_review = None
 
-    paginator = Paginator(reviews, 5)  
+    paginator = Paginator(reviews, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -116,6 +116,34 @@ def product_detail(request, product_id):
     recommended_count = reviews.filter(rating__gte=4).count() if total_reviews > 0 else 0
     recommended_percent = round((recommended_count / total_reviews) * 100, 1) if total_reviews > 0 else 0
 
+    # === ЛОГІКА "НЕЩОДАВНО ПЕРЕГЛЯНУТИХ" ===
+    recently_viewed = request.session.get('recently_viewed', [])
+
+    # видаляємо поточний товар, якщо є у списку
+    if product.id in recently_viewed:
+        recently_viewed.remove(product.id)
+
+    # додаємо поточний на початок списку
+    recently_viewed.insert(0, product.id)
+
+    # обмежуємо список (наприклад, 6 останніх)
+    recently_viewed = recently_viewed[:6]
+
+    # зберігаємо назад у сесію
+    request.session['recently_viewed'] = recently_viewed
+
+    # формуємо порядок для запиту
+    preserved_order = Case(
+        *[When(id=pk, then=pos) for pos, pk in enumerate(recently_viewed) if pk != product.id]
+    )
+
+    # дістаємо продукти, крім поточного
+    recently_viewed_products = (
+        Product.objects.filter(id__in=recently_viewed)
+        .exclude(id=product.id)
+        .order_by(preserved_order)
+    )
+
     context = {
         'product': product,
         'reviews': page_obj,
@@ -124,9 +152,9 @@ def product_detail(request, product_id):
         'recommended_count': recommended_count,
         'recommended_percent': recommended_percent,
         'range': range(1, 6),
+        'recently_viewed': recently_viewed_products, 
     }
     return render(request, 'main/product_detail.html', context)
-
 
 
 
@@ -474,12 +502,10 @@ def rate_product(request):
         product_id = None
         rating = None
 
-        # спочатку пробуємо як form-data
         if request.POST.get("product_id"):
             product_id = request.POST.get("product_id")
             rating = request.POST.get("rating")
         else:
-            # якщо form-data нема  парсимо JSON
             try:
                 data = json.loads(request.body)
                 product_id = data.get("product_id")
@@ -493,7 +519,6 @@ def rate_product(request):
 
         product = get_object_or_404(Product, id=product_id)
 
-        # оновлюємо або створюємо рейтинг користувача
         obj, created = ProductRating.objects.update_or_create(
             user=request.user,
             product=product,
