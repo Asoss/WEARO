@@ -5,7 +5,6 @@
   {% csrf_token %}
   <link rel="stylesheet" href="{% static 'css/filters.css' %}" />
 
-  <!-- Пошук -->
   <div class="search-bar">
     <form id="filter-form" method="get" action="{% url 'product_search' %}">
       <input type="text" id="searchInput" name="q" placeholder="Пошук" value="{{ request.GET.q|default:'' }}" />
@@ -13,13 +12,11 @@
     </form>
   </div>
 
-  <!-- Breadcrumb -->
   <div class="breadcrumb">
     <a href="{% url 'home' %}">Головна</a> \
     <span>{{ title }}</span>
   </div>
 
-  <!-- Заголовок -->
   <h1 class="page-title">{{ title|upper }}</h1>
 
   <!-- Категорії -->
@@ -79,7 +76,6 @@
     {% endif %}
   </div>
 
-  <!-- Основний контейнер з фільтрами та товарами -->
   <div class="page-container">
     <!-- ФІЛЬТРИ -->
     <div class="filters-container">
@@ -241,7 +237,11 @@
                 {% endif %}
               {% endwith %}
 
-              <button type="submit" class="add-to-cart-btn">Додати в кошик</button>
+              <form method="post" action="{% url 'move_to_cart' product.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="quantity" value="1" />
+                <button type="submit" class="add-to-cart-btn">Додати в кошик</button>
+              </form>
             </div>
 
             <div class="product-info">
@@ -252,6 +252,7 @@
                 <div class="stars-container"></div>
                 <span class="reviews">({{ product.rating_count }})</span>
               </div>
+
               <!-- Ціна -->
               <div class="product-prices">
                 {% if product.old_price %}
@@ -267,10 +268,107 @@
           </div>
         {% endfor %}
       </div>
+
+      <!-- Пагінація винесена за межі products-grid -->
+      {% if page_obj.has_other_pages %}
+        <div class="pagination-wrapper">
+          <hr />
+          <div class="pagination">
+            <div class="pagination-left">
+              {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                  <span class="current">{{ num }}</span>
+                {% else %}
+                  <a href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+              {% endfor %}
+            </div>
+
+            <div class="pagination-right">
+              {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="page-btn">‹</a>
+              {% else %}
+                <span class="page-btn disabled">‹</span>
+              {% endif %}
+
+              {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="page-btn">›</a>
+              {% else %}
+                <span class="page-btn disabled">›</span>
+              {% endif %}
+            </div>
+          </div>
+          <hr />
+        </div>
+      {% endif %}
     </div>
   </div>
 
   <style>
+    .pagination-wrapper {
+      margin: 30px 0;
+    }
+    
+    .pagination-wrapper hr {
+      border: none;
+      border-top: 1px solid #ccc;
+      margin: 10px 0;
+      width: 200vw;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .pagination-left a,
+    .pagination-left span {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 3px;
+      border: 1px solid #ccc;
+      margin-right: 5px;
+      text-decoration: none;
+      color: #333;
+      transition: all 0.3s ease;
+    }
+    
+    .pagination-left a:hover {
+      background: #3f51b5;
+      color: white;
+    }
+    
+    .pagination-left .current {
+      background: white;
+      border: 2px solid #000;
+      font-weight: bold;
+    }
+    
+    .pagination-right .page-btn {
+      background: #3f51b5;
+      color: white;
+      border: none;
+      font-size: 29px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: inline-block;
+      line-height: 50px;
+      text-align: center;
+      margin-left: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+    
+    .pagination-right .page-btn:hover {
+      background: #283593;
+    }
+    
     .product-image-container {
       position: relative;
       overflow: hidden;

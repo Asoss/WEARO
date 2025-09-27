@@ -130,23 +130,19 @@
 
         <form method="post" action="{% url 'move_to_cart' product.id %}" id="addToCartForm" class="addcart-form">
           {% csrf_token %}
+
           <input type="hidden" name="size" id="selectedSize" value="" />
           <input type="hidden" name="length" id="selectedLength" value="" />
-          <form method="post" action="{% url 'move_to_cart' product.id %}">
-            {% csrf_token %}
-            <input type="hidden" name="quantity" id="quantityInput" value="1" />
+          <input type="hidden" name="quantity" id="quantityInput" value="1" />
 
-            <div class="qty-row">
-              <div class="qty-label">Кількість</div>
-              <div class="qty-controls">
-                <button type="button" class="qty-btn" id="qtyMinus">−</button>
-                <input type="text" id="qtyDisplay" value="1" readonly />
-                <button type="button" class="qty-btn" id="qtyPlus">+</button>
-              </div>
+          <div class="qty-row">
+            <div class="qty-label">Кількість</div>
+            <div class="qty-controls">
+              <button type="button" class="qty-btn" id="qtyMinus">−</button>
+              <input type="text" id="qtyDisplay" value="1" readonly />
+              <button type="button" class="qty-btn" id="qtyPlus">+</button>
             </div>
-
-            <button type="submit" class="add-to-cart-btn">Додати до кошика</button>
-          </form>
+          </div>
 
           <div class="delivery-options">
             <label class="option">
@@ -162,7 +158,7 @@
             </label>
           </div>
 
-          <button type="submit" class="add-to-cart-btn">Додати в кошик</button>
+          <button type="submit" class="add-to-cart-btn">Додати до кошика</button>
         </form>
 
         <div class="meta-row">
@@ -251,7 +247,7 @@
             </div>
 
             <p class="write-review-link">
-              <a href="#reviews-list">Будемо дуже вдячні якщо напишете відгук</a>
+              <a href="#reviews-list" class="reviews-lists">Будемо дуже вдячні якщо напишете відгук</a>
             </p>
           </form>
         </section>
