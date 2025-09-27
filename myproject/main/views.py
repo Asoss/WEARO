@@ -73,8 +73,7 @@ def home(request):
 
 
 def product_list_by_gender(request, gender: bool, title: str):
-    """Універсальна в’юшка для списку товарів за статтю"""
-    products = Product.objects.filter(gender=gender, stock__gt=0)
+    products = Product.objects.filter(gender=gender, stock__gt=0).order_by("id")
 
     wishlist_products = []
     if request.user.is_authenticated:
@@ -82,11 +81,17 @@ def product_list_by_gender(request, gender: bool, title: str):
             user=request.user
         ).values_list("product_id", flat=True)
 
+    paginator = Paginator(products, 12) 
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     return render(request, "main/product_list.html", {
-        "products": products,
+        "products": page_obj,
         "wishlist_products": list(wishlist_products),
         "title": title,
         "gender": gender,
+        "page_obj": page_obj,
+        "paginator": paginator,
     })
 
 

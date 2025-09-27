@@ -1016,9 +1016,15 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin: 20px 0;
-        padding: 15px 0;
+
     }
+
+    .reviews-lists {
+        font-size: 14px;
+        text-align: center;
+        margin-left: 18px;
+    }
+
 
     .pagination .page-info {
         font-size: 14px;
