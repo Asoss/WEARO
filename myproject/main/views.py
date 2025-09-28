@@ -13,7 +13,7 @@ from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Case, When
+from django.db.models import Case, When,Q
 from cart.models import Cart, CartItem
 from .models import Product, ProductRating, Review, UserDetails, Wishlist
 from .forms import RegisterForm, UserForm,UserDetailsForm
@@ -395,21 +395,26 @@ def search_results(request):
 
     products = Product.objects.all()
 
-    # фільтруємо по gender, якщо передано
-    if gender is not None:
-        products = products.filter(gender=gender)
+    # фільтруємо по статі (гендеру)
+    if gender:
+        products = products.filter(gender__icontains=gender)
 
+    # фільтруємо по пошуковому запиту
     if query:
         words = query.split()
         q_filter = Q()
         for word in words:
-            q_filter |= Q(name__icontains=word)
+            q_filter |= (
+                Q(name__icontains=word) |          # назва товару
+                Q(category__name__icontains=word) |# категорія
+                Q(gender__icontains=word)          # стать / жанр
+            )
         products = products.filter(q_filter)
 
     if brand_filter:
-        products = products.filter(brand=brand_filter)
+        products = products.filter(brand__icontains=brand_filter)
     if size_filter:
-        products = products.filter(model_size=size_filter)
+        products = products.filter(model_size__icontains=size_filter)
     if price_min:
         products = products.filter(price__gte=price_min)
     if price_max:

@@ -77,7 +77,7 @@
                 <div class="mega-column">
                   <h4>Нова колекція</h4>
                   <a href="#">Переглянути все</a>
-                  <a href="#">Одяг</a>
+                  <a href="{% url 'product_search' %}?q=Куртка">Куртки</a>
                   <a href="#">Взуття</a>
                   <div class="column-separator"></div>
                   <h4>Інші колекції</h4>
@@ -93,7 +93,7 @@
                   <a href="#">Домашня колекція</a>
                   <a href="#">Спортивна колекція</a>
                   <a href="#">Садова колекція</a>
-                  <a href="#">Домашні аксесуари</a>
+                  <a href="{% url 'product_search' %}?q=Футболка">Футболки</a>
                   <a href="#">Прикраси</a>
                   <a href="#">Інше</a>
                 </div>
@@ -104,7 +104,7 @@
                   <a href="#">Домашня колекція</a>
                   <a href="#">Спортивна колекція</a>
                   <a href="#">Садова колекція</a>
-                  <a href="#">Домашні аксесуари</a>
+                  <a href="{% url 'product_search' %}?q=Светр або Світшот">Светри та Світшоти</a>
                   <a href="#">Прикраси</a>
                   <a href="#">Інше</a>
                 </div>
@@ -147,14 +147,14 @@
                   <a href="#">Інше</a>
                 </div>
                 <div class="mega-column">
-                  <h4>Відкрий для себе також</h4>
-                  <a href="#">Вся колекція</a>
-                  <a href="#">Вулична колекція</a>
-                  <a href="#">Домашня колекція</a>
-                  <a href="#">Спортивна колекція</a>
-                  <a href="#">Садова колекція</a>
-                  <a href="#">Домашні аксесуари</a>
-                  <a href="#">Косметика</a>
+                  <h4>Відкрийте для себе також</h4>
+                  <a href="#">Всі бренди</a>
+                  <a href="{% url 'product_search' %}?q=STAFF">STAFF</a>
+                  <a href="#">ASOS</a>
+                  <a href="#">MAXA</a>
+                  <a href="#">Michiko Koshino</a>
+                  <a href="#">Arch</a>
+                  <a href="#">Lynx</a>
                   <a href="#">Інше</a>
                 </div>
               </div>
