@@ -254,11 +254,13 @@
               </div>
 
               <!-- Ціна -->
-              <div class="product-prices">
-                {% if product.old_price %}
-                  <span class="old-price">{{ product.old_price }} грн</span>
+              <div class="price-row">
+                {% if product.discount %}
+                  <div class="price-old">{{ product.price }} грн</div>
+                  <div class="price-new">{{ product.final_price }} грн</div>
+                {% else %}
+                  <div>{{ product.price }} грн</div>
                 {% endif %}
-                <span class="new-price">{{ product.price }} грн</span>
               </div>
             </div>
           </div>
