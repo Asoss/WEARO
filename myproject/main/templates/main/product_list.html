@@ -4,6 +4,7 @@
 {% block content %}
   {% csrf_token %}
   <link rel="stylesheet" href="{% static 'css/filters.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/product_list.css' %}" />
 
   <div class="search-bar">
     <form id="filter-form" method="get" action="{% url 'product_search' %}">
@@ -306,115 +307,7 @@
     </div>
   </div>
 
-  <style>
-    .pagination-wrapper {
-      margin: 30px 0;
-    }
-    
-    .pagination-wrapper hr {
-      border: none;
-      border-top: 1px solid #ccc;
-      margin: 10px 0;
-      width: 200vw;
-      position: relative;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-    
-    .pagination {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .pagination-left a,
-    .pagination-left span {
-      display: inline-block;
-      padding: 6px 12px;
-      border-radius: 3px;
-      border: 1px solid #ccc;
-      margin-right: 5px;
-      text-decoration: none;
-      color: #333;
-      transition: all 0.3s ease;
-    }
-    
-    .pagination-left a:hover {
-      background: #3f51b5;
-      color: white;
-    }
-    
-    .pagination-left .current {
-      background: white;
-      border: 2px solid #000;
-      font-weight: bold;
-    }
-    
-    .pagination-right .page-btn {
-      background: #3f51b5;
-      color: white;
-      border: none;
-      font-size: 29px;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      display: inline-block;
-      line-height: 50px;
-      text-align: center;
-      margin-left: 8px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-decoration: none;
-    }
-    
-    .pagination-right .page-btn:hover {
-      background: #283593;
-    }
-    
-    .product-image-container {
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .product-image {
-      width: 100%;
-      display: block;
-      transition: opacity 0.9s ease;
-    }
-    
-    .img-back {
-      position: absolute;
-      top: 0;
-      left: 0;
-      opacity: 0;
-    }
-    
-    .product-image-container:hover .img-front {
-      opacity: 0;
-    }
-    
-    .product-image-container:hover .img-back {
-      opacity: 1;
-    }
-    
-    .add-to-cart-btn {
-      position: absolute;
-      bottom: -50px;
-      left: 0;
-      width: 100%;
-      padding: 12px;
-      background: #3f51b5;
-      color: #fff;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-      transition: bottom 0.4s ease;
-    }
-    
-    .product-image-container:hover .add-to-cart-btn {
-      bottom: 0;
-    }
-  </style>
+  <script src="{% static 'js/trans_prod_list.js' %}"></script>
   <script src="{% static 'js/rating.js' %}"></script>
   <script src="{% static 'js/search.js' %}"></script>
   <script src="{% static 'js/filters.js' %}"></script>

@@ -19,7 +19,7 @@
   <div class="hover-gallery">
     <div class="hover-item">
       <img src="{% static 'home_page/pants.jpg' %}" alt="Photo 1" class="default" />
-      <img src="{% static 'home_page/pants0.png' %}" alt="Photo 1 Hover" class="hover" />
+      <a href="{% url 'women' %}"><img src="{% static 'home_page/pants0.png' %}" alt="Photo 1 Hover" class="hover" /></a>
     </div>
     <div class="hover-item">
       <img src="{% static 'home_page/styles0.jpg' %}" alt="Photo 2" class="default" />
@@ -27,7 +27,7 @@
     </div>
     <div class="hover-item">
       <img src="{% static 'home_page/closes0.jpg' %}" alt="Photo 3" class="default" />
-      <img src="{% static 'home_page/closes.jpg' %}" alt="Photo 3 Hover" class="hover" />
+      <a href="{% url 'men' %}"><img src="{% static 'home_page/closes.jpg' %}" alt="Photo 3 Hover" class="hover" /></a>
     </div>
   </div>
 
@@ -53,7 +53,7 @@
     <div class="hero-overlay">
       <p class="small-text">Керуй трендами</p>
       <h3 class="big-text">СТВОРИ СВІЙ ВЛАСНИЙ СТИЛЬ</h3>
-      <a href="{% url 'product_search' %}?q=одяг&gender=0" class="link-text">Підібрати одяг</a>
+      <a href="{% url 'product_search' %}" class="link-text">Підібрати одяг</a>
     </div>
   </div>
 
@@ -82,7 +82,7 @@
 
   <h2 class="section-title">ШУКАЄТЕ БІЛЬШЕ ВАРІАНТІВ?</h2>
   <div class="options-buttons">
-    <a href="{% url 'product_search' %}?q=Джинси&gender=0" class="option-btn">Жіночі джинси</a>
+    <a href="{% url 'product_search' %}?q=ДЖИНСИ&gender=0" class="option-btn">Жіночі джинси</a>
     <a href="{% url 'product_search' %}?q=Шорти&gender=0" class="option-btn">Жіночі шорти</a>
     <a href="{% url 'product_search' %}?q=Штани&gender=0" class="option-btn">Жіночі штани</a>
     <a href="{% url 'product_search' %}?q=Топи блузки сорочки&gender=0" class="option-btn">Жіночі топи, блузки та сорочки</a>
@@ -318,7 +318,7 @@
       margin-right: 10px;
     }
   </style>
-
+  <script src="{% static 'js/trans_home.js' %}"></script>
   <script src="{% static 'js/search.js' %}"></script>
   <script>
     let positions = {}
@@ -329,7 +329,7 @@
       const visibleItems = 4
       const totalItems = items.length
     
-      if (totalItems <= visibleItems) return // нема що крутити
+      if (totalItems <= visibleItems) return
     
       const itemWidth = items[0].offsetWidth
       const maxPosition = -(itemWidth * (totalItems - visibleItems))

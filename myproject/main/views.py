@@ -383,7 +383,7 @@ def search_results(request):
     developer_keywords = [
         'developers', 'dev', 'team', 'about', 'creators', 
         'розробники', 'команда', 'творці', 'автори',
-        'secret',
+        'secret','wearo'
     ]
     if any(keyword in query for keyword in developer_keywords):
         return redirect('developers_page')
