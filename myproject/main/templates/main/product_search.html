@@ -427,7 +427,7 @@
       </div>
 
       {% if page_obj.has_next %}
-        <button class="load-more-btn" id="load-more" data-next-page="{{ page_obj.next_page_number }}">LOAD MORE</button>
+        <button class="load-more-btn" id="load-more" data-next-page="{{ page_obj.next_page_number }}">Завантажити більше</button>
       {% endif %}
     {% else %}
       <div class="no-results">
@@ -438,17 +438,20 @@
   </div>
 
   <script>
+    // Додаємо перевірку на існування форми перед роботою з нею
     const form = document.getElementById('filter-form')
-    form.querySelectorAll('select').forEach((el) => {
-      el.addEventListener('change', () => form.submit())
-    })
-    let timeout
-    form.querySelectorAll('input[type="number"]').forEach((el) => {
-      el.addEventListener('input', () => {
-        clearTimeout(timeout)
-        timeout = setTimeout(() => form.submit(), 500)
+    if (form) {
+      form.querySelectorAll('select').forEach((el) => {
+        el.addEventListener('change', () => form.submit())
       })
-    })
+      let timeout
+      form.querySelectorAll('input[type="number"]').forEach((el) => {
+        el.addEventListener('input', () => {
+          clearTimeout(timeout)
+          timeout = setTimeout(() => form.submit(), 500)
+        })
+      })
+    }
     
     // Rating stars initialization
     document.addEventListener('DOMContentLoaded', function () {
@@ -536,7 +539,7 @@
             if (newBtn && newBtn.dataset.nextPage) {
               loadMoreBtn.dataset.nextPage = newBtn.dataset.nextPage
               loadMoreBtn.style.opacity = '1'
-              loadMoreBtn.textContent = 'LOAD MORE'
+              loadMoreBtn.textContent = 'Завантажити більше'
             } else {
               loadMoreBtn.style.opacity = '0'
               loadMoreBtn.style.transform = 'translateY(10px)'
@@ -548,7 +551,7 @@
             loadMoreBtn.style.opacity = '1'
             loadMoreBtn.textContent = 'Помилка завантаження'
             setTimeout(() => {
-              loadMoreBtn.textContent = 'LOAD MORE'
+              loadMoreBtn.textContent = 'Завантажити більше'
             }, 2000)
           })
       })
