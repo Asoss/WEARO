@@ -13,41 +13,100 @@
       --black: #000;
       --dark: #111;
       --muted: #666;
+      --white: #fff;
     }
 
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: Arial, sans-serif; background: #f9f9f9; color: #111; min-height: 100vh; }
+    body { margin: 0; font-family: Arial, sans-serif; background: #f9f9f9; color: #111; min-height: 100vh; display: flex; justify-content: center; }
+
     .page { display: flex; width: 100%; max-width: 1200px; margin: 40px auto; gap: var(--gap); padding: 0 var(--gap); }
+
+    /* Sidebar */
     .sidebar { width: var(--sidebar-width); display: flex; flex-direction: column; gap: 12px; }
-    .profile { display: flex; align-items: center; gap: 10px; background: #fff; padding: 16px; border: 2px solid var(--dark); border-radius: 6px; }
-    .avatar { width: 60px; height: 60px; border-radius: 50%; background: var(--dark); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #fff;
+      padding: 16px 16px 16px 50px;
+      border: 4px solid var(--dark);
+      border-radius: 6px;
+      position: relative;
+    }
+
+    .avatar {
+      position: absolute;
+      left: -30px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--dark);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 24px;
+      border: 4px solid var(--white);
+    }
+
     .name { line-height: 1; }
     .name .greet { font-size: 14px; color: var(--muted); display:block; }
     .name .user { font-weight: 700; font-size: 16px; display:block; }
 
-    /* Меню */
+    /* Menu */
     .menu { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
-    .menu a { display: block; padding: 12px 16px; text-decoration: none; color: #fff; background: var(--dark); font-size: 15px; border: 1px solid #222; border-radius: 0; }
+    .menu a { display: block; padding: 12px 16px; text-decoration: none; color: #fff; background: var(--dark); font-size: 15px; border-radius: 0; position: relative; }
     .menu a:hover { background: #222; }
 
+    .menu a.active {
+      background: var(--white);
+      color: var(--dark);
+      font-weight: 700;
+    }
+    .menu a.active::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 55px;
+      background: var(--dark);
+      border-radius: 2px;
+    }
+
+    /* Content */
     .content { flex: 1; display: flex; flex-direction: column; gap: 16px; }
-    .content-header { display: inline-block; background: var(--black); color: #fff; padding: 8px 16px; font-size: 18px; font-weight: 700; text-transform: uppercase; border-radius: 4px; }
-    .content-subheader { display: flex; align-items: center; gap: 12px; background: var(--black); color: #fff; padding: 20px; font-size: 22px; font-weight: 700; text-transform: uppercase; border-radius: 4px; }
+    .content-header { font-weight: 700; font-size: 24px; text-transform: uppercase; color: #111; border-bottom: 2px solid #fff; padding-bottom: 8px; display: inline-block; }
+    .content-subheader { display: flex; align-items: center; gap: 12px; font-size: 22px; font-weight: 700; text-transform: uppercase; color: var(--white); background: var(--black); padding: 20px; border-radius: 4px; }
     .content-subheader .icon { width: 30px; height: 30px; }
-    .content-body { background: #fff; padding: 40px; border: 1px solid #e6e6e6; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+
+    .content-body {
+      background: var(--white);
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 16px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      flex-grow: 1;
+    }
     .content-body img { margin-bottom: 16px; }
     .content-body h2 { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
     .content-body p { font-size: 14px; color: #444; margin-bottom: 20px; max-width: 500px; }
-    .content-body .btn { background: var(--dark); color: #fff; border: none; padding: 10px 20px; cursor: pointer; font-weight: 700; border-radius: 4px; }
+    .content-body .btn { background: var(--dark); color: var(--white); border: none; padding: 10px 20px; cursor: pointer; font-weight: 700; border-radius: 4px; }
     .content-body .btn:hover { background: #222; }
 
-    footer { background: #eee; color: #333; font-size: 12px; padding: 10px; text-align: center; margin-top: 40px; }
-
-    @media (max-width: 880px){
+    @media (max-width: 880px) {
       .page { flex-direction: column; padding: 20px; gap: 16px; }
       .sidebar { width: 100%; flex-direction: row; gap: 12px; align-items: center; overflow-x:auto; }
       .menu { flex-direction: row; }
       .menu a { white-space:nowrap; font-size:13px; padding:8px 10px; }
+      .menu a.active::before { height: 40px; top: 50%; }
       .content-subheader { padding:14px; font-size:18px; }
       .content-body { padding:20px; max-width: 100%; }
     }
@@ -64,10 +123,9 @@
         </div>
       </div>
 
-      <!-- Меню -->
       <nav class="menu">
         <a href="{% url 'my_orders' %}">Мої замовлення</a>
-        <a href="{% url 'my_returns' %}">Повернення</a>
+        <a href="{% url 'my_returns' %}" class="active">Повернення</a>
         <a href="{% url 'need_help' %}">Потрібна допомога</a>
         <a href="{% url 'my_details' %}">Мої дані</a>
         <a href="{% url 'password_reset' %}">Змінити пароль</a>
@@ -80,6 +138,7 @@
 
     <main class="content">
       <div class="content-header">Особистий кабінет</div>
+
       <div class="content-subheader">
         <img src="{% static 'account/return.png' %}" alt="return" class="icon">
         <span>Повернення</span>

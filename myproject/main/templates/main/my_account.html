@@ -1,3 +1,4 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="uk">
@@ -18,7 +19,7 @@
       background: #f9f9f9;
       display: flex;
       justify-content: center;
-      min-height: 100vh;
+      min-height: 50vh;
     }
 
     .wrapper {
@@ -45,8 +46,8 @@
       gap: 10px;
       background: #fff;
       padding: 16px 16px 16px 50px;
-      border: 3px solid var(--dark); /* товстіша рамка */
-      border-radius: 0; /* без заокруглень */
+      border: 5px solid var(--dark); /* товстіша рамка */
+
     }
 
     /* Круглий аватар */
@@ -101,7 +102,7 @@
     /* Контент */
     .content {
       flex-grow: 1;
-      background: #1f1f1f;
+      background: hsl(0, 0%, 0%);
       display: flex;
       flex-direction: column;
       padding: 24px;
@@ -113,16 +114,15 @@
     /* Welcome-блок */
     .welcome-block {
       background: #fff;
-      padding: 20px;
+      padding: 10px;
       border-radius: 0; /* без заокруглень */
-      width: 100%;
+      width: 49%;
     }
 
     .welcome-block .welcome-line {
       font-size: 22px;
       font-weight: bold;
       text-transform: uppercase;
-      margin-bottom: 20px; /* відступ між рядками */
       display: block;
     }
 
@@ -132,8 +132,8 @@
       flex-grow: 1;
       width: 100%;
       height: 400px;
-      border-radius: 0; /* без заокруглень */
-      border: 3px solid #fff;
+      border-radius: 0; 
+      border: 5px solid #fff;
       display: flex;
       align-items: flex-start;
       justify-content: flex-start;
@@ -176,6 +176,7 @@
     <main class="content">
       <div class="welcome-block">
         <div class="welcome-line">ЛАСКАВО ПРОСИМО ДО</div>
+        <div style="margin-bottom: 20px; background-color: #000;"></div>
         <div class="welcome-line">ВАШОГО ОБЛІКОВОГО ЗАПИСУ</div>
       </div>
 

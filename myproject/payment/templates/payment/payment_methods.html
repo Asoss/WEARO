@@ -5,7 +5,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Address Book – My Account</title>
+  <title>Адресна книга – Особистий кабінет</title>
   <style>
     :root {
       --sidebar-width: 280px;
@@ -16,40 +16,149 @@
     }
 
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: Arial, sans-serif; background: #f9f9f9; color: #111; min-height: 100vh; }
 
-    .page { display: flex; width: 100%; max-width: 1000px; margin: 40px auto; gap: var(--gap); padding: 0 var(--gap); }
-    .sidebar { width: var(--sidebar-width); display: flex; flex-direction: column; gap: 12px; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      color: #111;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
 
-    .profile { display: flex; align-items: center; gap: 10px; background: #fff; padding: 12px; border: 2px solid var(--dark); border-radius: 6px; }
-    .avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--dark); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
+    .page {
+      display: flex;
+      width: 100%;
+      max-width: 1200px;
+      margin: 40px auto;
+      gap: var(--gap);
+      padding: 0 var(--gap);
+      align-items: flex-start;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-width);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #fff;
+      padding: 16px 16px 16px 50px;
+      border: 4px solid var(--dark);
+      border-radius: 6px;
+      position: relative;
+    }
+
+    .avatar {
+      position: absolute;
+      left: -30px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--dark);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 24px;
+      border: 4px solid #fff;
+    }
+
     .name { line-height: 1; }
-    .name .greet { font-size: 12px; color: var(--muted); display:block; }
-    .name .user { font-weight: 700; font-size: 13px; display:block; }
+    .name .greet { font-size: 14px; color: var(--muted); display:block; }
+    .name .user { font-weight: 700; font-size: 16px; display:block; }
 
-    /* Меню як на інших сторінках */
-    .menu { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
-    .menu a { display: block; padding: 12px 16px; text-decoration: none; color: #fff; background: var(--dark); font-size: 15px; border: 1px solid #222; border-radius: 0; }
+    /* Меню */
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 15px;
+    }
+    .menu a {
+      display: block;
+      padding: 12px 16px;
+      text-decoration: none;
+      color: #fff;
+      background: var(--dark);
+      font-size: 15px;
+      border-radius: 0;
+    }
     .menu a:hover { background: #222; }
 
-    .content { flex: 1; display: flex; flex-direction: column; gap: 12px; }
-    .content-header { display: inline-block; background: var(--black); color: #fff; padding: 6px 12px; font-size: 14px; font-weight: 700; text-transform: uppercase; border-radius: 4px; }
-    .content-subheader { display: flex; align-items: center; gap: 12px; background: var(--black); color: #fff; padding: 16px 18px; font-size: 18px; font-weight: 700; text-transform: uppercase; border-radius: 4px; }
-    .content-subheader .icon { width: 24px; height: 24px; }
+    /* Контент */
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
 
-    .content-body { background: #fff; padding: 36px; border: 1px solid #e6e6e6; display: flex; flex-direction: column; gap: 18px; max-width: 640px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
-    .billing-note { font-weight: bold; font-size: 16px; }
-    .billing-info { margin-top: 6px; color: #444; font-size: 14px; }
-    .btn { background: var(--dark); color: #fff; border: none; padding: 10px 18px; font-weight: 700; cursor: pointer; border-radius: 4px; text-align: center; width: fit-content; }
+    .content-header {
+      font-weight: 700;
+      font-size: 24px;
+      text-transform: uppercase;
+      color: #111;
+      border-bottom: 2px solid #fff;
+      padding-bottom: 8px;
+      display: inline-block;
+    }
+
+    .content-subheader {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 22px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #fff;
+      background: var(--black);
+      padding: 20px;
+      border-radius: 4px;
+    }
+    .content-subheader .icon { width: 30px; height: 30px; }
+
+    .content-body {
+      background: #fff;
+      padding: 36px;
+      border: 1px solid #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      max-width: 640px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .billing-note { font-weight: 700; font-size: 16px; }
+    .billing-info {
+      margin-top: 6px;
+      color: #444;
+      font-size: 14px;
+    }
+
+    .btn { background: var(--dark); color: #fff; border: none; padding: 10px 18px; font-weight: 700; cursor: pointer; border-radius: 4px; text-align: center; }
     .btn:hover { background: #222; }
     .back-link { color: #111; text-decoration: none; font-size: 14px; margin-top: 16px; display: inline-block; }
 
-    @media (max-width: 880px){
+    @media(max-width: 880px){
       .page { flex-direction: column; padding: 20px; gap: 16px; }
       .sidebar { width: 100%; flex-direction: row; gap: 12px; align-items: center; overflow-x:auto; }
       .menu { flex-direction: row; }
-      .menu a { white-space:nowrap; font-size:13px; padding:8px 10px; }
-      .content-subheader { padding:14px; font-size:16px; }
+      .menu a { white-space: nowrap; font-size: 13px; padding: 8px 10px; }
+      .content-subheader { padding:14px; font-size:18px; }
       .content-body { padding:20px; max-width: 100%; }
     }
   </style>
@@ -71,7 +180,7 @@
         <a href="{% url 'need_help' %}">Потрібна допомога</a>
         <a href="{% url 'my_details' %}">Мої дані</a>
         <a href="{% url 'password_reset' %}">Змінити пароль</a>
-        <a href="{% url 'address_book' %}">Адресна книга</a>
+        <a href="{% url 'address_book' %}" class="active">Адресна книга</a>
         <a href="{% url 'payment_methods' %}">Спосіб оплати</a>
         <a href="{% url 'social_accounts' %}">Соцмережі</a>
         <a href="{% url 'sign_out' %}">Вихід</a>
@@ -86,13 +195,13 @@
       </div>
 
       <div class="content-body">
-        <div class="billing-note">НАМ потрібна адреса для виставлення рахунків</div>
+        <div class="billing-note">Нам потрібна адреса для виставлення рахунків</div>
         <div class="billing-info">
           Наразі у вас немає збереженої адреси. Без неї ви не зможете додати новий спосіб оплати.
         </div>
 
-        <a href="{% url 'my_details' %}" class="btn">Додати нову адресу</a>
-        <a href="{% url 'my_account' %}" class="back-link">← Back to account</a>
+        <a href="{% url 'address_book' %}" class="btn">Додати нову адресу</a>
+        <a href="{% url 'my_account' %}" class="back-link">← Повернутися до особистого кабінету</a>
       </div>
     </main>
   </div>
