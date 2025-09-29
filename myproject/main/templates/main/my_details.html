@@ -5,7 +5,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Особистий кабінет – My Details</title>
+  <title>Особистий кабінет – Мої дані</title>
   <style>
     :root{
       --sidebar-width: 280px;
@@ -13,32 +13,114 @@
       --black: #000;
       --dark: #111;
       --muted: #666;
+      --white: #fff;
     }
 
-    *{box-sizing: border-box;}
-    body { margin: 0; font-family: Arial, sans-serif; background: #fff; color: #111; min-height: 100vh; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      color: #111;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
 
-    .page { display: flex; width: 100%; max-width: 1000px; margin: 40px auto; gap: var(--gap); padding: 0 var(--gap); align-items: flex-start; }
+    .page {
+      display: flex;
+      width: 100%;
+      max-width: 1200px;
+      margin: 40px auto;
+      gap: var(--gap);
+      padding: 0 var(--gap);
+      align-items: flex-start;
+    }
 
+    /* Бокове меню */
     .sidebar { width: var(--sidebar-width); display: flex; flex-direction: column; gap: 12px; }
-    .profile { display: flex; align-items: center; gap: 10px; background: #fff; padding: 12px; border: 2px solid var(--dark); }
-    .avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--dark); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
-    .name { line-height: 1; }
-    .name .greet { font-size: 12px; color: var(--muted); display:block; }
-    .name .user { font-weight: 700; font-size: 13px; display:block; }
 
-    /* Меню таке ж саме, як на попередніх сторінках */
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #fff;
+      padding: 16px 16px 16px 50px;
+      border: 4px solid var(--dark);
+      border-radius: 6px;
+      position: relative;
+    }
+
+    .avatar {
+      position: absolute;
+      left: -30px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--dark);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 24px;
+      border: 4px solid var(--white);
+    }
+
+    .name { line-height: 1; }
+    .name .greet { font-size: 14px; color: var(--muted); display:block; }
+    .name .user { font-weight: 700; font-size: 16px; display:block; }
+
+    /* Меню */
     .menu { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
-    .menu a { display: block; padding: 12px 16px; text-decoration: none; color: #fff; background: var(--dark); font-size: 15px; border: 1px solid #222; border-radius: 0; }
+    .menu a { display: block; padding: 12px 16px; text-decoration: none; color: #fff; background: var(--dark); font-size: 15px; border-radius: 0; position: relative; }
     .menu a:hover { background: #222; }
 
-    .content { flex: 1; max-width: calc(100% - var(--sidebar-width) - var(--gap)); display: flex; flex-direction: column; gap: 12px; }
-    .content-header { display: inline-block; background: var(--black); color: #fff; padding: 6px 12px; font-size: 14px; font-weight: 700; text-transform: uppercase; }
-    .content-subheader { display: flex; align-items: center; gap: 12px; background: var(--black); color: #fff; padding: 16px 18px; font-size: 18px; font-weight: 700; text-transform: uppercase; }
-    .content-subheader .icon { width: 24px; height: 24px; }
-    .content-body { background: #fff; padding: 16px; border: 1px solid #e6e6e6; display: flex; justify-content: center; max-width: 100%; }
+    /* Активний пункт меню */
+    .menu a.active {
+      background: var(--white);
+      color: var(--dark);
+      font-weight: 700;
+    }
+    .menu a.active::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 55px;
+      background: var(--dark);
+      border-radius: 2px;
+    }
 
-    .details-form { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 14px; font-size: 14px; }
+    /* Контент */
+    .content { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+    .content-header { font-weight: 700; font-size: 24px; text-transform: uppercase; color: #111; border-bottom: 2px solid #fff; padding-bottom: 8px; display: inline-block; }
+    .content-subheader { display: flex; align-items: center; gap: 12px; font-size: 22px; font-weight: 700; text-transform: uppercase; color: var(--white); background: var(--black); padding: 20px; border-radius: 4px; }
+    .content-subheader .icon { width: 30px; height: 30px; }
+
+    .content-body {
+      background: var(--white);
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 16px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      flex-grow: 1;
+    }
+
+    .details-form {
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      font-size: 14px;
+    }
     .form-desc { margin: 0 0 8px 0; color: #333; font-size: 14px; }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-group label { font-weight: 600; font-size: 13px; color: #111; }
@@ -50,9 +132,10 @@
 
     @media (max-width: 880px){
       .page{ flex-direction: column; padding: 20px; gap: 16px; }
-      .sidebar{ width: 100%; flex-direction: row; gap: 12px; align-items: center; }
-      .menu{ flex-direction: row; overflow-x:auto; }
+      .sidebar{ width: 100%; flex-direction: row; gap: 12px; align-items: center; overflow-x:auto; }
+      .menu{ flex-direction: row; }
       .menu a{ white-space:nowrap; font-size:13px; padding:8px 10px; }
+      .menu a.active::before { height: 40px; top: 50%; }
       .content-subheader{ padding:14px; font-size:16px; }
       .content-body{ padding:14px; }
     }
@@ -60,7 +143,7 @@
 </head>
 <body>
   <div class="page">
-    <!-- БІЧНЕ МЕНЮ -->
+    <!-- Бокове меню -->
     <aside class="sidebar">
       <div class="profile">
         <div class="avatar">{{ user.username|slice:":1" }}{{ user.last_name|slice:":1" }}</div>
@@ -75,7 +158,7 @@
         <a href="{% url 'my_orders' %}">Мої замовлення</a>
         <a href="{% url 'my_returns' %}">Повернення</a>
         <a href="{% url 'need_help' %}">Потрібна допомога</a>
-        <a href="{% url 'my_details' %}">Мої дані</a>
+        <a href="{% url 'my_details' %}" class="active">Мої дані</a>
         <a href="{% url 'password_reset' %}">Змінити пароль</a>
         <a href="{% url 'address_book' %}">Адресна книга</a>
         <a href="{% url 'payment_methods' %}">Спосіб оплати</a>
@@ -84,24 +167,24 @@
       </nav>
     </aside>
 
-    <!-- ГОЛОВНИЙ КОНТЕНТ -->
+    <!-- Основний контент -->
     <main class="content">
       <div class="content-header">Особистий кабінет</div>
 
       <div class="content-subheader">
         <img src="/static/account/details.png" alt="details" class="icon">
-        <span>My Details</span>
+        <span>Мої дані</span>
       </div>
 
       <div class="content-body">
         <form method="POST" class="details-form">
           {% csrf_token %}
           <p class="form-desc">
-            Feel free to edit any of your details below so your account is totally up to date.
+            Ви можете змінити свої дані нижче, щоб ваш обліковий запис був актуальним.
           </p>
 
           <div class="form-group">
-            <label>Username</label>
+            <label>Ім'я користувача</label>
             <input type="text" value="{{ user.username }}" readonly>
           </div>
           <div class="form-group">
@@ -122,8 +205,8 @@
           </div>
 
           <div class="form-actions">
-            <button type="submit" class="btn">SAVE CHANGES</button>
-            <a class="back-link" href="{% url 'my_account' %}">← Back to account</a>
+            <button type="submit" class="btn">Зберегти зміни</button>
+            <a class="back-link" href="{% url 'my_account' %}">← Повернутися до акаунту</a>
           </div>
         </form>
       </div>
