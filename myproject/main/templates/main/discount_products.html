@@ -1,0 +1,111 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/filters.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/product_list.css' %}" />
+    <div class="page-title">Товари зі знижкою</div>
+
+    <div class="main-content">
+      <div class="products-grid">
+        {% for product in products %}
+          <div class="product-item" data-price="{{ product.final_price }}" data-color="{{ product.color.name|default:'' }}" data-pattern="{{ product.get_pattern_display }}" data-clothing-style="{{ product.get_clothing_style_display }}" data-stretchiness="{{ product.get_stretchiness_display }}" data-sizes="{{ product.sizes|join:',' }}" data-lengths="{{ product.lengths|join:',' }}">
+            <div class="product-image-container">
+              <!-- Wishlist heart -->
+              {% if user.is_authenticated %}
+                {% if product.id in wishlist_products %}
+                  <img src="{% static 'icons/heart_filled.png' %}" data-filled="{% static 'icons/heart_filled.png' %}" data-empty="{% static 'icons/heart.png' %}" class="wishlist-heart" data-product-id="{{ product.id }}" />
+                {% else %}
+                  <img src="{% static 'icons/heart.png' %}" data-filled="{% static 'icons/heart_filled.png' %}" data-empty="{% static 'icons/heart.png' %}" class="wishlist-heart" data-product-id="{{ product.id }}" />
+                {% endif %}
+              {% else %}
+                <a href="{% url 'login_email' %}"><img src="{% static 'icons/heart.png' %}" class="wishlist-heart-login" /></a>
+              {% endif %}
+
+              <!-- Product images -->
+              {% with first_image=product.images.first second_image=product.images.all|slice:'1:2'|first %}
+                {% if first_image %}
+                  <img src="{{ first_image.image.url }}" alt="{{ product.name }}" class="product-image img-front" />
+                {% endif %}
+                {% if second_image %}
+                  <img src="{{ second_image.image.url }}" alt="{{ product.name }}" class="product-image img-back" />
+                {% endif %}
+              {% endwith %}
+
+              <form method="post" action="{% url 'move_to_cart' product.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="quantity" value="1" />
+                <button type="submit" class="add-to-cart-btn">Додати в кошик</button>
+              </form>
+            </div>
+
+            <div class="product-info">
+              <a href="{% url 'product_detail' product.id %}" class="product-link"><h3 class="product-name">{{ product.name }}</h3></a>
+
+              <!-- Рейтинг і відгуки -->
+              <div class="product-rating" data-product-id="{{ product.id }}" data-average-rating="{{ product.average_rating|floatformat:1 }}" data-rating-count="{{ product.rating_count }}">
+                <div class="stars-container"></div>
+                <span class="reviews">({{ product.rating_count }})</span>
+              </div>
+
+              <!-- Ціна -->
+              <div class="price-row">
+                {% if product.discount %}
+                  <div class="price-old">{{ product.price }} грн</div>
+                  <div class="price-new">{{ product.final_price }} грн</div>
+                {% else %}
+                  <div>{{ product.price }} грн</div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% empty %}
+          <div class="no-products">
+            <p>Немає товарів</p>
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- Пагінація винесена за межі products-grid -->
+      {% if page_obj.has_other_pages %}
+        <div class="pagination-wrapper">
+          <hr />
+          <div class="pagination">
+            <div class="pagination-left">
+              {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                  <span class="current">{{ num }}</span>
+                {% else %}
+                  <a href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+              {% endfor %}
+            </div>
+
+            <div class="pagination-right">
+              {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="page-btn">‹</a>
+              {% else %}
+                <span class="page-btn disabled">‹</span>
+              {% endif %}
+
+              {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="page-btn">›</a>
+              {% else %}
+                <span class="page-btn disabled">›</span>
+              {% endif %}
+            </div>
+          </div>
+          <hr />
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+
+
+    <script src="{% static 'js/trans_prod_list.js' %}"></script>
+  <script src="{% static 'js/rating.js' %}"></script>
+  <script src="{% static 'js/search.js' %}"></script>
+  <script src="{% static 'js/filters.js' %}"></script>
+  <script src="{% static 'js/wishlist.js' %}"></script>
+{% endblock %}

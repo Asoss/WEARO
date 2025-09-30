@@ -552,3 +552,14 @@ def rate_product(request):
         })
 
     return JsonResponse({"success": False, "error": "Invalid method"}, status=405)
+
+
+
+def discount_products(request):
+
+    products = Product.objects.filter(discount__gt=0).order_by('-discount')
+
+    context = {
+        'products': products
+    }
+    return render(request, 'main/discount_products.html', context)
