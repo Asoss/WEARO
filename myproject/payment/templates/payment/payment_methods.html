@@ -1,11 +1,7 @@
-{% if user.is_authenticated %}
+{% extends 'main/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Адресна книга – Особистий кабінет</title>
+
+{% block content %}
   <style>
     :root {
       --sidebar-width: 280px;
@@ -14,19 +10,12 @@
       --dark: #111;
       --muted: #666;
     }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
-      color: #111;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
+    
+    .page,
+    .page * {
+      box-sizing: border-box;
     }
-
+    
     .page {
       display: flex;
       width: 100%;
@@ -36,7 +25,7 @@
       padding: 0 var(--gap);
       align-items: flex-start;
     }
-
+    
     /* Sidebar */
     .sidebar {
       width: var(--sidebar-width);
@@ -44,7 +33,7 @@
       flex-direction: column;
       gap: 12px;
     }
-
+    
     .profile {
       display: flex;
       align-items: center;
@@ -55,7 +44,7 @@
       border-radius: 6px;
       position: relative;
     }
-
+    
     .avatar {
       position: absolute;
       left: -30px;
@@ -71,11 +60,21 @@
       font-size: 24px;
       border: 4px solid #fff;
     }
-
-    .name { line-height: 1; }
-    .name .greet { font-size: 14px; color: var(--muted); display:block; }
-    .name .user { font-weight: 700; font-size: 16px; display:block; }
-
+    
+    .name {
+      line-height: 1;
+    }
+    .name .greet {
+      font-size: 14px;
+      color: var(--muted);
+      display: block;
+    }
+    .name .user {
+      font-weight: 700;
+      font-size: 16px;
+      display: block;
+    }
+    
     /* Меню */
     .menu {
       display: flex;
@@ -91,9 +90,30 @@
       background: var(--dark);
       font-size: 15px;
       border-radius: 0;
+      position: relative;
     }
-    .menu a:hover { background: #222; }
-
+    .menu a:hover {
+      background: #222;
+    }
+    
+    /* Активний пункт меню */
+    .menu a.active {
+      background: #fff;
+      color: var(--dark);
+      font-weight: 700;
+    }
+    .menu a.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 55px;
+      background: var(--dark);
+      border-radius: 2px;
+    }
+    
     /* Контент */
     .content {
       flex: 1;
@@ -101,7 +121,7 @@
       flex-direction: column;
       gap: 16px;
     }
-
+    
     .content-header {
       font-weight: 700;
       font-size: 24px;
@@ -111,7 +131,7 @@
       padding-bottom: 8px;
       display: inline-block;
     }
-
+    
     .content-subheader {
       display: flex;
       align-items: center;
@@ -124,8 +144,11 @@
       padding: 20px;
       border-radius: 4px;
     }
-    .content-subheader .icon { width: 30px; height: 30px; }
-
+    .content-subheader .icon {
+      width: 30px;
+      height: 30px;
+    }
+    
     .content-body {
       background: #fff;
       padding: 36px;
@@ -135,39 +158,87 @@
       align-items: center;
       justify-content: center;
       gap: 18px;
-      max-width: 640px;
+    
+      width: 100%;
       border-radius: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
       margin: 0 auto;
       text-align: center;
     }
-
-    .billing-note { font-weight: 700; font-size: 16px; }
+    
+    .billing-note {
+      font-weight: 700;
+      font-size: 16px;
+    }
     .billing-info {
       margin-top: 6px;
       color: #444;
       font-size: 14px;
     }
-
-    .btn { background: var(--dark); color: #fff; border: none; padding: 10px 18px; font-weight: 700; cursor: pointer; border-radius: 4px; text-align: center; }
-    .btn:hover { background: #222; }
-    .back-link { color: #111; text-decoration: none; font-size: 14px; margin-top: 16px; display: inline-block; }
-
-    @media(max-width: 880px){
-      .page { flex-direction: column; padding: 20px; gap: 16px; }
-      .sidebar { width: 100%; flex-direction: row; gap: 12px; align-items: center; overflow-x:auto; }
-      .menu { flex-direction: row; }
-      .menu a { white-space: nowrap; font-size: 13px; padding: 8px 10px; }
-      .content-subheader { padding:14px; font-size:18px; }
-      .content-body { padding:20px; max-width: 100%; }
+    
+    .btn {
+      background: var(--dark);
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      font-weight: 700;
+      cursor: pointer;
+      border-radius: 4px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn:hover {
+      background: #222;
+    }
+    .back-link {
+      color: #111;
+      text-decoration: none;
+      font-size: 14px;
+      margin-top: 16px;
+      display: inline-block;
+    }
+    
+    @media (max-width: 880px) {
+      .page {
+        flex-direction: column;
+        padding: 20px;
+        gap: 16px;
+      }
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        gap: 12px;
+        align-items: center;
+        overflow-x: auto;
+      }
+      .menu {
+        flex-direction: row;
+      }
+      .menu a {
+        white-space: nowrap;
+        font-size: 13px;
+        padding: 8px 10px;
+      }
+      .menu a.active::before {
+        height: 40px;
+        top: 50%;
+      }
+      .content-subheader {
+        padding: 14px;
+        font-size: 18px;
+      }
+      .content-body {
+        padding: 20px;
+        max-width: 100%;
+      }
     }
   </style>
-</head>
-<body>
+
   <div class="page">
     <aside class="sidebar">
       <div class="profile">
-        <div class="avatar">{{ user.username|slice:":1" }}{{ user.last_name|slice:":1" }}</div>
+        <div class="avatar">{{ user.username|slice:':1' }}{{ user.last_name|slice:':1' }}</div>
         <div class="name">
           <span class="greet">Привіт</span>
           <span class="user">{{ user.username }}</span>
@@ -180,8 +251,8 @@
         <a href="{% url 'need_help' %}">Потрібна допомога</a>
         <a href="{% url 'my_details' %}">Мої дані</a>
         <a href="{% url 'password_reset' %}">Змінити пароль</a>
-        <a href="{% url 'address_book' %}" class="active">Адресна книга</a>
-        <a href="{% url 'payment_methods' %}">Спосіб оплати</a>
+        <a href="{% url 'address_book' %}">Адресна книга</a>
+        <a href="{% url 'payment_methods' %}" class="active">Спосіб оплати</a>
         <a href="{% url 'social_accounts' %}">Соцмережі</a>
         <a href="{% url 'sign_out' %}">Вихід</a>
       </nav>
@@ -190,21 +261,17 @@
     <main class="content">
       <div class="content-header">Особистий кабінет</div>
       <div class="content-subheader">
-        <img src="{% static 'account/payment.png' %}" alt="address" class="icon">
+        <img src="{% static 'account/payment.png' %}" alt="address" class="icon" />
         <span>Адресна книга</span>
       </div>
 
       <div class="content-body">
         <div class="billing-note">Нам потрібна адреса для виставлення рахунків</div>
-        <div class="billing-info">
-          Наразі у вас немає збереженої адреси. Без неї ви не зможете додати новий спосіб оплати.
-        </div>
+        <div class="billing-info">Наразі у вас немає збереженої адреси. Без неї ви не зможете додати новий спосіб оплати.</div>
 
         <a href="{% url 'address_book' %}" class="btn">Додати нову адресу</a>
         <a href="{% url 'my_account' %}" class="back-link">← Повернутися до особистого кабінету</a>
       </div>
     </main>
   </div>
-</body>
-</html>
-{% endif %}
+{% endblock %}
