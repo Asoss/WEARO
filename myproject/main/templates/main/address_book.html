@@ -1,13 +1,8 @@
+{% extends 'main/base.html' %}
 {% load static %}
 
-{% if user.is_authenticated %}
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Особистий кабінет – Адресна книга</title>
-  <style>
+{% block content %}
+<style>
   :root {
     --sidebar-width: 280px;
     --gap: 24px;
@@ -17,16 +12,9 @@
     --white: #fff;
   }
 
-  * { box-sizing: border-box; }
-
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f9f9f9;
-    color: #111;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
+  .page,
+  .page * {
+    box-sizing: border-box;
   }
 
   .page {
@@ -73,11 +61,26 @@
     border: 4px solid var(--white);
   }
 
-  .name { line-height: 1; }
-  .name .greet { font-size: 14px; color: var(--muted); display:block; }
-  .name .user { font-weight: 700; font-size: 16px; display:block; }
+  .name {
+    line-height: 1;
+  }
+  .name .greet {
+    font-size: 14px;
+    color: var(--muted);
+    display: block;
+  }
+  .name .user {
+    font-weight: 700;
+    font-size: 16px;
+    display: block;
+  }
 
-  .menu { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
+  .menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 15px;
+  }
   .menu a {
     display: block;
     padding: 12px 16px;
@@ -88,7 +91,9 @@
     border-radius: 0;
     position: relative;
   }
-  .menu a:hover { background: #222; }
+  .menu a:hover {
+    background: #222;
+  }
 
   /* Активний пункт меню */
   .menu a.active {
@@ -138,7 +143,10 @@
     padding: 20px;
     border-radius: 4px;
   }
-  .content-subheader .icon { width: 30px; height: 30px; }
+  .content-subheader .icon {
+    width: 30px;
+    height: 30px;
+  }
 
   .content-body {
     background: #fff;
@@ -149,13 +157,9 @@
     text-align: center;
     gap: 16px;
     border-radius: 6px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     flex-grow: 1;
   }
-
-  .content-body img { margin-bottom: 16px; }
-  .content-body h2 { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
-  .content-body p { font-size: 14px; color: #444; margin-bottom: 20px; max-width: 500px; }
 
   .address-form {
     width: 100%;
@@ -165,8 +169,13 @@
     gap: 14px;
     font-size: 14px;
   }
-  .address-form label { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
-  .address-form input, .address-form select {
+  .address-form label {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+  .address-form input,
+  .address-form select {
     padding: 10px;
     font-size: 14px;
     border: 1px solid #ccc;
@@ -182,98 +191,131 @@
     border-radius: 4px;
     width: 100%;
   }
-  .address-form button:hover { background: #222; }
-
-  .back-link { display: inline-block; margin-top: 10px; font-size: 14px; color: #111; text-decoration: none; }
-  .field-errors { color: red; font-size: 13px; margin-top: 4px; }
-
-  @media(max-width:880px){
-    .page { flex-direction: column; padding: 20px; gap: 16px; }
-    .sidebar { width: 100%; flex-direction: row; gap: 12px; align-items: center; overflow-x:auto; }
-    .menu { flex-direction: row; }
-    .menu a { white-space: nowrap; font-size:13px; padding:8px 10px; }
-    .menu a.active::before { height: 40px; top: 50%; }
-    .content-subheader { padding:14px; font-size:18px; }
-    .content-body { padding:20px; max-width: 100%; }
+  .address-form button:hover {
+    background: #222;
   }
 
-  </style>
-</head>
-<body>
-  <div class="page">
-    <aside class="sidebar">
-      <div class="profile">
-        <div class="avatar">{{ user.username|slice:":1" }}{{ user.last_name|slice:":1" }}</div>
-        <div class="name">
-          <span class="greet">Привіт</span>
-          <span class="user">{{ user.username }}</span>
-        </div>
+  .back-link {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #111;
+    text-decoration: none;
+  }
+  .field-errors {
+    color: red;
+    font-size: 13px;
+    margin-top: 4px;
+  }
+
+  @media (max-width: 880px) {
+    .page {
+      flex-direction: column;
+      padding: 20px;
+      gap: 16px;
+    }
+    .sidebar {
+      width: 100%;
+      flex-direction: row;
+      gap: 12px;
+      align-items: center;
+      overflow-x: auto;
+    }
+    .menu {
+      flex-direction: row;
+    }
+    .menu a {
+      white-space: nowrap;
+      font-size: 13px;
+      padding: 8px 10px;
+    }
+    .menu a.active::before {
+      height: 40px;
+      top: 50%;
+    }
+    .content-subheader {
+      padding: 14px;
+      font-size: 18px;
+    }
+    .content-body {
+      padding: 20px;
+      max-width: 100%;
+    }
+  }
+</style>
+
+<div class="page">
+  <aside class="sidebar">
+    <div class="profile">
+      <div class="avatar">{{ user.username|slice:":1" }}{{ user.last_name|slice:":1" }}</div>
+      <div class="name">
+        <span class="greet">Привіт</span>
+        <span class="user">{{ user.username }}</span>
       </div>
+    </div>
 
-      <nav class="menu">
-        <a href="{% url 'my_orders' %}">Мої замовлення</a>
-        <a href="{% url 'my_returns' %}">Повернення</a>
-        <a href="{% url 'need_help' %}">Потрібна допомога</a>
-        <a href="{% url 'my_details' %}">Мої дані</a>
-        <a href="{% url 'password_reset' %}">Змінити пароль</a>
-        <a href="{% url 'address_book' %}" class="active">Адресна книга</a>
-        <a href="{% url 'payment_methods' %}">Спосіб оплати</a>
-        <a href="{% url 'social_accounts' %}">Соцмережі</a>
-        <a href="{% url 'sign_out' %}">Вихід</a>
-      </nav>
-    </aside>
+    <nav class="menu">
+      <a href="{% url 'my_orders' %}">Мої замовлення</a>
+      <a href="{% url 'my_returns' %}">Повернення</a>
+      <a href="{% url 'need_help' %}">Потрібна допомога</a>
+      <a href="{% url 'my_details' %}">Мої дані</a>
+      <a href="{% url 'password_reset' %}">Змінити пароль</a>
+      <a href="{% url 'address_book' %}" class="active">Адресна книга</a>
+      <a href="{% url 'payment_methods' %}">Спосіб оплати</a>
+      <a href="{% url 'social_accounts' %}">Соцмережі</a>
+      <a href="{% url 'sign_out' %}">Вихід</a>
+    </nav>
+  </aside>
 
-    <main class="content">
-      <div class="content-header">Особистий кабінет</div>
+  <main class="content">
+    <div class="content-header">Особистий кабінет</div>
 
-      <div class="content-subheader">
-        <img src="{% static 'account/address.png' %}" alt="address" class="icon">
-        <span>Адресна книга</span>
-      </div>
+    <div class="content-subheader">
+      <img src="{% static 'account/address.png' %}" alt="address" class="icon">
+      <span>Адресна книга</span>
+    </div>
 
-      <div class="content-body">
-        <form method="POST" class="address-form">
-          {% csrf_token %}
-          <p style="margin-bottom: 10px; color: #444; font-size: 14px;">
-            Ви ще не додали жодної адреси. Почніть з додавання нової.
-          </p>
+    <div class="content-body">
+      <form method="POST" class="address-form">
+        {% csrf_token %}
+        <p style="margin-bottom: 10px; color: #444; font-size: 14px;">
+          Ви ще не додали жодної адреси. Почніть з додавання нової.
+        </p>
 
-          <label for="first_name">Ім'я:</label>
-          <input type="text" id="first_name" name="first_name" value="{{ form.first_name.value|default_if_none:'' }}" required>
-          {% if form.first_name.errors %}
-            <div class="field-errors">{{ form.first_name.errors }}</div>
-          {% endif %}
+        <label for="first_name">Ім'я:</label>
+        <input type="text" id="first_name" name="first_name" value="{{ form.first_name.value|default_if_none:'' }}" required>
+        {% if form.first_name.errors %}
+          <div class="field-errors">{{ form.first_name.errors }}</div>
+        {% endif %}
 
-          <label for="last_name">Прізвище:</label>
-          <input type="text" id="last_name" name="last_name" value="{{ form.last_name.value|default_if_none:'' }}" required>
-          {% if form.last_name.errors %}
-            <div class="field-errors">{{ form.last_name.errors }}</div>
-          {% endif %}
+        <label for="last_name">Прізвище:</label>
+        <input type="text" id="last_name" name="last_name" value="{{ form.last_name.value|default_if_none:'' }}" required>
+        {% if form.last_name.errors %}
+          <div class="field-errors">{{ form.last_name.errors }}</div>
+        {% endif %}
 
-          <label for="mobile">Мобільний:</label>
-          <input type="text" id="mobile" name="mobile" value="{{ form.mobile.value|default_if_none:'' }}" required>
-          {% if form.mobile.errors %}
-            <div class="field-errors">{{ form.mobile.errors }}</div>
-          {% endif %}
+        <label for="mobile">Мобільний:</label>
+        <input type="text" id="mobile" name="mobile" value="{{ form.mobile.value|default_if_none:'' }}" required>
+        {% if form.mobile.errors %}
+          <div class="field-errors">{{ form.mobile.errors }}</div>
+        {% endif %}
 
-          <label for="country">Країна:</label>
-          <select id="country" name="country" required>
-            <option value="">Оберіть країну</option>
-            <option value="UA" {% if form.country.value == "UA" %}selected{% endif %}>Україна</option>
-            <option value="PL" {% if form.country.value == "PL" %}selected{% endif %}>Польща</option>
-            <option value="US" {% if form.country.value == "US" %}selected{% endif %}>США</option>
-            <option value="GB" {% if form.country.value == "GB" %}selected{% endif %}>Великобританія</option>
-          </select>
-          {% if form.country.errors %}
-            <div class="field-errors">{{ form.country.errors }}</div>
-          {% endif %}
+        <label for="country">Країна:</label>
+        <select id="country" name="country" required>
+          <option value="">Оберіть країну</option>
+          <option value="UA" {% if form.country.value == "UA" %}selected{% endif %}>Україна</option>
+          <option value="PL" {% if form.country.value == "PL" %}selected{% endif %}>Польща</option>
+          <option value="US" {% if form.country.value == "US" %}selected{% endif %}>США</option>
+          <option value="GB" {% if form.country.value == "GB" %}selected{% endif %}>Великобританія</option>
+        </select>
+        {% if form.country.errors %}
+          <div class="field-errors">{{ form.country.errors }}</div>
+        {% endif %}
 
-          <button type="submit">Додати адресу</button>
-          <a href="{% url 'my_account' %}" class="back-link">← Повернутися до акаунту</a>
-        </form>
-      </div>
-    </main>
-  </div>
-</body>
-</html>
-{% endif %}
+        <button type="submit">Додати адресу</button>
+        <a href="{% url 'my_account' %}" class="back-link">← Повернутися до акаунту</a>
+      </form>
+    </div>
+  </main>
+</div>
+{% endblock %}

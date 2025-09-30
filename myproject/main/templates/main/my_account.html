@@ -1,35 +1,28 @@
-
+{% extends 'main/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Особистий кабінет</title>
+
+{% block content %}
   <style>
     :root {
       --sidebar-width: 280px;
       --dark: #111;
       --muted: #666;
     }
-
-    * { box-sizing: border-box; margin:0; padding:0; }
-    body {
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
-      display: flex;
-      justify-content: center;
-      min-height: 50vh;
+    
+    .wrapper,
+    .wrapper * {
+      box-sizing: border-box;
     }
-
+    
     .wrapper {
       display: flex;
       max-width: 1200px;
       width: 100%;
       gap: 24px;
-      padding: 40px 20px;
+      padding: 20px 20px;
+      margin: 0 auto;
     }
-
+    
     /* Меню */
     .sidebar {
       width: var(--sidebar-width);
@@ -37,7 +30,7 @@
       flex-direction: column;
       gap: 12px;
     }
-
+    
     /* Профіль */
     .profile {
       position: relative;
@@ -46,40 +39,41 @@
       gap: 10px;
       background: #fff;
       padding: 16px 16px 16px 50px;
-      border: 5px solid var(--dark); /* товстіша рамка */
-
+      border: 5px solid var(--dark);
     }
-
+    
     /* Круглий аватар */
     .avatar {
       position: absolute;
       left: -30px;
       width: 60px;
       height: 60px;
-      border-radius: 50%; /* коло */
+      border-radius: 50%;
       background: var(--dark);
       color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: bold;
-      font-size: 24px; /* більший текст */
-      border: 4px solid #fff; /* товстіша рамка */
+      font-size: 24px;
+      border: 4px solid #fff;
     }
-
-    .name { line-height: 1; }
-    .name .greet { 
-      font-size: 14px; 
-      color: var(--muted); 
-      font-weight: 400; 
-      display:block; 
+    
+    .name {
+      line-height: 1;
     }
-    .name .user { 
-      font-weight: 400; 
-      font-size: 16px; 
-      display:block; 
+    .name .greet {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 400;
+      display: block;
     }
-
+    .name .user {
+      font-weight: 400;
+      font-size: 16px;
+      display: block;
+    }
+    
     /* Меню */
     .menu {
       display: flex;
@@ -95,10 +89,12 @@
       background: var(--dark);
       font-size: 15px;
       border: 1px solid #222;
-      border-radius: 0; /* без заокруглень */
+      border-radius: 0;
     }
-    .menu a:hover { background: #222; }
-
+    .menu a:hover {
+      background: #222;
+    }
+    
     /* Контент */
     .content {
       flex-grow: 1;
@@ -107,54 +103,66 @@
       flex-direction: column;
       padding: 24px;
       border: 2px solid var(--dark);
-      border-radius: 0; /* без заокруглень */
+      border-radius: 0;
       gap: 20px;
     }
-
+    
     /* Welcome-блок */
     .welcome-block {
       background: #fff;
       padding: 10px;
-      border-radius: 0; /* без заокруглень */
+      border-radius: 0;
       width: 49%;
     }
-
+    
     .welcome-block .welcome-line {
       font-size: 22px;
       font-weight: bold;
       text-transform: uppercase;
       display: block;
     }
-
+    
     /* Фото в середині квадрата */
     .box {
       background: #1f1f1f;
       flex-grow: 1;
       width: 100%;
       height: 400px;
-      border-radius: 0; 
+      border-radius: 0;
       border: 5px solid #fff;
       display: flex;
       align-items: flex-start;
       justify-content: flex-start;
       overflow: hidden;
     }
-
+    
     .box img {
       width: 600px;
       height: auto;
       display: block;
-      border-radius: 0; /* без округлень */
+      border-radius: 0;
+    }
+    
+    /* WEARO SHOP під .box */
+    .wearo-logo {
+      max-width: 1150px;
+      width: 100%;
+      margin: 5px auto;
+      display: flex;
+      justify-content: flex-end;
+    }
+    
+    .wearo-logo img {
+      width: calc(100% - var(--sidebar-width) - 24px);
+      height: auto;
+      display: block;
     }
   </style>
-</head>
-<body>
+
   <div class="wrapper">
     <aside class="sidebar">
       <div class="profile">
-        <div class="avatar">
-          {{ user.username|slice:":1" }}{{ user_form.last_name|slice:":1" }}
-        </div>
+        <div class="avatar">{{ user.username|slice:':1' }}{{ user_form.last_name|slice:':1' }}</div>
         <div class="name">
           <span class="greet">Привіт</span>
           <span class="user">{{ user.username }}</span>
@@ -181,9 +189,12 @@
       </div>
 
       <div class="box">
-        <img src="{% static 'account/circle.png' %}" alt="circle">
+        <img src="{% static 'account/circle.png' %}" alt="circle" />
       </div>
     </main>
   </div>
-</body>
-</html>
+
+  <div class="wearo-logo">
+    <img src="{% static 'icons/wearo_shop.png' %}" alt="WEARO SHOP" />
+  </div>
+{% endblock %}

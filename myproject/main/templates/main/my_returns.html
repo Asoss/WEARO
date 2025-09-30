@@ -1,11 +1,7 @@
-{% if user.is_authenticated %}
+{% extends 'main/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Повернення – Особистий кабінет</title>
+
+{% block content %}
   <style>
     :root {
       --sidebar-width: 280px;
@@ -15,15 +11,29 @@
       --muted: #666;
       --white: #fff;
     }
-
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: Arial, sans-serif; background: #f9f9f9; color: #111; min-height: 100vh; display: flex; justify-content: center; }
-
-    .page { display: flex; width: 100%; max-width: 1200px; margin: 40px auto; gap: var(--gap); padding: 0 var(--gap); }
-
+    
+    .page,
+    .page * {
+      box-sizing: border-box;
+    }
+    
+    .page {
+      display: flex;
+      width: 100%;
+      max-width: 1200px;
+      margin: 40px auto;
+      gap: var(--gap);
+      padding: 0 var(--gap);
+    }
+    
     /* Sidebar */
-    .sidebar { width: var(--sidebar-width); display: flex; flex-direction: column; gap: 12px; }
-
+    .sidebar {
+      width: var(--sidebar-width);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
     .profile {
       display: flex;
       align-items: center;
@@ -34,7 +44,7 @@
       border-radius: 6px;
       position: relative;
     }
-
+    
     .avatar {
       position: absolute;
       left: -30px;
@@ -50,23 +60,49 @@
       font-size: 24px;
       border: 4px solid var(--white);
     }
-
-    .name { line-height: 1; }
-    .name .greet { font-size: 14px; color: var(--muted); display:block; }
-    .name .user { font-weight: 700; font-size: 16px; display:block; }
-
+    
+    .name {
+      line-height: 1;
+    }
+    .name .greet {
+      font-size: 14px;
+      color: var(--muted);
+      display: block;
+    }
+    .name .user {
+      font-weight: 700;
+      font-size: 16px;
+      display: block;
+    }
+    
     /* Menu */
-    .menu { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
-    .menu a { display: block; padding: 12px 16px; text-decoration: none; color: #fff; background: var(--dark); font-size: 15px; border-radius: 0; position: relative; }
-    .menu a:hover { background: #222; }
-
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 15px;
+    }
+    .menu a {
+      display: block;
+      padding: 12px 16px;
+      text-decoration: none;
+      color: #fff;
+      background: var(--dark);
+      font-size: 15px;
+      border-radius: 0;
+      position: relative;
+    }
+    .menu a:hover {
+      background: #222;
+    }
+    
     .menu a.active {
       background: var(--white);
       color: var(--dark);
       font-weight: 700;
     }
     .menu a.active::before {
-      content: "";
+      content: '';
       position: absolute;
       left: 0;
       top: 50%;
@@ -76,13 +112,40 @@
       background: var(--dark);
       border-radius: 2px;
     }
-
+    
     /* Content */
-    .content { flex: 1; display: flex; flex-direction: column; gap: 16px; }
-    .content-header { font-weight: 700; font-size: 24px; text-transform: uppercase; color: #111; border-bottom: 2px solid #fff; padding-bottom: 8px; display: inline-block; }
-    .content-subheader { display: flex; align-items: center; gap: 12px; font-size: 22px; font-weight: 700; text-transform: uppercase; color: var(--white); background: var(--black); padding: 20px; border-radius: 4px; }
-    .content-subheader .icon { width: 30px; height: 30px; }
-
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .content-header {
+      font-weight: 700;
+      font-size: 24px;
+      text-transform: uppercase;
+      color: #111;
+      border-bottom: 2px solid #fff;
+      padding-bottom: 8px;
+      display: inline-block;
+    }
+    .content-subheader {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 22px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--white);
+      background: var(--black);
+      padding: 20px;
+      border-radius: 4px;
+    }
+    .content-subheader .icon {
+      width: 30px;
+      height: 30px;
+    }
+    
     .content-body {
       background: var(--white);
       padding: 40px;
@@ -92,31 +155,127 @@
       text-align: center;
       gap: 16px;
       border-radius: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
       flex-grow: 1;
     }
-    .content-body img { margin-bottom: 16px; }
-    .content-body h2 { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
-    .content-body p { font-size: 14px; color: #444; margin-bottom: 20px; max-width: 500px; }
-    .content-body .btn { background: var(--dark); color: var(--white); border: none; padding: 10px 20px; cursor: pointer; font-weight: 700; border-radius: 4px; }
-    .content-body .btn:hover { background: #222; }
-
+    .content-body img {
+      margin-bottom: 16px;
+    }
+    .content-body h2 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .content-body p {
+      font-size: 14px;
+      color: #444;
+      margin-bottom: 20px;
+      max-width: 500px;
+    }
+    .content-body .btn {
+      background: var(--dark);
+      color: var(--white);
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-weight: 700;
+      border-radius: 4px;
+    }
+    .content-body .btn:hover {
+      background: #222;
+    }
+    
+    /* Styles for order and item blocks */
+    .order-block {
+      width: 100%;
+      background: #f5f5f5;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    
+    .order-block h2 {
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+    
+    .order-block .order-total {
+      font-weight: bold;
+    }
+    
+    .order-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .order-item:last-child {
+      border-bottom: none;
+    }
+    
+    .item-image img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+    
+    .item-details {
+      flex-grow: 1;
+    }
+    
+    .item-title {
+      font-size: 16px;
+      margin: 0;
+    }
+    
+    .item-actions {
+      text-align: right;
+    }
+    
     @media (max-width: 880px) {
-      .page { flex-direction: column; padding: 20px; gap: 16px; }
-      .sidebar { width: 100%; flex-direction: row; gap: 12px; align-items: center; overflow-x:auto; }
-      .menu { flex-direction: row; }
-      .menu a { white-space:nowrap; font-size:13px; padding:8px 10px; }
-      .menu a.active::before { height: 40px; top: 50%; }
-      .content-subheader { padding:14px; font-size:18px; }
-      .content-body { padding:20px; max-width: 100%; }
+      .page {
+        flex-direction: column;
+        padding: 20px;
+        gap: 16px;
+      }
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        gap: 12px;
+        align-items: center;
+        overflow-x: auto;
+      }
+      .menu {
+        flex-direction: row;
+      }
+      .menu a {
+        white-space: nowrap;
+        font-size: 13px;
+        padding: 8px 10px;
+      }
+      .menu a.active::before {
+        height: 40px;
+        top: 50%;
+      }
+      .content-subheader {
+        padding: 14px;
+        font-size: 18px;
+      }
+      .content-body {
+        padding: 20px;
+        max-width: 100%;
+      }
     }
   </style>
-</head>
-<body>
+
   <div class="page">
     <aside class="sidebar">
       <div class="profile">
-        <div class="avatar">{{ user.username|slice:":1" }}{{ user.last_name|slice:":1" }}</div>
+        <div class="avatar">{{ user.username|slice:':1' }}{{ user.last_name|slice:':1' }}</div>
         <div class="name">
           <span class="greet">Привіт</span>
           <span class="user">{{ user.username }}</span>
@@ -140,19 +299,49 @@
       <div class="content-header">Особистий кабінет</div>
 
       <div class="content-subheader">
-        <img src="{% static 'account/return.png' %}" alt="return" class="icon">
+        <img src="{% static 'account/return.png' %}" alt="return" class="icon" />
         <span>Повернення</span>
       </div>
 
       <div class="content-body">
-        <img src="{% static 'account/scissors.png' %}" alt="scissors" width="40">
-        <h2>ВИ ЩЕ НЕ ЗДІЙСНИЛИ ЖОДНОЇ ПОКУПКИ</h2>
-        <p>Ви можете повернути покупку за кілька простих кроків.  
-        Зверніть увагу, що для деяких варіантів повернення може знадобитися фото чека.</p>
-        <button class="btn" onclick="window.location.href='{% url 'home' %}'">ДО ПОКУПОК</button>
+        {% if orders %}
+          {% for order in orders %}
+            <div class="order-block">
+              <h2>Замовлення №{{ order.id }} від {{ order.date_ordered|date:'d.m.Y H:i' }}</h2>
+              <p class="order-total">Сума: {{ order.total_price }} грн</p>
+
+              {% for item in order.items.all %}
+                {% if item.status == 'returned' %}
+                  <div class="order-item">
+                    <div class="item-image">
+                      {% with image=item.product.images.first %}
+                        {% if image %}
+                          <img src="{{ image.image.url }}" alt="{{ item.product.name }}" />
+                        {% else %}
+                          <img src="{% static 'icons/no-photo.png' %}" alt="Немає фото" />
+                        {% endif %}
+                      {% endwith %}
+                    </div>
+                    <div class="item-details">
+                      <h3 class="item-title">{{ item.product.name }}</h3>
+                      <div class="item-prices">
+                        <span class="final-price">{{ item.price }} грн</span>
+                      </div>
+                      <p>Кількість: {{ item.quantity }}</p>
+                      <p>Статус: Повернено</p>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% endfor %}
+        {% else %}
+          <img src="{% static 'account/scissors.png' %}" alt="scissors" width="40" />
+          <h2>У ВАС НЕМАЄ ПОВЕРНЕНЬ</h2>
+          <p>Ви можете повернути покупку за кілька простих кроків.</p>
+          <button class="btn" onclick="window.location.href='{% url 'home' %}'">ПЕРЕГЛЯНУТИ ТОВАРИ</button>
+        {% endif %}
       </div>
     </main>
   </div>
-</body>
-</html>
-{% endif %}
+{% endblock %}

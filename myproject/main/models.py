@@ -156,10 +156,50 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return f"Фото для {self.product.name}"
+    
 class Order(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    description = models.TextField()
-    date_ordered = models.DateField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
+    description = models.TextField(blank=True, null=True)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    STATUS_CHOICES = [
+        ('shipped', 'В дорозі'),
+        ('cancelled', 'Скасовано'),
+    ]
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default='shipped',
+    )
+    
+    date_ordered = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Замовлення #{self.id} від {self.user.username}"
+    
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    # Add this status field to OrderItem
+    STATUS_CHOICES = [
+        ('shipped', 'В дорозі'),
+        ('returned', 'Повернено'),
+    ]
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default='shipped',
+    )
+
+    def get_total(self):
+        return self.quantity * self.price
+
+    def __str__(self):
+        return f"{self.product.name} × {self.quantity}"
 
 class Return(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

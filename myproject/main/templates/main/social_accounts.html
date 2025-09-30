@@ -1,28 +1,38 @@
-{% if user.is_authenticated %}
+{% extends 'main/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Соцмережі – Особистий кабінет</title>
+
+{% block content %}
   <style>
-    :root{
+    :root {
       --sidebar-width: 280px;
       --gap: 24px;
       --black: #000;
       --dark: #111;
       --muted: #666;
     }
-
-    *{ box-sizing: border-box; }
-    body { margin: 0; font-family: Arial, sans-serif; background: #f9f9f9; color: #111; min-height: 100vh; display: flex; justify-content: center; }
-
-    .page { display: flex; width: 100%; max-width: 1200px; margin: 40px auto; gap: var(--gap); padding: 0 var(--gap); }
-
+    
+    .page,
+    .page * {
+      box-sizing: border-box;
+    }
+    
+    .page {
+      display: flex;
+      width: 100%;
+      max-width: 1200px;
+      margin: 40px auto;
+      gap: var(--gap);
+      padding: 0 var(--gap);
+    }
+    
     /* Sidebar */
-    .sidebar { width: var(--sidebar-width); display: flex; flex-direction: column; gap: 12px; }
-
+    .sidebar {
+      width: var(--sidebar-width);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
     /* Профіль з рамкою */
     .profile {
       display: flex;
@@ -34,7 +44,7 @@
       border-radius: 6px;
       position: relative;
     }
-
+    
     .avatar {
       position: absolute;
       left: -30px;
@@ -50,22 +60,93 @@
       font-size: 24px;
       border: 4px solid #fff;
     }
-
-    .name { line-height: 1; }
-    .name .greet { font-size: 14px; color: var(--muted); display:block; }
-    .name .user { font-weight: 700; font-size: 16px; display:block; }
-
+    
+    .name {
+      line-height: 1;
+    }
+    .name .greet {
+      font-size: 14px;
+      color: var(--muted);
+      display: block;
+    }
+    .name .user {
+      font-weight: 700;
+      font-size: 16px;
+      display: block;
+    }
+    
     /* Меню */
-    .menu { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
-    .menu a { display: block; padding: 12px 16px; text-decoration: none; color: #fff; background: var(--dark); font-size: 15px; border-radius: 0; }
-    .menu a:hover { background: #222; }
-
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 15px;
+    }
+    .menu a {
+      display: block;
+      padding: 12px 16px;
+      text-decoration: none;
+      color: #fff;
+      background: var(--dark);
+      font-size: 15px;
+      border-radius: 0;
+      position: relative;
+    }
+    .menu a:hover {
+      background: #222;
+    }
+    
+    /* Активний пункт меню */
+    .menu a.active {
+      background: #fff;
+      color: var(--dark);
+      font-weight: 700;
+    }
+    .menu a.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 55px;
+      background: var(--dark);
+      border-radius: 2px;
+    }
+    
     /* Контент */
-    .content { flex: 1; display: flex; flex-direction: column; gap: 16px; }
-    .content-header { font-weight: 700; font-size: 24px; text-transform: uppercase; color: #111; border-bottom: 2px solid #fff; padding-bottom: 8px; display: inline-block; }
-    .content-subheader { display: flex; align-items: center; gap: 12px; font-size: 22px; font-weight: 700; text-transform: uppercase; color: #fff; background: var(--black); padding: 20px; border-radius: 4px; }
-    .content-subheader .icon { width: 30px; height: 30px; }
-
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .content-header {
+      font-weight: 700;
+      font-size: 24px;
+      text-transform: uppercase;
+      color: #111;
+      border-bottom: 2px solid #fff;
+      padding-bottom: 8px;
+      display: inline-block;
+    }
+    .content-subheader {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 22px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #fff;
+      background: var(--black);
+      padding: 20px;
+      border-radius: 4px;
+    }
+    .content-subheader .icon {
+      width: 30px;
+      height: 30px;
+    }
+    
     .content-body {
       background: #fff;
       padding: 48px;
@@ -75,11 +156,11 @@
       text-align: center;
       gap: 18px;
       border-radius: 6px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      max-width: 700px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       margin: 0 auto;
+      width: 100%;
     }
-
+    
     .account-item {
       display: flex;
       justify-content: space-between;
@@ -89,9 +170,12 @@
       font-size: 14px;
       width: 100%;
     }
-
-    .account-item.disabled { opacity: 0.5; color: #666; }
-
+    
+    .account-item.disabled {
+      opacity: 0.5;
+      color: #666;
+    }
+    
     .btn {
       background: var(--dark);
       color: #fff;
@@ -100,26 +184,53 @@
       cursor: pointer;
       font-weight: 700;
       border-radius: 4px;
+      text-decoration: none;
+      display: inline-block;
     }
-    .btn:hover { background: #222; }
-
-    .back-link { font-size: 14px; color: #111; text-decoration: none; margin-top: 12px; display: inline-block; }
-
-    @media (max-width: 880px){
-      .page{ flex-direction: column; padding: 20px; gap: 16px; }
-      .sidebar{ width: 100%; flex-direction: row; gap: 12px; align-items: center; overflow-x:auto; }
-      .menu{ flex-direction: row; }
-      .menu a{ white-space:nowrap; font-size:13px; padding:8px 10px; }
-      .content-subheader{ padding:14px; font-size:18px; }
-      .content-body{ padding:30px; max-width: 100%; }
+    .btn:hover {
+      background: #222;
+    }
+    
+    @media (max-width: 880px) {
+      .page {
+        flex-direction: column;
+        padding: 20px;
+        gap: 16px;
+      }
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        gap: 12px;
+        align-items: center;
+        overflow-x: auto;
+      }
+      .menu {
+        flex-direction: row;
+      }
+      .menu a {
+        white-space: nowrap;
+        font-size: 13px;
+        padding: 8px 10px;
+      }
+      .menu a.active::before {
+        height: 40px;
+        top: 50%;
+      }
+      .content-subheader {
+        padding: 14px;
+        font-size: 18px;
+      }
+      .content-body {
+        padding: 30px;
+        max-width: 100%;
+      }
     }
   </style>
-</head>
-<body>
+
   <div class="page">
     <aside class="sidebar">
       <div class="profile">
-        <div class="avatar">{{ user.username|slice:":1" }}{{ user.last_name|slice:":1" }}</div>
+        <div class="avatar">{{ user.username|slice:':1' }}{{ user.last_name|slice:':1' }}</div>
         <div class="name">
           <span class="greet">Привіт</span>
           <span class="user">{{ user.username }}</span>
@@ -142,7 +253,7 @@
     <main class="content">
       <div class="content-header">Особистий кабінет</div>
       <div class="content-subheader">
-        <img src="{% static 'account/social.png' %}" alt="social" class="icon">
+        <img src="{% static 'account/social.png' %}" alt="social" class="icon" />
         <span>Соцмережі</span>
       </div>
 
@@ -164,6 +275,4 @@
       </div>
     </main>
   </div>
-</body>
-</html>
-{% endif %}
+{% endblock %}

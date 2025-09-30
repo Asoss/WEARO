@@ -50,5 +50,8 @@ urlpatterns = [
     path('api/products/', views.products_api, name='products_api'),
     path('product/<int:product_id>/review/', views.add_review, name='add_review'),
     path('product/<int:product_id>/', views.product_detail, name='product_detail'),
+    path("order/", include("order.urls")),
+    path('returns/', views.my_returns, name='my_returns'),
+    path('return-item/<int:item_id>/', views.return_order_item, name='return_order_item'),
 ]
 
