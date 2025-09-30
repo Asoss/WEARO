@@ -6,7 +6,7 @@ from cart.models import Cart, CartItem
 from main.models import Product, Wishlist
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
+
 
 @login_required(login_url="login_email")
 def cart_view(request):
@@ -89,3 +89,5 @@ def update_cart_quantity(request):
             return JsonResponse({"success": False, "error": "Невірні дані"}, status=400)
 
     return JsonResponse({"success": False, "error": "Метод не дозволений"}, status=405)
+
+

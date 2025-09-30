@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Case, When,Q
 from cart.models import Cart, CartItem
+from .models import Order, OrderItem
 from .models import Product, ProductRating, Review, UserDetails, Wishlist
 from .forms import RegisterForm, UserForm,UserDetailsForm
 import random
@@ -202,11 +203,41 @@ def add_review(request, product_id):
 def my_account(request):
     return render(request, 'main/my_account.html')
 
+@login_required
 def my_orders(request):
-    return render(request, 'order/my_orders.html')
+    orders = Order.objects.filter(user=request.user).order_by("-date_ordered")
+    return render(request, "order/my_orders.html", {"orders": orders})
 
+
+@login_required
 def my_returns(request):
-    return render(request, 'main/my_returns.html')
+    # This correctly filters Orders that have at least one related OrderItem
+    # with a status of 'returned'.
+    returns = Order.objects.filter(
+        user=request.user,
+        items__status="returned"
+    ).distinct().order_by("-date_ordered")
+    
+    return render(request, "main/my_returns.html", {"orders": returns})
+
+@login_required
+def return_order_item(request, item_id):
+    if request.method == 'POST':
+        try:
+            item = get_object_or_404(OrderItem, id=item_id, order__user=request.user)
+            item.status = "returned"
+            item.save()
+            order = item.order
+            all_items_returned = all(i.status == 'returned' for i in order.items.all())
+            if all_items_returned:
+                order.status = "cancelled"
+                order.save()
+
+            return redirect("my_returns")
+        except:
+            return redirect("my_orders")
+    
+    return redirect('my_orders')
 
 def need_help(request):
     return render(request, 'main/need_help.html')
