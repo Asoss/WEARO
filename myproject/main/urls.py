@@ -53,5 +53,4 @@ urlpatterns = [
     path("order/", include("order.urls")),
     path('returns/', views.my_returns, name='my_returns'),
     path('return-item/<int:item_id>/', views.return_order_item, name='return_order_item'),
-]
-
+    path('discounts/', views.discount_products, name='discount_products'),
