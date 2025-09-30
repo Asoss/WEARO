@@ -81,15 +81,16 @@
       <h5><b>Орієнтовна загальна сума:</b> ₴ <span id="total-price" style="font-size: 30px;">{{ total_price }}</span></h5>
     </div>
     <button id="continue-btn" style="width: 100%;background-color: rgb(57, 70, 189);height: 40px; border: none;color: white;font-size: 16px;"><b>Продовжити</b></button>
+
     <button style="width: 100%; border: none; height: 40px;font-size: 16px;"><b>Код на знижку</b></button>
     <div style="display: flex; width: 100%; margin-top: 10px;">
       <input type="text" placeholder="XXX-XXX-XXX" style="flex: 1; padding: 10px; border: 2px solid #000000; border-right: none; border-radius: 0; font-size: 16px;" />
       <button style="background: #000; color: #fff; border: none; padding: 0 20px; font-size: 16px;">Застосувати</button>
     </div>
   </div>
-
+  
   <hr style="border: 0.5px rgb(218, 218, 218) solid; width: 102%;margin-left: -1%; margin-top: 2%;" />
-
+  
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       function updateTotals() {
@@ -105,35 +106,35 @@
         totalPriceElements.forEach(function (element) {
           if (element) element.textContent = total.toFixed(2)
         })
-      }
+    }
     
-      function sendQuantityUpdate(productId, quantity) {
-        fetch("{% url 'update_cart_quantity' %}", {
-          method: 'POST',
-          headers: {
-            'X-CSRFToken': '{{ csrf_token }}',
+    function sendQuantityUpdate(productId, quantity) {
+      fetch("{% url 'update_cart_quantity' %}", {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({ product_id: productId, quantity: quantity })
         })
-          .then((response) => response.json())
-          .then((data) => {
-            if (!data.success) console.error('Не вдалося оновити кількість')
-          })
-          .catch((error) => console.error('Помилка запиту:', error))
-      }
-    
-      document.querySelectorAll('.increase-btn').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          const cartItem = btn.closest('.cart-item')
-          const qtyElem = cartItem.querySelector('.item-qty')
-          let newQty = parseInt(qtyElem.textContent) + 1
-          qtyElem.textContent = newQty
-          updateTotals()
-          const productId = cartItem.dataset.productId
-          sendQuantityUpdate(productId, newQty)
+        .then((response) => response.json())
+        .then((data) => {
+          if (!data.success) console.error('Не вдалося оновити кількість')
         })
+      .catch((error) => console.error('Помилка запиту:', error))
+    }
+    
+    document.querySelectorAll('.increase-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const cartItem = btn.closest('.cart-item')
+        const qtyElem = cartItem.querySelector('.item-qty')
+        let newQty = parseInt(qtyElem.textContent) + 1
+        qtyElem.textContent = newQty
+        updateTotals()
+        const productId = cartItem.dataset.productId
+        sendQuantityUpdate(productId, newQty)
       })
+    })
     
       document.querySelectorAll('.decrease-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
@@ -149,37 +150,37 @@
           }
         })
       })
-    
+      
       updateTotals()
     })
-  </script>
+    </script>
 
-  <style>
-    .search-bar {
-      text-align: center;
-      margin: 30px 0;
-    }
-    
-    .search-bar form {
-      display: inline-flex;
-      border: 2px solid #000;
-      border-radius: 4px;
-      overflow: hidden;
-      align-items: center;
-      background: #fff;
-    }
-    
-    .search-bar input {
-      border: none;
-      padding: 7px 9px;
-      outline: none;
-      width: 650px;
-      font-size: 16px;
-      height: 23px;
-    }
-    
-    .search-bar button {
-      border: none;
+<style>
+  .search-bar {
+    text-align: center;
+    margin: 30px 0;
+  }
+  
+  .search-bar form {
+    display: inline-flex;
+    border: 2px solid #000;
+    border-radius: 4px;
+    overflow: hidden;
+    align-items: center;
+    background: #fff;
+  }
+  
+  .search-bar input {
+    border: none;
+    padding: 7px 9px;
+    outline: none;
+    width: 650px;
+    font-size: 16px;
+    height: 23px;
+  }
+  
+  .search-bar button {
+    border: none;
       background: transparent;
       cursor: pointer;
       display: flex;
@@ -202,225 +203,310 @@
       border-radius: 3px;
       height: 40px;
       width: 200px;
+      font-size: 20px;
     }
-    
+
+input[type="checkbox"] {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  accent-color: #000;
+  border: 1px solid #ffffff;
+}
+input[type="checkbox"]:checked {
+  appearance: auto;
+  accent-color: #ffffff;
+  border: 1px solid #000;
+}
+
     body.modal-open {
       overflow: hidden;
     }
-  </style>
 
-  <div id="checkout-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100vh; z-index:1000;">
-    <div id="checkout-blur" style="position:absolute; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.3); backdrop-filter: blur(5px);"></div>
-    <div style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: #fff; 
-padding: 30px 20px; min-width: 50%; z-index: 1001; border: #000 2px solid; overflow-y: auto; overflow-x: hidden;">
-      <button onclick="document.getElementById('checkout-modal').style.display='none';document.body.classList.remove('modal-open');" style="position:absolute; top:10px; right:10px; border:none; background:none; font-size:26px; cursor:pointer;">&times;</button>
-      <!-- Хрестик -->
-      <button class="modal-close" data-target="checkout-modal" style="position:absolute; top:10px; right:10px; border:none; background:#fff; color:#000; font-size:24px; cursor:pointer;">&times;</button>
-      <h3 style="margin-top:0; background-color: #000; color: white; width: 98%; padding: 30px;margin-left: -20px;margin-top: -30px;">1/3 КОНТАКТНІ ДАНІ</h3>
-      <form id="contact-form" style="width: 60%;">
-        <div style="margin-bottom: 10px;">
-          <label>Ім'я<br /><input type="text" style="width:100%;" required /></label>
+    .check-ln {
+      background-color: #000;
+      color: white;
+      display: block;
+      position:relative;
+      width: 97%;
+      margin-bottom: 10px;
+      padding: 10px;
+      text-align: left;
+      padding-left: 20px;
+      cursor: pointer;
+    }
+    
+    .check-f {
+      background-color: #000;
+      color: white;
+      display: block;
+      width: 97%;
+      margin-bottom: 10px;
+      padding: 10px;
+      text-align: left;
+      padding-left: 20px;
+      left: 0px;
+    }
+    .check-ln:hover {
+      background: rgb(26, 26, 26)
+    }
+    
+    .ch-bx {
+      display: absolute;
+      margin-top: 20px;
+    }
+    .form-label {
+  font-size: 20px;
+  margin-left: 5px;
+  margin-bottom: -18px;
+  margin-top: 0;
+  background: #fff;
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+  padding: 0 6px;
+  top: 2px;
+  left: 8px;
+}
+.form-input {
+  height: 70px;
+  width: 100%;
+  font-size: 24px;
+  padding: 18px 10px 18px 10px;
+  border: 1.5px solid #bdbdbd;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  margin-top: -10px;
+  color: #444;
+  background: #fff;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+}
+    </style>
+
+    <div id="checkout-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:2000; align-items:center; justify-content:center;">
+      <div style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0, 0, 0, 0.5); backdrop-filter: blur(2px); z-index:2001;"></div>
+      <div style="display: flex; top: 10px; flex-direction: row; gap: 10px; justify-content: center; align-items: flex-start; margin:auto; position:relative; z-index:2002;">
+        <!-- Перший блок -->
+        <div style="background:#fff; padding:10px; box-shadow:0 2px 16px rgba(0,0,0,0.2); min-width:50%; text-align:center;">
+          <div class="check-f"><label style="display: flex; align-items: center; gap: 10px; font-weight: normal; margin-bottom: 0;">
+    <input type="checkbox" style="margin:0 8px 0 0; width: 20px; height: 20px;"> Доставка за кордон
+  </label></div>
+  <div class="check-f"><label style="display: flex; align-items: center; gap: 10px; font-weight: normal; margin-bottom: 0;">
+    <input type="checkbox" style="margin:0 8px 0 0; width: 20px; height: 20px;"> Внесок в благодійний фонд WEARO
+  </label></div>
+          <div class="check-ln" data-target="content1"><b>1. КОНТАКТНІ ДАНІ</b></div>
+          <div class="check-content" id="content1" style="display:none; text-align:left; padding:20px;">
+            <form id="contact-form" style="width: 60%;margin-left: -20px;">
+    <div style="margin-bottom: 10px;">
+      <span class="form-label">Ім’я:</span>
+      <input type="text" class="form-input" style="font-size: 20px;" required value="{{ user.username|default_if_none:'' }}">
+    </div>
+    <div style="margin-bottom: 10px;">
+      <span class="form-label">Прізвище:</span>
+      <input type="text" class="form-input" style="font-size: 20px;" required value="{{ user_form.last_name|default_if_none:'' }}">
+    </div>
+    <div style="margin-bottom: 10px;">
+      <span class="form-label">Мобільний телефон</span>
+      <input type="tel" class="form-input" style="font-size: 20px;"required placeholder="+380 XXX-XXX-XXX">
+    </div>
+    <div style="margin-bottom: 10px;">
+      <span class="form-label">Електронна пошта</span>
+      <input type="email" class="form-input" style="font-size: 20px;" required placeholder="youremail@email.com">
+    </div>
+    <div style="margin-bottom: 18px; display: flex; align-items: center; font-size: 18px;">
+      <span style="margin-right: 10px;">Отримувач:</span>
+      <label style="display: flex; align-items: center; margin-right: 15px;">
+        <input type="radio" name="recipient_type" checked style="margin-right: 5px; border: black 1px solid; accent-color: #2563eb; width: 16px; height: 16px;" />
+        Новий
+      </label>
+      <label style="display: flex; align-items: center;">
+        <input type="radio" name="recipient_type" style="margin-right: 5px; border: black 1px solid; accent-color: #2563eb; width: 16px; height: 16px;" />
+        Раніше вже купував
+      </label>
+    </div>
+    <button type="submit" id="to-delivery-btn" style="width:100%; background:#3a53b7; color:#fff; border:none; padding:15px; font-size:20px; margin-top:10px;font-weight: bold;">Вибрати доставку</button>
+  </form>
+</div>
+<div class="check-ln" data-target="content2"><b>2. ДОСТАВКА</b></div>
+<div class="check-content" id="content2" style="display:none; text-align:left; padding:20px;">
+  <form id="delivery-form" style="width: 60%;margin-left: -20px;">
+    <div style="margin-bottom: 10px;">
+      <span class="form-label">Країна:</span>
+      <input type="text" class="form-input"  style="width:100%;" required /></label>
+    </div>
+    <div style="margin-bottom: 10px;">
+      <span class="form-label">Місто</span>
+      <input type="text" class="form-input"  style="width:100%;" required /></label>
+    </div>
+    <div style="margin-bottom: 10px;">
+      <span class="form-label">Район\вулиця</span>
+      <input type="text" class="form-input"  style="width:100%;" required /></label>
+    </div>
+    <button type="submit" id="to-payment-btn" style="width:100%; background:#3a53b7; color:#fff; border:none; padding:15px; font-size:20px; margin-top:10px;font-weight: bold;">Оплата</button>
+  </div>
+  </form>
+  <div class="check-ln" data-target="content3"><b>3. ОПЛАТА</b></div>
+  <div class="check-content" id="content3" style="display:none; text-align:left; padding:20px;">
+  <form id="payment-form" style="width: 60%; margin-bottom: 20px;">
+    <div style="font-weight: bold; font-size: 18px; margin-bottom: 10px;">Виберіть спосіб оплати</div>
+    <div style="border-radius: 6px; border: 1px solid #eee; margin-bottom: 10px;">
+      <label style="display: flex; align-items: center; padding: 10px 0;cursor: pointer;">
+        <input type="radio" name="pay" value="visa" checked style="height: 20px; width: 20px;" />
+        <img src="{% static 'icons/visa-card.jpg' %}" alt="visa" style="height: 24px; margin-right: 8px;margin-left: 10px;" />
+        <span style="font-size: 16px; margin-left: 50px;">Оплата онлайн картою Visa</span>
+      </label>
+      <hr style="border: rgb(216, 216, 216) 1px solid;" />
+      <label style="display: flex; align-items: center; padding: 10px 0;cursor: pointer;">
+        <input type="radio" name="pay" value="paypal" style="height: 20px; width: 20px;" />
+        <img src="{% static 'icons/pp-card.jpg' %}" alt="paypal" style="height: 24px; margin-right: 8px;margin-left: 10px;" />
+        <span style="font-size: 16px; margin-left: 50px;">Оплата онлайн картою PayPal</span>
+      </label>
+      <hr style="border: rgb(216, 216, 216) 1px solid;" />
+      <label style="display: flex; align-items: center; padding: 10px 0; cursor: pointer;">
+        <input type="radio" name="pay" value="mono" style="height: 20px; width: 20px;" />
+        <img src="{% static 'icons/mono-card.jpg' %}" alt="mono" style="width: 30px; margin-right: 8px;margin-left: 10px;" />
+        <span style="font-size: 16px; margin-left: 45px;">Оплата онлайн картою Monobank</span>
+      </label>
+      <hr style="border: rgb(216, 216, 216) 1px solid;" />
+      <label style="display: flex; align-items: center; padding: 10px 0; cursor: pointer;">
+        <input type="radio" name="pay" value="mastercard" style="height: 20px; width: 20px;" />
+        <img src="{% static 'icons/mast-card.jpg' %}" alt="mastercard" style="height: 24px; margin-right: 8px;margin-left: 10px;" />
+        <span style="font-size: 16px; margin-left: 50px;">Оплата онлайн картою MasterCard</span>
+      </label>
+    </div>
+
+    <!-- Розкладушка для коментаря -->
+    <div style="margin-bottom: 15px;margin-left: -10px;">
+      <button type="button" id="toggle-comment" style="background: none; border: none; color: #2c2c2c; font-size: 16px; cursor: pointer; display: flex; align-items: center;text-decoration: underline;">
+        <span id="comment-arrow" style="font-size: 22px; margin-right: 6px;"></span> Додати коментар до замовлення
+      </button>
+      <div id="comment-section" style="display: none; margin-top: 10px;">
+        <textarea name="order_comment" id="order_comment" rows="6" style="width: 160%; font-size: 16px; border-radius: 2px; border: 1px solid #bbb; padding: 8px;" placeholder="Ваш коментар..."></textarea>
+      </div>
+    </div>
+
+    <button type="submit" style="width:100%; background:#3a53b7; color:#fff; border:none; padding:15px; font-size:20px; margin-top:10px;font-weight: bold;">Підтвердити замовлення</button>
+  </form>
+</div>
         </div>
-        <div style="margin-bottom: 10px;">
-          <label>Прізвище<br /><input type="text" style="width:100%;" required /></label>
-        </div>
-        <div style="margin-bottom: 10px;">
-          <label>Мобільний телефон<br /><input type="tel" style="width:100%;" required /></label>
-        </div>
-        <div style="margin-bottom: 10px;">
-          <label>Електронна пошта<br /><input type="email" style="width:100%;" required /></label>
-        </div>
-        <button type="submit" style="width:100%; background:#3a53b7; color:#fff; border:none; padding:10px; font-size:16px; margin-top:10px;">Вибрати доставку</button>
-      </form>
-      <div style="margin-top:20px; position: absolute; margin-left: 61%; margin-top: -38%; border: 2px black solid; padding: 20px;">
-        <b>Ваше замовлення:</b>
-        <div style="margin-top:10px;">
-          {% for item in items %}
-            <div style="display:flex; align-items:center; margin-bottom:10px;">
+        <!-- Другий блок справа від першого -->
+        <div style="background:#f7f7f7; padding:10px; box-shadow:0 2px 16px rgba(0,0,0,0.1); min-width:320px; text-align:center;">
+          <ul style="list-style:none; border: #000 2px solid; padding: 10px;margin-bottom: 10px; text-align: left; margin-top: 0px;">
+            {% for item in items %}
+            <li style="margin-bottom:10px;">
               <img src="{% if item.product.images.all %}
                   {{ item.product.images.first.image.url }}
                 {% else %}
                   {% static 'img/no-image.png' %}
                 {% endif %}"
-                style="width:50px; height:65px; object-fit:cover; margin-right:10px;" />
-              <div>
-                <div style="font-size:14px;">{{ item.product.name }}</div>
-                <div style="font-size:13px; color:gray;">Кількість: {{ item.quantity }}</div>
+                style="height:150px; max-width: 100px; object-fit:cover; margin-right:10px;" />
+              <div style="font-size: 15px; margin-top: -150px; margin-left: 115px;display: flex; height: 150px; max-width: 200px; flex-direction: column;">
+                <div><b>{{ item.product.name }}</b>
+                </div>
+                <div>{{ item.subtotal }}
+                </div>
+                <div>Колір: {{ item.product.color }}
+                </div>
+                <div>Кількість: {{ item.quantity }}
+                </div>
               </div>
-            </div>
-            <hr style="border: 1px rgb(216, 216, 216) solid;" />
-          {% endfor %}
+              <hr style="border-top: rgb(211, 211, 211) 1px solid;">
+            </li>
+            {% endfor %}
+          </ul>
+          <div style="border: #000 2px solid; padding: 10px ;text-align: left;font-size: 15px; color: rgb(29, 29, 29);">Сума: <b>₴{{ total_price }}</b> <br><br>Сума знижки: <b>₴0</b> <br><br> Доставка: <b>Ще не підраховано</b></div>
+          <div style="border: #000 2px solid;border-top: none; padding: 10px ;text-align: center;font-size: 30px; color: rgb(29, 29, 29);"><b>До сплати: ₴{{ total_price }}</b></div>
+          <div style="text-align: start;max-width: 300px;">
+            <div style="font-size: 15px; color: rgb(37, 37, 37);margin: 5px 0px;"><input type="checkbox" style="width: 15px; accent-color: #2563eb; appearance: auto;"> <b>Підписатись на новини і акції</b></div>
+            <div style="font-size: 10px; color: rgb(37, 37, 37);line-height: 15px;">Підтверджуючи замовлення, я даю згоду на обробку своїх персональних даних відповідно до <span style="text-decoration:overline;">умов користувача</span> на законних підставах</div>
+          </div>
         </div>
-        <div style="margin-top:10px; font-size:16px;">
-          <b>Загальна сума: ₴<span id="modal-total">{{ total_price }}</span></b>
+        <div style="background:#f7f7f7;width: 60px; box-shadow:0 2px 16px rgba(0,0,0,0.1); text-align:center;">
+          <button onclick="document.getElementById('checkout-modal').style.display='none'; " style="border: none;font-size: 50px;">×</button>
         </div>
       </div>
-    </div>
-  </div>
+    </div>        
 
-  <div id="delivery-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100vh; z-index:1001;">
-    <div style="position:absolute; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.3); backdrop-filter: blur(5px);"></div>
-    <div style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: #fff; 
-padding: 30px 20px; min-width: 50%;z-index: 1002; border: #000 2px solid; overflow-y: auto; overflow-x: hidden;">
-      <button onclick="document.getElementById('delivery-modal').style.display='none';document.body.classList.remove('modal-open');" style="position:absolute; top:10px; right:10px; border:none; background:none; font-size:24px; cursor:pointer;">&times;</button>
-      <h3 style="margin-top:0; background-color: #000; color: white; width: 98%; padding: 30px;margin-left: -20px;margin-top: -30px;">2/3 ДОСТАВКА</h3>
-      <form id="delivery-form" style="width: 60%;">
-        <div style="margin-bottom: 10px;">
-          <label>Країна<br /><input type="text" style="width:100%;" required /></label>
-        </div>
-        <div style="margin-bottom: 10px;">
-          <label>Місто<br /><input type="text" style="width:100%;" required /></label>
-        </div>
-        <div style="margin-bottom: 10px;">
-          <label>Вулиця<br /><input type="text" style="width:100%;" required /></label>
-        </div>
-        <div style="margin-bottom: 10px;">
-          <label>Поштовий індекс<br /><input type="text" style="width:100%;" required /></label>
-        </div>
-        <button type="submit" style="width:100%; background:#3a53b7; color:#fff; border:none; padding:10px; font-size:16px; margin-top:10px;">Оплата</button>
-      </form>
-      <div style="margin-top:20px; position: absolute; margin-left: 61%; margin-top: -38%; border: 2px black solid; padding: 20px;">
-        <b>Ваше замовлення:</b>
-        <div style="margin-top:10px;">
-          {% for item in items %}
-            <div style="display:flex; align-items:center; margin-bottom:10px;">
-              <img src="{% if item.product.images.all %}
-                  {{ item.product.images.first.image.url }}
-                {% else %}
-                  {% static 'img/no-image.png' %}
-                {% endif %}"
-                style="width:50px; height:65px; object-fit:cover; margin-right:10px;" />
-              <div>
-                <div style="font-size:14px;">{{ item.product.name }}</div>
-                <div style="font-size:13px; color:gray;">Кількість: {{ item.quantity }}</div>
-              </div>
-            </div>
-            <hr style="border: 1px rgb(216, 216, 216) solid;" />
-          {% endfor %}
-        </div>
-        <div style="margin-top:10px; font-size:16px;">
-          <b>Загальна сума: ₴<span id="modal-total2">{{ total_price }}</span></b>
-        </div>
-      </div>
-    </div>
-  </div>
+<script>
+  function setActiveTab(tabIndex) {
+    document.querySelectorAll('.check-content').forEach(function (content, idx) {
+      content.style.display = (idx === tabIndex) ? 'block' : 'none';
+    });
+    document.querySelectorAll('.check-ln').forEach(function (ln, idx) {
+      if (idx === tabIndex) {
+        ln.style.backgroundColor = '#fff';
+        ln.style.color = '#000';
+      } else {
+        ln.style.backgroundColor = '#000';
+        ln.style.color = '#fff';
+      }
+    });
+  }
 
-  <div id="payment-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100vh; z-index:1002;">
-    <div style="position:absolute; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.3); backdrop-filter: blur(5px);"></div>
-    <div style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: #fff; 
-padding: 30px 20px; min-width: 50%;z-index: 1003; border: #000 2px solid; overflow-y: auto; overflow-x: hidden;">
-      <button onclick="document.getElementById('payment-modal').style.display='none';document.body.classList.remove('modal-open');" style="position:absolute; top:10px; right:10px; border:none; background:none; font-size:24px; cursor:pointer;">&times;</button>
-      <h3 style="margin-top:0; background-color: #000; color: white; width: 98%; padding: 30px;margin-left: -20px;margin-top: -30px;">3/3 ОПЛАТА</h3>
-      <form id="payment-form" style="width: 60%; margin-bottom: 20px;">
-        <div style="font-weight: bold; font-size: 18px; margin-bottom: 10px;">Виберіть спосіб оплати</div>
-        <div style="border-radius: 6px; border: 1px solid #eee; margin-bottom: 10px;">
-          <label style="display: flex; align-items: center; padding: 10px 0;cursor: pointer;">
-            <input type="radio" name="pay" value="visa" checked style="height: 20px; width: 20px;" />
-            <img src="{% static 'icons/visa-card.jpg' %}" alt="visa" style="height: 24px; margin-right: 8px;margin-left: 10px;" />
-            <span style="font-size: 16px; margin-left: 50px;">Оплата онлайн картою Visa</span>
-          </label>
-          <hr style="border: rgb(216, 216, 216) 1px solid;" />
-          <label style="display: flex; align-items: center; padding: 10px 0;cursor: pointer;">
-            <input type="radio" name="pay" value="paypal" style="height: 20px; width: 20px;" />
-            <img src="{% static 'icons/pp-card.jpg' %}" alt="paypal" style="height: 24px; margin-right: 8px;margin-left: 10px;" />
-            <span style="font-size: 16px; margin-left: 50px;">Оплата онлайн картою PayPal</span>
-          </label>
-          <hr style="border: rgb(216, 216, 216) 1px solid;" />
-          <label style="display: flex; align-items: center; padding: 10px 0; cursor: pointer;">
-            <input type="radio" name="pay" value="mono" style="height: 20px; width: 20px;" />
-            <img src="{% static 'icons/mono-card.jpg' %}" alt="mono" style="width: 30px; margin-right: 8px;margin-left: 10px;" />
-            <span style="font-size: 16px; margin-left: 45px;">Оплата онлайн картою Monobank</span>
-          </label>
-          <hr style="border: rgb(216, 216, 216) 1px solid;" />
-          <label style="display: flex; align-items: center; padding: 10px 0; cursor: pointer;">
-            <input type="radio" name="pay" value="mastercard" style="height: 20px; width: 20px;" />
-            <img src="{% static 'icons/mast-card.jpg' %}" alt="mastercard" style="height: 24px; margin-right: 8px;margin-left: 10px;" />
-            <span style="font-size: 16px; margin-left: 50px;">Оплата онлайн картою MasterCard</span>
-          </label>
-        </div>
-        <button type="submit" style="width:100%; background:#3a53b7; color:#fff; border:none; padding:12px; font-size:18px; font-weight: bold; margin-top:10px;">Підтвердити замовлення</button>
-      </form>
-      <div style="margin-top:20px; position: absolute; margin-left: 61%; margin-top: -38%; border: 2px black solid; padding: 20px;">
-        <b>Ваше замовлення:</b>
-        <div style="margin-top:10px;">
-          {% for item in items %}
-            <div style="display:flex; align-items:center; margin-bottom:10px;">
-              <img src="{% if item.product.images.all %}
-                  {{ item.product.images.first.image.url }}
-                {% else %}
-                  {% static 'img/no-image.png' %}
-                {% endif %}"
-                style="width:50px; height:65px; object-fit:cover; margin-right:10px;" />
-              <div>
-                <div style="font-size:14px;">{{ item.product.name }}</div>
-                <div style="font-size:13px; color:gray;">Кількість: {{ item.quantity }}</div>
-              </div>
-            </div>
-            <hr style="border: 1px rgb(216, 216, 216) solid;" />
-          {% endfor %}
-        </div>
-        <div style="margin-top:10px; font-size:16px;">
-          <b>Загальна сума: ₴<span id="modal-total3">{{ total_price }}</span></b>
-        </div>
-      </div>
-    </div>
-  </div>
+  document.querySelectorAll('.check-ln').forEach(function (ln, idx) {
+    ln.addEventListener('click', function () {
+      setActiveTab(idx);
+    });
+  });
 
-  <script>
-    document.querySelectorAll('.modal-close').forEach((btn) => {
+  document.getElementById('continue-btn').addEventListener('click', function (e) {
+    e.preventDefault();
+    document.getElementById('checkout-modal').style.display = 'block';
+    document.body.classList.add('modal-open');
+    setActiveTab(0);
+  });
+
+  document.getElementById('contact-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    setActiveTab(1);
+  });
+
+  document.getElementById('delivery-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    setActiveTab(2);
+  });
+
+  // Фікс для хрестика: закриває модалку і повертає скрол
+  document.querySelectorAll('#checkout-modal button').forEach(function(btn) {
+    if (btn.textContent.trim() === '×') {
       btn.addEventListener('click', function () {
-        let target = this.getAttribute('data-target')
-        document.getElementById(target).style.display = 'none'
-        document.body.classList.remove('modal-open')
-      })
-    })
-    
-    document.getElementById('continue-btn').addEventListener('click', function (e) {
-      e.preventDefault()
-      document.getElementById('checkout-modal').style.display = 'block'
-      document.body.classList.add('modal-open')
-    })
-    
-    document.getElementById('contact-form').addEventListener('submit', function (e) {
-      e.preventDefault()
-      document.getElementById('checkout-modal').style.display = 'none'
-      document.getElementById('delivery-modal').style.display = 'block'
-    })
-    
-    document.getElementById('delivery-form').addEventListener('submit', function (e) {
-      e.preventDefault()
-      document.getElementById('delivery-modal').style.display = 'none'
-      document.getElementById('payment-modal').style.display = 'block'
-    })
-    
-    document.getElementById('payment-form').addEventListener('submit', function (e) {
-      e.preventDefault()
-      document.getElementById('payment-modal').style.display = 'none'
-      document.body.classList.remove('modal-open')
-    
-      setTimeout(function () {
-        alert('Purchased')
-        fetch("{% url 'clear_cart' %}", {
-          method: 'POST',
-          headers: {
-            'X-CSRFToken': '{{ csrf_token }}',
-            Accept: 'application/json'
-          }
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.success) {
-              document.querySelectorAll('.cart-item').forEach(function (item) {
-                item.remove()
-              })
-              var totalPrice = document.getElementById('total-price')
-              if (totalPrice) totalPrice.textContent = '0.00'
-            }
-          })
-          .catch((error) => {
-            console.error('Error:', error)
-          })
-      }, 100)
-    })
-  </script>
+        document.getElementById('checkout-modal').style.display = 'none';
+        document.body.classList.remove('modal-open');
+      });
+    }
+  });
+
+  // Очищення кошика при натисканні "Підтвердити замовлення"
+  var paymentForm = document.getElementById('payment-form');
+  if (paymentForm) {
+    paymentForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      fetch("{% url 'clear_cart' %}", {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}'
+        }
+      }).then(function () {
+        window.location.reload();
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    // Розкладушка для коментаря
+    var toggleBtn = document.getElementById('toggle-comment');
+    var commentSection = document.getElementById('comment-section');
+    if (toggleBtn && commentSection) {
+      toggleBtn.addEventListener('click', function () {
+        if (commentSection.style.display === 'none' || commentSection.style.display === '') {
+          commentSection.style.display = 'block';
+        } else {
+          commentSection.style.display = 'none';
+        }
+      });
+    }
+  });
+</script>
 {% endblock %}
